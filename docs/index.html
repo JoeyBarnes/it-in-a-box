@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT-in-a-Box</title>
+<script>document.documentElement.setAttribute("data-theme",localStorage.getItem("ptom-theme")||"light");</script>
+<style>
+/* Fluent 2 design tokens — light default, dark override */
+:root{
+  /* neutrals */
+  --bg:#faf9f8;
+  --panel:#ffffff;
+  --panel-2:#f5f5f5;
+  --panel-3:#ededed;
+  --line:#e1dfdd;
+  --line-solid:#d2d0ce;
+  --tx:#242424;
+  --tx-2:#424242;
+  --tx-3:#616161;
+  /* brand */
+  --accent:#0f6cbd;
+  --accent-2:#115ea3;
+  --accent-dim:#ebf3fc;
+  --hover:#00000008;
+  --ring:#0f6cbd33;
+  --shadow:0 1.6px 3.6px rgba(0,0,0,.10),0 .3px .9px rgba(0,0,0,.07);
+  --radius:6px;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+  --sans:"Segoe UI Variable Text","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#0f0f0f;
+  --panel:#1f1f1f;
+  --panel-2:#292929;
+  --panel-3:#333333;
+  --line:#333333;
+  --line-solid:#3d3d3d;
+  --tx:#ffffff;
+  --tx-2:#e0e0e0;
+  --tx-3:#c8c8c8;
+  --accent:#479ef5;
+  --accent-2:#62abf5;
+  --accent-dim:#0c1c2e;
+  --hover:#ffffff0a;
+  --ring:#479ef540;
+  --shadow:0 1.6px 3.6px rgba(0,0,0,.4),0 .3px .9px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0;text-align:left}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.area-btn:focus-visible,.cap-btn:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--panel);color:var(--tx);padding:10px 16px;
+  border:1px solid var(--accent);border-radius:var(--radius);z-index:100}
+.skip:focus{left:12px;top:12px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 90px}
+
+header.top{border-bottom:1px solid var(--line-solid);background:var(--panel);padding:24px 0 20px;margin-bottom:20px}
+.top-inner{max-width:1180px;margin:0 auto;padding:0 20px;position:relative}
+h1{margin:0;font-size:25px;font-weight:600;letter-spacing:-.02em}
+.sub{margin:9px 0 0;color:var(--tx-2);max-width:940px;font-size:13.5px}
+.sub-lead,.sub-p{display:block}
+.sub-lead{color:var(--tx);margin-bottom:7px}
+.sub-p{margin-bottom:7px}
+.sub-p:last-child{margin-bottom:0}
+.sub strong{font-weight:600;color:var(--tx)}
+.themebtn{position:absolute;top:0;right:20px;background:var(--panel-2);border:1px solid var(--line-solid);border-radius:var(--radius);
+  padding:7px 12px;font-size:12.5px;color:var(--tx-2);display:flex;align-items:center;gap:7px}
+.themebtn:hover{background:var(--panel-3);color:var(--tx)}
+.themebtn svg{width:14px;height:14px}
+
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px;position:sticky;top:0;z-index:20;
+  background:var(--bg);padding:12px 0 10px}
+.tierlabel{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3)}
+.tiermark{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--tx-3);white-space:nowrap}
+.search{flex:1;min-width:220px;max-width:360px;position:relative}
+.search input{width:100%;background:var(--panel);border:1px solid var(--line-solid);color:var(--tx);padding:9px 12px 9px 32px;border-radius:8px;font-size:13px;outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.5}
+.covbar{display:flex;gap:5px;flex-wrap:wrap}
+.covbtn{background:var(--panel);border:1px solid var(--line-solid);border-radius:99px;padding:5px 11px;font-size:12.5px;color:var(--tx-2);font-family:var(--mono)}
+.covbtn:hover{background:var(--panel-2);color:var(--tx)}
+.covbtn[aria-pressed="true"]{background:var(--accent-dim);border-color:var(--accent);color:var(--accent-2)}
+.tools{display:flex;gap:5px;margin-left:auto}
+.tbtn{background:var(--panel);border:1px solid var(--line-solid);border-radius:7px;padding:6px 11px;font-size:12.5px;color:var(--tx-2)}
+.tbtn:hover{background:var(--panel-2);color:var(--tx)}
+.rowbrk{flex:1 0 100%;height:0;margin:0}
+.rescount{font-family:var(--mono);font-size:11px;color:var(--tx-3);white-space:nowrap}
+
+.grouphdr{display:flex;align-items:baseline;gap:10px;margin:26px 0 9px;padding-bottom:7px;border-bottom:1px solid var(--line-solid);font-size:inherit;font-weight:400}
+.grouphdr:first-of-type{margin-top:0}
+.grouphdr .gn{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gc);font-weight:700}
+.grouphdr .gd{font-size:12.5px;color:var(--tx-3)}
+.grouphdr.hide,.area.hide,.cap.hide{display:none}
+
+/* area */
+.area{background:var(--panel);border:1px solid var(--line-solid);border-left:3px solid var(--ac);border-radius:var(--radius);margin-bottom:7px;overflow:hidden}
+.area-btn{display:grid;grid-template-columns:18px 46px 1fr auto;gap:11px;align-items:center;width:100%;padding:13px 15px;transition:background .12s}
+.area-btn:hover{background:var(--panel-2)}
+.chev{color:var(--tx-2);font-size:13px;transition:transform .18s,color .12s;display:inline-block;line-height:1;transform-origin:45% 50%}
+.area-btn:hover .chev,.cap-btn:hover .chev{color:var(--accent-2)}
+.area.open .area-btn .chev{transform:rotate(90deg);color:var(--ac)}
+.area-btn .code{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ac)}
+.area-btn .nm{display:block;font-size:15px;font-weight:650}
+.area-btn .df{display:block;font-size:12.5px;color:var(--tx-2);margin-top:3px;line-height:1.4}
+.area-btn .meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.pillN{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:99px;font-weight:700;white-space:nowrap}
+.count{font-family:var(--mono);font-size:11px;color:var(--tx-3);white-space:nowrap}
+.area-body{display:none;padding:0 4px 6px 34px;border-top:1px solid var(--line)}
+.area.open .area-body{display:block}
+
+/* capability */
+.cap{border-bottom:1px solid var(--line);overflow:hidden}
+.cap:last-child{border-bottom:0}
+.cap-btn .meta{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.cap-btn{display:grid;grid-template-columns:18px 44px 1fr auto;gap:10px;align-items:start;width:100%;padding:10px 12px;transition:background .12s}
+.cap-btn:hover{background:var(--hover)}
+.cap.open .cap-btn .chev{transform:rotate(90deg);color:var(--ac)}
+.cap-btn .cc{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--ac);padding-top:2px}
+.cap-btn .cn{display:block;font-size:13px;font-weight:600}
+.cap-btn .cd{display:block;font-size:12.5px;color:var(--tx-3);margin-top:3px;line-height:1.45}
+.cap-body{display:none;padding:2px 12px 14px 70px;background:transparent}
+.cap.open .cap-body{display:block}
+.mrow{display:grid;grid-template-columns:104px 1fr;gap:12px;padding:4px 0;align-items:baseline}
+@media(max-width:620px){.mrow{grid-template-columns:1fr;gap:1px}}
+.mk{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-3)}
+.mv{font-size:12.5px;color:var(--tx);line-height:1.5}
+.mv.none{color:var(--tx-3);font-style:italic}
+.mv.alt{color:var(--tx-2)}
+.msprod{font-weight:600;color:var(--accent-2)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chips span{background:var(--panel-2);border:1px solid var(--line-solid);border-radius:5px;padding:2px 8px;font-size:11.5px;color:var(--tx-2)}
+.lic{display:inline-block;font-family:var(--mono);font-size:11.5px;padding:2px 8px;border-radius:5px;
+  background:var(--panel-2);border:1px solid var(--line-solid);color:var(--tx-2)}
+.lic.verify{color:#8a5a00;background:#fff4ce;border-color:#e9c26a}
+html[data-theme="dark"] .lic.verify{color:#f0c674;background:rgba(230,173,60,.14);border-color:rgba(230,173,60,.5)}
+.pos{font-size:12px;color:var(--tx-2);line-height:1.55}
+.docs{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--accent-2);text-decoration:none;
+  border-bottom:1px solid transparent}
+.docs:hover{border-bottom-color:var(--accent-2)}
+.mnote{margin-top:7px;font-size:12.5px;color:var(--tx-3);line-height:1.5;padding-left:116px}
+@media(max-width:620px){.mnote{padding-left:0}}
+
+.empty{padding:44px;text-align:center;color:var(--tx-3);font-size:13px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 14px;padding-bottom:13px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12.5px;color:var(--tx-3)}
+.legend span{display:flex;align-items:center;gap:6px}
+kbd{background:var(--panel-2);border:1px solid var(--line-solid);border-bottom-width:2px;border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:11px}
+mark{background:#4a90d94d;color:var(--tx);border-radius:2px;padding:0 1px}
+
+/* ---- view tabs ---- */
+.tabs{display:flex;gap:2px;margin:16px 0 0}
+.tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;padding:9px 14px;
+  font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--tx-3);cursor:pointer}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--tx)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:4px}
+
+/* ---- reference implementation ---- */
+.ri-kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);margin:26px 0 4px}
+.ri-title{margin:0;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.ri-intro{margin:8px 0 4px;color:var(--tx-2);font-size:13.5px;max-width:900px}
+.ri-src{font-family:var(--mono);font-size:11.5px;color:var(--tx-3);margin:0 0 20px}
+.ri-band{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tx-3);margin:26px 0 9px;display:flex;align-items:center;gap:10px}
+.ri-band::after{content:"";flex:1;height:1px;background:var(--line)}
+.stage{background:var(--panel);border:1px solid var(--line-solid);border-left:3px solid var(--sc,var(--accent));
+  border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
+.stage-hd{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.stage-k{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--sc,var(--accent));
+  border:1px solid var(--sc,var(--accent));border-radius:4px;padding:1px 6px;flex:none}
+.stage-n{font-weight:600;font-size:14px}
+.stage-d{color:var(--tx-2);font-size:12.5px;margin:5px 0 9px}
+.chips-row{display:flex;flex-wrap:wrap;gap:5px}
+.rchip{display:inline-flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--line-solid);
+  border-radius:20px;padding:3px 10px 3px 8px;font-size:11.5px;color:var(--tx-2);cursor:pointer;font-family:var(--sans)}
+.rchip:hover{border-color:var(--accent);color:var(--tx)}
+.rchip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rchip[data-noring]:focus,.rchip[data-noring]:focus-visible{outline:none}
+.ri-dl{margin:4px 0 0;padding-left:18px}
+.ri-dl li{font-size:12.5px;color:var(--tx-2);margin-bottom:4px}
+.rchip .rid{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+.rdot{width:7px;height:7px;border-radius:50%;flex:none}
+.ri-split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:860px){.ri-split{grid-template-columns:1fr}}
+.ri-path{border:1px dashed var(--line-solid);border-radius:var(--radius);padding:12px}
+.ri-path h3{margin:0 0 10px;font-size:12px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3)}
+.pl-n{font-family:var(--sans);font-size:12px;font-weight:600;fill:var(--tx-2);pointer-events:none}
+.pl-bar{stroke-width:1}
+.dg-node:hover .pl-bar{stroke-opacity:1}
+.dg-node:focus-visible .pl-bar{stroke-opacity:1;stroke-width:2}
+.pl-gap{font-family:var(--mono);font-size:9.5px;fill:#c50f1f}
+.ri-note{margin-top:24px;border:1px solid var(--line-solid);border-left:3px solid #c50f1f;border-radius:var(--radius);
+  padding:12px 14px;background:var(--panel)}
+.ri-note h3{margin:0 0 7px;font-size:13px}
+.ri-note p{margin:0 0 8px;font-size:12.5px;color:var(--tx-2)}
+.ri-note p:last-child{margin-bottom:0}
+
+/* ---- functional diagram ---- */
+.dg-wrap{background:var(--panel);border:1px solid var(--line-solid);border-radius:var(--radius);
+  padding:16px 14px;margin:10px 0 4px;box-shadow:var(--shadow);overflow-x:auto}
+.dg{display:block;width:100%;min-width:820px;height:auto}
+.dg-node{cursor:pointer}
+.dg-node rect.bx{fill:var(--panel-2);stroke:var(--line-solid)}
+.dg-node:hover rect.bx{stroke:var(--accent)}
+.dg-node:focus{outline:none}
+.dg-node:focus-visible rect.bx{stroke:var(--accent);stroke-width:2}
+.dg-k{font-family:var(--mono);font-size:9.5px;font-weight:700}
+.dg-t{font-family:var(--sans);font-size:12.5px;font-weight:600;fill:var(--tx)}
+.dg-s{font-family:var(--mono);font-size:9px;fill:var(--tx-3);letter-spacing:.08em}
+.dg-lane{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;fill:var(--tx-3)}
+.dg-edge{stroke:var(--tx-3);stroke-width:1.4;fill:none}
+.dg-edge-d{stroke:var(--tx-3);stroke-width:1.2;fill:none;stroke-dasharray:5 3;opacity:.8}
+.dg-elbl{font-family:var(--mono);font-size:8.5px;fill:var(--tx-3)}
+.dg-lanebox{fill:none;stroke:var(--line);stroke-dasharray:3 3}
+.stage.flash{animation:fl 1.5s ease-out}
+@keyframes fl{0%,22%{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}100%{}}
+@media(prefers-reduced-motion:reduce){.stage.flash{animation:none}}
+
+/* ---- capability dialog ---- */
+dialog#capdlg{border:1px solid var(--line-solid);border-radius:8px;padding:0;max-width:660px;width:calc(100% - 32px);
+  background:var(--panel);color:var(--tx);box-shadow:0 8px 28px rgba(0,0,0,.28)}
+dialog#capdlg::backdrop{background:rgba(0,0,0,.45)}
+.dlg-hd{display:flex;gap:12px;align-items:flex-start;padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+.dlg-crumb{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);margin:0 0 5px}
+.dlg-hd h2{margin:0;font-size:16px}
+.dlg-def{margin:6px 0 0;font-size:12.5px;color:var(--tx-2)}
+.dlg-x{margin-left:auto;background:none;border:1px solid var(--line-solid);border-radius:5px;color:var(--tx-2);
+  width:28px;height:28px;flex:none;cursor:pointer;font-size:13px;line-height:1}
+.dlg-x:hover{border-color:var(--accent);color:var(--tx)}
+.dlg-body{padding:14px 18px 4px}
+.dlg-ft{display:flex;gap:7px;justify-content:flex-end;padding:12px 18px 16px}
+dialog#capdlg .mrow{display:grid;grid-template-columns:104px 1fr;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+dialog#capdlg .mrow:first-child{border-top:0}
+dialog#capdlg .mk{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--tx-3);padding-top:2px}
+dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
+@media(max-width:620px){dialog#capdlg .mrow{grid-template-columns:1fr;gap:3px}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#host">Skip to capability model</a>
+
+<header class="top">
+  <div class="top-inner">
+    <button class="themebtn" id="themebtn" aria-label="Switch theme"></button>
+    <h1>IT-in-a-Box</h1>
+    <p class="sub" id="sub"><span class="sub-lead">A complete model of an enterprise technology function — every capability a business needs in order to operate, expressed as a reusable standard rather than as any one company's organisation chart.</span><span class="sub-p">It exists to make a recurring assessment repeatable. A business joining a portfolio arrives with a technology function already in place — its own platforms, vendors and decisions — so the question is rarely what is missing. It is how that estate compares to the standard, where convergence is worth the cost, and where the business is better left to run its own. Doing that from a blank page each time is slow and produces answers that cannot be compared across the portfolio. Each capability is mapped to the Microsoft platform, so what is already owned and what still has to be bought fall out of the same view.</span></p>
+    <div class="tabs" role="tablist" aria-label="View">
+      <button class="tab" id="tab-model" role="tab" aria-selected="true" aria-controls="view-model">Capability Model</button>
+      <button class="tab" id="tab-ri" role="tab" aria-selected="false" aria-controls="view-ri">Reference Implementation</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="view-model" role="tabpanel" aria-labelledby="tab-model">
+  <div class="legend" id="legend"></div>
+  <div class="toolbar" role="search">
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" aria-label="Search functional areas, capabilities and products" placeholder="Search areas, capabilities, products…" autocomplete="off">
+    </div>
+    <div class="covbar" id="covbar" role="group" aria-label="Filter by platform coverage"></div>
+    <div class="covbar" id="tierbar" role="group" aria-label="Filter by capability tier"></div>
+    <div class="rowbrk" aria-hidden="true"></div>
+    <span class="rescount" id="rescount" role="status" aria-live="polite"></span>
+    <div class="tools">
+      <button class="tbtn" id="expandAll">Expand all</button>
+      <button class="tbtn" id="collapseAll">Collapse all</button>
+    </div>
+  </div>
+
+  <div id="host" tabindex="-1"></div>
+  <div class="empty" id="empty" style="display:none" role="status">No matches.</div>
+</section>
+
+<section id="view-ri" role="tabpanel" aria-labelledby="tab-ri" hidden></section>
+</main>
+
+<dialog id="capdlg" aria-labelledby="dlg-title">
+  <div class="dlg-hd">
+    <div>
+      <p class="dlg-crumb" id="dlg-crumb"></p>
+      <h2 id="dlg-title"></h2>
+      <p class="dlg-def" id="dlg-def"></p>
+    </div>
+    <button class="dlg-x" id="dlg-x" aria-label="Close">&#10005;</button>
+  </div>
+  <div class="dlg-body" id="dlg-body"></div>
+  <div class="dlg-ft">
+    <button class="tbtn" id="dlg-goto">Open in capability model</button>
+    <button class="tbtn" id="dlg-close">Close</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+/* Fluent 2 accent ramp — [dark-mode, light-mode] pairs */
+const PAL={
+  blue:["#479ef5","#0f6cbd"], cyan:["#58d3db","#007b84"], teal:["#4ac1b8","#0f6f68"],
+  green:["#5ec75e","#0e7a0b"], lime:["#a4cc6c","#4f6f1f"], amber:["#fbbc04","#835b00"],
+  gold:["#e6ad3c","#8a6100"], orange:["#f7893a","#a14e00"], rust:["#e06c3c","#8c3a12"],
+  violet:["#a97ff0","#6b3fa0"], pink:["#e87eb3","#a3376a"], red:["#e37d80","#b10e1c"],
+  crimson:["#f1707b","#c50f1f"], slate:["#a0a0a0","#616161"], indigo:["#8f9ff5","#3b47c9"]
+};
+let THEME=(localStorage.getItem("ptom-theme")||"light");
+const pick=n=>PAL[n][THEME==="dark"?0:1];
+let C={};
+function setPalette(){Object.keys(PAL).forEach(k=>C[k]=pick(k));}
+setPalette();
+</script>
+<script>
+const GROUPS=[
+{id:"G1",name:"Core Platform",color:C.blue,desc:"The technical substrate every workload depends on"},
+{id:"G2",name:"Data, Integration & Applications",color:C.gold,desc:"Where business logic and business information live"},
+{id:"G3",name:"Workplace & AI",color:C.violet,desc:"How the workforce and machine agents operate"},
+
+{id:"G4",name:"Security & Governance",color:C.crimson,desc:"Protection, assurance and regulatory obligation"},
+{id:"G5",name:"Service & Business Management",color:C.slate,desc:"How technology is run, funded and sourced"}
+];
+
+const AREAS=[
+/* ---------------- G1 CORE PLATFORM ---------------- */
+{id:"01",g:"G1",name:"Identity & Access Management",color:C.cyan,
+ desc:"Establishing, governing and enforcing who and what may access which resources.",
+ caps:[
+ {id:"01.1",name:"Directory & Identity Lifecycle",def:"Authoritative identity store; joiner, mover and leaver provisioning and deprovisioning."},
+ {id:"01.2",name:"Authentication & Single Sign-On",def:"Credential verification, multi-factor, passwordless and federated sign-on across applications."},
+ {id:"01.3",name:"Authorisation & Entitlements",def:"Role and attribute-based access models, group management and application entitlement assignment."},
+ {id:"01.4",name:"Privileged Access Management",def:"Elevation, just-in-time administrative access, session brokering, vaulting and credential rotation."},
+ {id:"01.5",name:"Identity Governance & Administration",def:"Access reviews, certification campaigns, segregation of duties and access request workflow."},
+ {id:"01.6",name:"External & Partner Identity",def:"Guest, contractor, supplier and consortium-staff identity and cross-tenant collaboration."},
+ {id:"01.7",name:"Customer Identity (CIAM)",def:"Registration, authentication and profile management for external customers of the business."},
+ {id:"01.8",name:"Workload & Agent Identity",def:"Non-human identity for services, machines, workloads and AI agents, including secret and certificate management."},
+ {id:"01.9",name:"Identity Threat Detection & Response",def:"Detection of identity compromise, risky sign-in scoring and automated identity containment."}
+ ]},
+{id:"02",g:"G1",name:"Endpoint & Device Management",color:C.teal,
+ desc:"Provisioning, configuring, securing and retiring the device estate across corporate and frontline populations.",
+ caps:[
+ {id:"02.1",name:"Device Provisioning & Enrolment",def:"Zero-touch build, enrolment and initial configuration of corporate and shared devices."},
+ {id:"02.2",name:"Configuration & Policy Management",def:"Baseline configuration, hardening profiles and compliance policy enforcement on devices."},
+ {id:"02.3",name:"Patch & Update Management",def:"Operating system and firmware update rings, deployment scheduling and remediation reporting."},
+ {id:"02.4",name:"Application Packaging & Delivery",def:"Packaging, distribution, update and removal of applications on managed devices."},
+ {id:"02.5",name:"Mobile & BYOD Management",def:"Mobile device and mobile application management, including unmanaged and personal devices."},
+ {id:"02.6",name:"Frontline & Shared Device Management",def:"Shift-based shared devices, kiosk modes, rugged and vehicle-mounted hardware for deskless workers."},
+ {id:"02.8",name:"Endpoint Analytics & Digital Experience",def:"Device performance, reliability and user-experience telemetry and remediation."},
+ {id:"02.9",name:"Device Lifecycle & Disposal",def:"Procurement standards, refresh cycles, asset tracking, secure wipe and disposal."}
+ ]},
+{id:"03",g:"G1",name:"Network & Connectivity",color:C.green,
+ desc:"Transport, segmentation and secure reachability between users, sites, workloads and assets.",
+ caps:[
+ {id:"03.1",name:"Wide Area Network & SD-WAN",def:"Inter-site connectivity, path selection, circuit management and branch and remote-site links."},
+ {id:"03.2",name:"Application Delivery & Protection",def:"Global and regional application delivery, web application firewall, DDoS protection and API threat protection for published interfaces."},
+ {id:"03.3",name:"Remote & Hybrid Access",def:"Zero-trust network access, VPN replacement and conditional remote connectivity for users and vendors."},
+ {id:"03.4",name:"Secure Internet Edge",def:"Egress control, secure web gateway, DNS filtering and cloud-delivered inspection."},
+ {id:"03.5",name:"Network Segmentation",def:"Macro and micro-segmentation, enclave design and enforcement of trust boundaries between zones."},
+ {id:"03.6",name:"DNS, DHCP & Address Management",def:"Name resolution, address allocation and authoritative IP address management."},
+ {id:"03.7",name:"Cloud Interconnect & Peering",def:"Private circuits, peering and virtual network connectivity into cloud platforms."},
+ {id:"03.8",name:"Network Monitoring & Assurance",def:"Flow, performance and availability monitoring, capacity planning and network fault management."}
+ ]},
+{id:"04",g:"G1",name:"Cloud Platform & Infrastructure",color:C.lime,
+ desc:"Compute, storage, hosting topology and the automation and resilience standards applied to them.",
+ caps:[
+ {id:"04.1",name:"Tenant & Landing Zone Architecture",def:"Tenant model, subscription and account topology, management group hierarchy and guardrail placement."},
+ {id:"04.2",name:"Compute & Container Platform",def:"Virtual machines, container orchestration, serverless execution and application hosting runtimes."},
+ {id:"04.3",name:"Storage & File Services",def:"Object, block and file storage, tiering, and user and application file services."},
+ {id:"04.4",name:"Database Platform",def:"Relational, non-relational and analytical database hosting, provisioning and administration."},
+ {id:"04.5",name:"Infrastructure as Code & Automation",def:"Declarative infrastructure definitions, reusable module catalogue and deployment pipelines."},
+ {id:"04.6",name:"Policy as Code & Guardrails",def:"Preventative and detective platform policy, configuration drift control and enforcement at deploy time."},
+ {id:"04.7",name:"Backup, Recovery & Continuity",def:"Backup, restore, replication, recovery objectives and disaster-recovery orchestration and testing."},
+ {id:"04.8",name:"Platform Observability",def:"Infrastructure metrics, logs, traces, alerting and platform-level service health."},
+ {id:"04.9",name:"On-Premises & Edge Infrastructure",def:"Datacentre, colocation and asset-site compute and storage, including edge and disconnected operation."}
+ ]},
+
+/* ---------------- G2 DATA, INTEGRATION & APPLICATIONS ---------------- */
+{id:"05",g:"G2",name:"Data & Analytics",color:C.gold,
+ desc:"Storing, governing, modelling and presenting information for operational and investor reporting.",
+ caps:[
+ {id:"05.1",name:"Data Platform & Lakehouse",def:"Central analytical storage and compute for structured and semi-structured data."},
+ {id:"05.2",name:"Data Engineering & Pipelines",def:"Ingestion, transformation, orchestration and scheduling of data movement."},
+ {id:"05.3",name:"Master & Reference Data Management",def:"Golden-record definition, matching, survivorship and distribution of shared reference data."},
+ {id:"05.4",name:"Data Governance & Catalogue",def:"Data ownership, glossary, classification, catalogue and access policy."},
+ {id:"05.5",name:"Data Quality & Lineage",def:"Quality rules, profiling, issue management and end-to-end lineage from source to report."},
+ {id:"05.6",name:"Business Intelligence & Reporting",def:"Semantic models, dashboards, operational reporting and self-service analytics."},
+ {id:"05.7",name:"Advanced Analytics & Data Science",def:"Statistical modelling, forecasting, notebooks and experimentation environments."},
+ {id:"05.8",name:"Data Contracts & Schema Management",def:"Producer and consumer data contracts, schema registry, schema evolution and breaking-change control across pipelines and interfaces."},
+ {id:"05.9",name:"Real-Time & Streaming Analytics",def:"Continuous processing of event and telemetry streams for operational decisions."}
+ ]},
+{id:"06",g:"G2",name:"Integration & Automation",color:C.amber,
+ desc:"Connecting systems and automating processes across application and organisational boundaries.",
+ caps:[
+ {id:"06.1",name:"API Management",def:"Publication, gateway, versioning, throttling and consumption governance of interfaces."},
+ {id:"06.2",name:"Application & Data Integration",def:"Point-to-point and hub integration, connectors, mapping and transformation between systems."},
+ {id:"06.3",name:"Event Streaming & Messaging",def:"Publish and subscribe backbone, queues, topics and event-driven distribution."},
+ {id:"06.4",name:"Business Process Automation",def:"Workflow orchestration, approvals and long-running process automation across systems."},
+ {id:"06.5",name:"Robotic Process Automation",def:"User-interface level automation of tasks in systems without usable interfaces."},
+ {id:"06.6",name:"Low-Code Application Platform",def:"Citizen and professional low-code application build, with governance of the resulting estate."},
+ {id:"06.7",name:"B2B & Partner Integration",def:"Trading-partner interfaces, file exchange and industry protocol integration."},
+ {id:"06.8",name:"Integration Operations & Observability",def:"Pipeline and interface run monitoring, failure triage, dead-letter handling, replay and reconciliation of in-flight work."}
+ ]},
+{id:"07",g:"G2",name:"Business Applications",color:C.pink,
+ desc:"Systems of record for finance, assets, workforce, supply chain and customer operations.",
+ caps:[
+ {id:"07.1",name:"Finance & ERP",def:"General ledger, consolidation, receivables, payables, fixed assets and financial close."},
+ {id:"07.2",name:"Enterprise Asset Management",def:"Asset register, maintenance planning, work orders and reliability-centred maintenance."},
+ {id:"07.3",name:"Human Capital Management & Payroll",def:"Core human resources record, payroll, time, absence and workforce scheduling."},
+ {id:"07.4",name:"Procurement & Supply Chain",def:"Source to pay, supplier management, inventory, logistics and materials planning."},
+ {id:"07.5",name:"Customer & Revenue Management",def:"Customer relationship management, contracts, billing and revenue operations."},
+ {id:"07.6",name:"Field Service Management",def:"Dispatch, scheduling, mobile work execution and field workforce enablement."},
+ {id:"07.9",name:"Application Portfolio Management",def:"Application inventory, ownership, lifecycle status, rationalisation and technical-debt tracking."}
+ ]},
+{id:"08",g:"G2",name:"Software Engineering & Product Technology",color:C.rust,
+ desc:"Building and operating software, whether internal applications or a product sold to customers.",
+ caps:[
+ {id:"08.1",name:"Source Control & Collaboration",def:"Repository hosting, branching model, code review and contribution workflow."},
+ {id:"08.2",name:"CI/CD & Release Automation",def:"Build, test, package and deployment pipelines with environment promotion."},
+ {id:"08.3",name:"Developer Environments & Tooling",def:"Local and cloud development environments, scaffolding and internal developer platform."},
+ {id:"08.4",name:"Test & Quality Engineering",def:"Automated testing, test data management, performance testing and release quality gates."},
+ {id:"08.5",name:"Application & Product Security",def:"Secure development lifecycle, dependency and code scanning, and product security assurance."},
+ {id:"08.6",name:"Product Telemetry & Analytics",def:"Instrumentation of product usage, adoption and reliability for customer-facing software."},
+ {id:"08.7",name:"SaaS Operations & Service Levels",def:"Multi-tenant operations, customer data isolation, availability commitments and status reporting."}
+ ]},
+
+/* ---------------- G3 WORKPLACE & AI ---------------- */
+{id:"09",g:"G3",name:"Productivity & Collaboration",color:C.violet,
+ desc:"The everyday working surface for corporate and frontline staff, and the content it produces.",
+ caps:[
+ {id:"09.1",name:"Email & Calendaring",def:"Messaging, scheduling, distribution lists and mail routing and hygiene."},
+ {id:"09.2",name:"Chat, Meetings & Voice",def:"Persistent chat, conferencing, telephony, contact centre and meeting-room technology."},
+ {id:"09.3",name:"Content & Document Management",def:"Document storage, co-authoring, versioning and internal and external sharing."},
+ {id:"09.4",name:"Intranet & Employee Communications",def:"Corporate publishing, targeted communications and campaign delivery to the workforce."},
+ {id:"09.5",name:"Records Management & Retention",def:"Retention schedules, legal hold, disposition and records classification."},
+ {id:"09.6",name:"Enterprise Search & Knowledge",def:"Cross-repository search, knowledge bases and expertise discovery."},
+ {id:"09.7",name:"Frontline Communications & Shift Management",def:"Shift handover, task assignment, safety briefings and deskless workforce communication."},
+ {id:"09.8",name:"Digital Employee Experience",def:"Measurement of workplace experience, sentiment and technology friction."}
+ ]},
+{id:"10",g:"G3",name:"AI & Agents",color:C.indigo,
+ desc:"Assistive and autonomous capability layered over data, applications and operations.",
+ caps:[
+ {id:"10.1",name:"AI Assistants & Copilots",def:"General and role-specific assistants embedded in productivity and line-of-business tools."},
+ {id:"10.2",name:"Agent Platform & Orchestration",def:"Agent build, registry, tool binding, orchestration and lifecycle management."},
+ {id:"10.3",name:"Grounding, Retrieval & Knowledge",def:"Indexing, retrieval augmentation and connection of models to governed enterprise content."},
+ {id:"10.4",name:"Model Access & Routing",def:"Model catalogue, endpoint provisioning, routing, quota and consumption control."},
+ {id:"10.5",name:"AI Development & MLOps",def:"Model training, fine-tuning, versioning, deployment and monitoring of custom models."},
+ {id:"10.6",name:"AI Evaluation & Observability",def:"Response quality evaluation, drift detection, tracing and usage analytics."},
+ {id:"10.7",name:"AI Governance & Safety",def:"Acceptable use, content filtering, human-in-the-loop design, and AI risk and compliance controls."},
+ {id:"10.8",name:"Document & Content Intelligence",def:"Extraction, classification and structuring of unstructured documents and media."}
+ ]},
+
+/* ---------------- G4 OPERATIONAL TECHNOLOGY ---------------- */
+{id:"11",g:"G4",name:"Cyber Security",color:C.crimson,
+ desc:"Prevention, detection, response and recovery across the technology estate.",
+ caps:[
+ {id:"11.1",name:"Security Operations & Monitoring",def:"Log aggregation, correlation, detection engineering and security operations centre workflow."},
+ {id:"11.2",name:"Endpoint Detection & Response",def:"Behavioural detection, containment and forensic capability on endpoints and servers."},
+ {id:"11.3",name:"Vulnerability & Exposure Management",def:"Discovery, prioritisation, remediation tracking and external attack-surface management."},
+ {id:"11.4",name:"Data Protection & Loss Prevention",def:"Classification, labelling, encryption, rights management and egress control of sensitive data."},
+ {id:"11.5",name:"Email & Collaboration Security",def:"Phishing, malware and business email compromise protection across collaboration channels."},
+ {id:"11.6",name:"Cloud & Workload Security Posture",def:"Configuration posture, workload protection, entitlement analysis and container security."},
+ {id:"11.7",name:"IoT & Connected Device Security",def:"Discovery, visibility and threat detection for unmanaged, embedded and connected devices on the corporate network."},
+ {id:"11.8",name:"Incident Response & Cyber Resilience",def:"Response planning, retainer, exercising, immutable recovery and cyber crisis management."},
+ {id:"11.9",name:"Third-Party & Supply Chain Security",def:"Vendor security assessment, integrator assurance and software supply-chain integrity."},
+ {id:"11.10",name:"Security Awareness & Human Risk",def:"Training, simulation and behavioural risk measurement across the workforce."}
+ ]},
+{id:"12",g:"G4",name:"Governance, Risk & Compliance",color:C.rust,
+ desc:"Control framework, obligation management and the evidence that satisfies auditors, regulators and insurers.",
+ caps:[
+ {id:"12.1",name:"Policy & Control Framework",def:"Control catalogue, framework mapping, policy set and exception management."},
+ {id:"12.2",name:"Risk Management",def:"Risk identification, assessment, treatment, register and reporting."},
+ {id:"12.3",name:"Regulatory Compliance Management",def:"Obligation register, sector and jurisdiction overlays, and regulatory change tracking."},
+ {id:"12.4",name:"Privacy & Data Protection",def:"Processing records, subject rights, transfer mechanisms and privacy impact assessment."},
+ {id:"12.5",name:"Audit, Assurance & Certification",def:"Internal and external audit support, evidence collection and certification maintenance."},
+ {id:"12.6",name:"Enterprise Architecture & Standards",def:"Reference architecture, technology standards, roadmap governance and design authority."},
+ {id:"12.7",name:"Business Continuity Management",def:"Business impact analysis, continuity planning and exercising distinct from technical recovery."},
+ {id:"12.8",name:"Sustainability & ESG Reporting",def:"Energy, carbon and sustainability data collection and disclosure reporting."}
+ ]},
+
+/* ---------------- G6 SERVICE & BUSINESS MANAGEMENT ---------------- */
+{id:"13",g:"G5",name:"IT Service Management & Operations",color:C.slate,
+ desc:"The processes and tooling by which technology services are delivered and supported.",
+ caps:[
+ {id:"13.1",name:"Service Desk & Request Fulfilment",def:"Contact channels, request catalogue, self-service and end-user support."},
+ {id:"13.2",name:"Incident & Major Incident Management",def:"Detection, triage, escalation, major incident command and communications."},
+ {id:"13.3",name:"Problem Management",def:"Root-cause analysis, known-error records and permanent fix tracking."},
+ {id:"13.4",name:"Change & Release Management",def:"Change assessment, approval, scheduling and release coordination including outage windows."},
+ {id:"13.5",name:"Configuration & Asset Management",def:"Configuration item register, dependency mapping and IT asset tracking."},
+ {id:"13.6",name:"Event Monitoring & Alerting",def:"Service monitoring, event correlation, alert routing and on-call management."},
+ {id:"13.7",name:"Service Catalogue & Service Levels",def:"Defined services, service level targets, reporting and experience measures."},
+ {id:"13.8",name:"Knowledge & Runbook Management",def:"Operational documentation, runbooks and support knowledge lifecycle."},
+ {id:"13.9",name:"Capacity & Availability Management",def:"Demand forecasting, capacity planning and availability engineering."}
+ ]},
+{id:"14",g:"G5",name:"Technology Business Management",color:C.teal,
+ desc:"Financial, commercial, sourcing and workforce management of the technology estate.",
+ caps:[
+ {id:"14.1",name:"IT Financial Management",def:"Budgeting, forecasting, cost allocation, showback and chargeback."},
+ {id:"14.2",name:"Cloud Cost Management",def:"Consumption visibility, optimisation, commitment management and unit economics."},
+ {id:"14.3",name:"Software Asset & Licence Management",def:"Entitlement tracking, compliance position, reconciliation and licence optimisation."},
+ {id:"14.4",name:"Vendor & Contract Management",def:"Contract register, renewal calendar, performance management and vendor consolidation."},
+ {id:"14.5",name:"Sourcing & Procurement",def:"Technology sourcing strategy, negotiation and portfolio-level purchasing agreements."},
+ {id:"14.6",name:"Portfolio & Demand Management",def:"Investment portfolio, demand intake, prioritisation and benefits tracking."},
+ {id:"14.7",name:"Workforce, Skills & Organisation",def:"Operating model design, sourcing mix, role definition, skills and capability development."},
+ {id:"14.8",name:"Merger, Integration & Separation",def:"Technology diligence, day-one readiness, integration execution and carve-out and divestiture."}
+ ]}
+];
+
+
+
+/* ============ PLATFORM MAPPING ============
+   cov: Native   Microsoft first party substantially covers the capability
+        Partial  Microsoft covers part; commonly supplemented by a third party
+        Gap      no meaningful Microsoft first-party product; third party required
+        N/A      outside the Microsoft addressable space
+   Product naming changes frequently — verify before external use.            */
+const MAP={
+/* 01 Identity & Access Management */
+"01.1":{ms:"Microsoft Entra ID",comp:["Entra ID","Lifecycle Workflows","Entra Connect / Cloud Sync","HR-driven provisioning","SCIM app provisioning"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/entra/fundamentals/what-is-entra",pos:"Authoritative cloud directory with HR-driven joiner/mover/leaver; Okta is still chosen where the estate is deliberately vendor-neutral or heavily non-Microsoft.",cov:"Native",alt:["Okta Workforce Identity","Ping Identity"]},
+"01.2":{ms:"Microsoft Entra ID",comp:["Conditional Access","Multifactor authentication","Passkeys / passwordless","Entra Verified ID","Federation & SSO"],lic:"Entra ID P1",docs:"https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",pos:"Conditional Access is the strongest policy engine in the market for Microsoft estates; Duo persists where MFA must sit in front of a heterogeneous VPN and network stack.",cov:"Native",alt:["Okta","Duo (Cisco)"]},
+"01.3":{ms:"Microsoft Entra ID",comp:["Role-based access control","Security & Microsoft 365 groups","App roles","Administrative units","Dynamic group membership"],lic:"Entra ID P1",docs:"https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",pos:"Solid for Microsoft workloads and apps federated to Entra; SailPoint and Saviynt lead where authorisation must span many non-Microsoft systems.",cov:"Native",alt:["SailPoint","Saviynt"]},
+"01.4":{ms:"Microsoft Entra Privileged Identity Management",comp:["Entra PIM","Just-in-time elevation","Approval workflows","Access reviews for roles","Azure Bastion"],lic:"Entra ID P2",docs:"https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",pos:"Covers Entra and Azure roles well; a dedicated vault is still required for servers, network devices and shared privileged accounts outside the Microsoft estate.",cov:"Partial",alt:["CyberArk","Delinea"]},
+"01.5":{ms:"Microsoft Entra ID Governance",comp:["Access reviews","Entitlement management","Access packages","Lifecycle Workflows","Separation of duties checks"],lic:"Add-on: Entra ID Governance",docs:"https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",pos:"Strong for Microsoft-centric estates and now a separate add-on SKU; SailPoint remains ahead on heterogeneous application connectors and complex certification campaigns.",cov:"Partial",alt:["SailPoint Identity Security Cloud","Saviynt"]},
+"01.6":{ms:"Microsoft Entra External ID",comp:["B2B collaboration","Cross-tenant access settings","Entra Verified ID","Guest access reviews","Multi-tenant organisation"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview",pos:"Mature B2B guest collaboration and cross-tenant controls — genuinely useful where assets are co-owned with consortium partners who run their own tenants.",cov:"Native",alt:["Okta","Ping Identity"]},
+"01.7":{ms:"Microsoft Entra External ID (CIAM)",comp:["External tenants","Custom sign-up/sign-in flows","Social & enterprise federation","User flows","Azure AD B2C (legacy)"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/entra/external-id/customers/overview-customers-ciam",pos:"Capable and improving, but Auth0 is still the common choice where a customer-facing product team owns the decision and wants developer-first tooling.",cov:"Partial",alt:["Auth0 (Okta)","Ping Identity"]},
+"01.8":{ms:"Microsoft Entra Workload ID",comp:["Managed identities","Workload identity federation","Azure Key Vault","Service principals","Entra Agent ID"],lic:"Add-on: Workload Identities Premium",docs:"https://learn.microsoft.com/en-us/entra/workload-id/workload-identities-overview",pos:"Managed identities remove secrets entirely inside Azure; HashiCorp Vault is still chosen for multi-cloud and on-premises secret management at scale.",cov:"Native",alt:["HashiCorp Vault","CyberArk Conjur"]},
+"01.9":{ms:"Microsoft Entra ID Protection",comp:["Risk-based Conditional Access","Sign-in & user risk detections","Defender for Identity","Identity risk investigation","Automated remediation"],lic:"Entra ID P2",docs:"https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",pos:"Signal quality from Microsoft's telemetry is a genuine advantage; Silverfort is chosen where legacy and unfederated systems must also be covered.",cov:"Native",alt:["CrowdStrike Identity Protection","Silverfort"]},
+
+/* 02 Endpoint & Device Management */
+"02.1":{ms:"Microsoft Intune",comp:["Windows Autopilot","Intune enrolment","Enrolment Status Page","Apple/Android enrolment","Autopilot device preparation"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/autopilot/device-preparation/overview",pos:"Zero-touch provisioning is mature for Windows; Jamf remains preferred where the Apple estate is large and Mac-specific workflows matter.",cov:"Native",alt:["Jamf (Apple)","Omnissa Workspace ONE"]},
+"02.2":{ms:"Microsoft Intune",comp:["Configuration profiles","Security baselines","Compliance policies","Settings catalog","Endpoint Privilege Management"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Comprehensive policy engine tightly coupled to Conditional Access — device compliance gating access is a genuine architectural advantage.",cov:"Native",alt:["Jamf Pro","Omnissa Workspace ONE"]},
+"02.3":{ms:"Windows Autopatch",comp:["Windows Autopatch","Update rings","Driver & firmware updates","Expedited quality updates","Autopatch reporting"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/windows/deployment/windows-autopatch/overview/windows-autopatch-overview",pos:"Autopatch handles Microsoft's own estate well; third-party application patching at scale is the routine reason to add Ivanti or Tanium.",cov:"Native",alt:["Ivanti Neurons","Tanium"]},
+"02.4":{ms:"Microsoft Intune",comp:["Enterprise App Management","Win32 app deployment","Microsoft Store apps","Configuration Manager (co-management)","App protection policies"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Enterprise App Management has narrowed the gap on packaging and updating common ISV apps, but large custom catalogues still often justify a specialist.",cov:"Partial",alt:["Ivanti","PatchMyPC"]},
+"02.5":{ms:"Microsoft Intune",comp:["Mobile device management","Mobile application management","App protection policies","BYOD enrolment","Conditional Access integration"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"App protection without enrolment is the strongest answer for contractor and BYOD scenarios — relevant where large field workforces use personal devices.",cov:"Native",alt:["Jamf","Omnissa Workspace ONE"]},
+"02.6":{ms:"Microsoft Intune",comp:["Shared device mode","Kiosk configuration","Android Enterprise dedicated devices","Windows 365 Frontline","Managed Home Screen"],lic:"Microsoft 365 F3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Shared and kiosk device modes are real capabilities, but rugged and purpose-built hardware often carries OEM management tooling Intune does not fully replace.",cov:"Partial",alt:["SOTI MobiControl","Zebra / Honeywell OEM tooling"]},
+"02.8":{ms:"Microsoft Intune Endpoint Analytics",comp:["Endpoint analytics","Startup performance score","Application reliability","Anomaly detection","Advanced Analytics (Intune Suite)"],lic:"Add-on: Intune Suite",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Useful baseline telemetry included with Intune, but Nexthink remains materially deeper for digital experience management and proactive remediation.",cov:"Partial",alt:["Nexthink","1E (TeamViewer DEX)"]},
+"02.9":{ms:"Microsoft Intune",comp:["Device inventory","Retire & wipe","Fresh Start","Autopilot device reset","Device categories"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Covers secure wipe and lifecycle actions, but financial asset tracking and disposal chain-of-custody sit outside Microsoft entirely.",cov:"Partial",alt:["ServiceNow ITAM","Lansweeper"]},
+
+/* 03 Network & Connectivity */
+"03.1":{ms:"Azure Virtual WAN",comp:["Azure Virtual WAN","ExpressRoute","VPN Gateway","Virtual hubs","Routing intent"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/virtual-wan/virtual-wan-about",pos:"Covers the cloud edge and hub topology well; branch and site SD-WAN hardware remains a third-party estate Microsoft does not address.",cov:"Partial",alt:["Cisco Catalyst SD-WAN","Fortinet Secure SD-WAN"]},
+"03.2":{ms:"Azure Front Door",comp:["Front Door Standard & Premium","Azure Web Application Firewall","Azure DDoS Protection","Application Gateway v2 (WAF_v2)","Defender for APIs"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/frontdoor/front-door-overview",pos:"Front Door Premium with DDoS Network Protection is a strong first-party edge, but two limits matter: Front Door Standard supports custom WAF rules only, and Defender for APIs protects REST APIs published through API Management, so APIs on App Service, AKS or Functions are uncovered.",cov:"Native",alt:["Cloudflare","Akamai"]},
+"03.3":{ms:"Microsoft Entra Private Access",comp:["Entra Private Access","Global Secure Access client","Per-app access policies","Conditional Access integration","Quick Access"],lic:"Add-on: Microsoft Entra Suite",docs:"https://learn.microsoft.com/en-us/entra/global-secure-access/overview-what-is-global-secure-access",pos:"Credible VPN replacement tied to Conditional Access; Zscaler is still chosen where a full SSE estate and mature inspection are required.",cov:"Native",alt:["Zscaler Private Access","Cloudflare Access"]},
+"03.4":{ms:"Microsoft Entra Internet Access",comp:["Entra Internet Access","Web content filtering","Azure Firewall","Threat intelligence filtering","Traffic forwarding profiles"],lic:"Add-on: Microsoft Entra Suite",docs:"https://learn.microsoft.com/en-us/entra/global-secure-access/concept-internet-access",pos:"Maturing quickly but still narrower than established secure service edge platforms; Zscaler and Netskope lead on inspection depth and global points of presence.",cov:"Partial",alt:["Zscaler Internet Access","Netskope"]},
+"03.5":{ms:"Azure network security",comp:["Network security groups","Azure Firewall","Application security groups","Private endpoints","Azure Virtual Network Manager"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/virtual-network-manager/overview",pos:"Cloud segmentation is native and strong; micro-segmentation across on-premises and mixed estates needs a dedicated product.",cov:"Partial",alt:["Illumio","Cisco Secure Workload"]},
+"03.6":{ms:"Azure DNS",comp:["Azure DNS","Private DNS zones","DNS Private Resolver","Windows Server DNS/DHCP","Azure DNS Security Policy"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/dns/dns-overview",pos:"Covers Azure and Windows estates; Infoblox remains the enterprise standard for authoritative IP address management across mixed networks.",cov:"Partial",alt:["Infoblox","EfficientIP"]},
+"03.7":{ms:"Azure ExpressRoute",comp:["ExpressRoute","ExpressRoute Direct","Microsoft Peering Service","Private peering","ExpressRoute Global Reach"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/expressroute/expressroute-introduction",pos:"Mature private connectivity into Azure with a broad partner ecosystem; Equinix and Megaport are the usual physical interconnect layer beneath it.",cov:"Native",alt:["Equinix Fabric","Megaport"]},
+"03.8":{ms:"Azure Network Watcher",comp:["Network Watcher","Connection Monitor","NSG flow logs","Traffic Analytics","Azure Monitor network insights"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/overview",pos:"Good visibility inside Azure; end-to-end internet and SaaS path monitoring across a distributed site estate is a common gap filled by ThousandEyes.",cov:"Partial",alt:["ThousandEyes (Cisco)","Kentik"]},
+
+/* 04 Cloud Platform & Infrastructure */
+"04.1":{ms:"Azure landing zones",comp:["Azure landing zones","Management groups","Azure Policy","Cloud Adoption Framework","Entra tenant design"],lic:"Included",docs:"https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/",pos:"Well-documented reference architecture with accelerators — the tenancy and subscription decisions made here determine carve-out cost years later.",cov:"Native",alt:["AWS Control Tower","Google Cloud org policy"]},
+"04.2":{ms:"Azure compute",comp:["Azure Virtual Machines","Azure Kubernetes Service","Azure Container Apps","Azure Functions","Azure App Service"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/aks/what-is-aks",pos:"Full-spectrum compute; the decision is rarely capability and usually commercial or existing-estate gravity.",cov:"Native",alt:["AWS","Google Cloud"]},
+"04.3":{ms:"Azure Storage",comp:["Azure Blob Storage","Azure Files","Azure NetApp Files","Storage lifecycle management","Azure File Sync"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction",pos:"Comprehensive tiering and file services; NetApp remains common where existing on-premises estate and protocols must be preserved exactly.",cov:"Native",alt:["NetApp","Dell PowerScale"]},
+"04.4":{ms:"Azure databases",comp:["Azure SQL Database","Azure SQL Managed Instance","Azure Cosmos DB","Azure Database for PostgreSQL","Azure Database for MySQL"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/azure-sql/azure-sql-iaas-vs-paas-what-is-overview",pos:"Managed Instance is the strongest lift-and-shift path for existing SQL Server estates; Oracle workloads usually stay on Oracle.",cov:"Native",alt:["Oracle","MongoDB Atlas"]},
+"04.5":{ms:"Bicep & Azure Verified Modules",comp:["Bicep","Azure Resource Manager","Azure Verified Modules","Azure Developer CLI","Deployment stacks"],lic:"Included",docs:"https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview",pos:"Bicep is excellent for Azure-only estates; Terraform is still preferred where the estate is genuinely multi-cloud or the team already has HashiCorp skills.",cov:"Native",alt:["Terraform (HashiCorp)","Pulumi"]},
+"04.6":{ms:"Azure Policy",comp:["Azure Policy","Policy initiatives","Deny & DeployIfNotExists effects","Regulatory compliance dashboard","Defender for Cloud recommendations"],lic:"Included",docs:"https://learn.microsoft.com/en-us/azure/governance/policy/overview",pos:"Genuinely strong preventative guardrails at deploy time — the mechanism that makes a mandated standard actually enforceable.",cov:"Native",alt:["Open Policy Agent / Gatekeeper","Kyverno","HashiCorp Sentinel"]},
+"04.7":{ms:"Azure Backup & Azure Site Recovery",comp:["Azure Backup","Azure Site Recovery","Backup vault immutability","Cross-region restore","Azure Business Continuity Center"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/backup/backup-overview",pos:"Covers Azure and some hybrid well; Veeam and Rubrik are routinely added for on-premises breadth and immutable ransomware recovery.",cov:"Partial",alt:["Veeam","Rubrik","Commvault"]},
+"04.8":{ms:"Azure Monitor",comp:["Azure Monitor","Log Analytics","Application Insights","Managed Prometheus & Grafana","Azure Monitor alerts"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/overview",pos:"Covers metrics, logs, traces and alerting across Azure and hybrid via Arc; Datadog and Dynatrace remain deeper for full-stack observability across genuinely heterogeneous estates.",cov:"Native",alt:["Datadog","Dynatrace","Splunk"]},
+"04.9":{ms:"Azure Local",comp:["Azure Local (formerly Azure Stack HCI)","Azure Arc-enabled servers","Arc-enabled Kubernetes","Azure IoT Operations","Disconnected operations"],lic:"Azure consumption + per-core",docs:"https://learn.microsoft.com/en-us/azure/azure-local/overview",pos:"Azure Local plus Arc is a credible answer for edge and disconnected infrastructure where remote sites cannot depend on continuous connectivity.",cov:"Native",alt:["Nutanix","VMware (Broadcom)"]},
+
+/* 05 Data & Analytics */
+"05.1":{ms:"Microsoft Fabric",comp:["OneLake","Lakehouse","Data Warehouse","Direct Lake","Fabric capacities"],lic:"Fabric capacity (F SKU)",docs:"https://learn.microsoft.com/en-us/fabric/fundamentals/microsoft-fabric-overview",pos:"Strong unified SaaS lakehouse and the successor to Synapse for new builds; data-engineering-heavy shops still choose Databricks or Snowflake for maturity and portability.",cov:"Native",alt:["Databricks","Snowflake"]},
+"05.2":{ms:"Microsoft Fabric Data Factory",comp:["Data Factory in Fabric","Dataflows Gen2","Data pipelines","Fabric Data Engineering (Spark)","Mirroring"],lic:"Fabric capacity (F SKU)",docs:"https://learn.microsoft.com/en-us/fabric/data-factory/data-factory-overview",pos:"Strong low-code ingestion with a very broad connector library; code-first teams often still prefer dbt or Airflow for orchestration.",cov:"Native",alt:["dbt","Informatica","Fivetran"]},
+"05.3":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"Genuine gap — SQL Server Master Data Services was deprecated and there is no first-party replacement. Profisee is the Microsoft-aligned partner product, not a Microsoft one.",cov:"Gap",alt:["Profisee","Informatica MDM","Semarchy"]},
+"05.4":{ms:"Microsoft Purview",comp:["Unified Catalog","Data Map","Business glossary & domains","Classification","Sensitivity labels"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/purview/data-governance-overview",pos:"Purview governance is now consumption-billed and distinct from the E5 compliance features; Collibra is still chosen where stewardship workflow across many non-Microsoft sources dominates.",cov:"Native",alt:["Collibra","Alation"]},
+"05.5":{ms:"Microsoft Purview",comp:["Data Quality in Unified Catalog","Data profiling","Quality rules & scans","Data Map lineage","Freshness monitoring"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/purview/unified-catalog-data-quality",pos:"Native quality and lineage are maturing fast but relatively new; regulated environments still commonly use Informatica or Ataccama for depth and auditability.",cov:"Partial",alt:["Informatica Data Quality","Ataccama","Great Expectations"]},
+"05.6":{ms:"Power BI",comp:["Semantic models","Power BI reports","Direct Lake mode","Paginated reports","Power BI Desktop"],lic:"Power BI Pro",docs:"https://learn.microsoft.com/en-us/power-bi/fundamentals/power-bi-overview",pos:"Market-leading and deeply integrated; note that Premium-class features now require Fabric capacity F64 or above rather than the retired P SKUs.",cov:"Native",alt:["Tableau","Qlik"]},
+"05.7":{ms:"Azure Machine Learning",comp:["Azure Machine Learning","Fabric Data Science","AutoML","Managed endpoints","MLflow integration"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning",pos:"Full-featured MLOps platform; Databricks remains common where the data science team is already lakehouse-native.",cov:"Native",alt:["Databricks","Dataiku"]},
+"05.8":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"Genuine gap for batch and lakehouse data. Azure Schema Registry enforces Avro compatibility for Event Hubs streaming only, and Purview records lineage after the fact rather than preventing a breaking change. Data Factory schema drift is designed to absorb source changes silently, which works against contract enforcement.",cov:"Gap",alt:["dbt model contracts","Soda","Confluent Schema Registry"]},
+"05.9":{ms:"Microsoft Fabric Real-Time Intelligence",comp:["Real-Time Hub","Eventstream","Eventhouse / KQL Database","Azure Event Hubs","Azure Stream Analytics"],lic:"Fabric capacity (F SKU)",docs:"https://learn.microsoft.com/en-us/fabric/real-time-intelligence/overview",pos:"Strong end-to-end streaming and telemetry stack; Kafka-native or ultra-low-latency estates still run Confluent or Flink.",cov:"Native",alt:["Confluent","Databricks Structured Streaming"]},
+
+/* 06 Integration & Automation */
+"06.1":{ms:"Azure API Management",comp:["API gateway","Developer portal","Versions & revisions","Policy engine","Self-hosted gateway"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/api-management/api-management-key-concepts",pos:"Solid full-lifecycle API platform; Apigee and Kong are chosen for advanced monetisation or heavy multi-cloud federation.",cov:"Native",alt:["Apigee (Google)","Kong"]},
+"06.2":{ms:"Azure Integration Services",comp:["Azure Logic Apps","Azure Functions","1,400+ connectors","Service Bus","Data Factory"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-overview",pos:"Strong iPaaS for Azure-centric estates; MuleSoft and Boomi still lead for large heterogeneous and on-premises integration landscapes.",cov:"Native",alt:["MuleSoft (Salesforce)","Boomi"]},
+"06.3":{ms:"Azure messaging services",comp:["Azure Service Bus","Azure Event Hubs","Azure Event Grid","Kafka-compatible endpoints","Schema registry"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview",pos:"Comprehensive publish/subscribe and queueing; Confluent is preferred where an event log standard or cross-cloud portability is mandated.",cov:"Native",alt:["Confluent (Kafka)","RabbitMQ"]},
+"06.4":{ms:"Power Automate",comp:["Cloud flows","Approvals","Process mining","AI Builder","Business process flows"],lic:"Power Automate Premium",docs:"https://learn.microsoft.com/en-us/power-automate/getting-started",pos:"Excellent for Microsoft 365 centric approvals and workflow; heavy stateful BPM and case management still goes to Camunda, Pega or Appian.",cov:"Native",alt:["ServiceNow Workflow","Camunda"]},
+"06.5":{ms:"Power Automate desktop flows",comp:["Power Automate Desktop","Attended RPA","Unattended RPA","Hosted RPA","Process advisor"],lic:"Add-on: unattended RPA",docs:"https://learn.microsoft.com/en-us/power-automate/desktop-flows/introduction",pos:"Competitive and well-priced when bundled, but UiPath still leads very large attended and unattended robot estates with complex orchestration.",cov:"Native",alt:["UiPath","Automation Anywhere"]},
+"06.6":{ms:"Microsoft Power Apps",comp:["Canvas apps","Model-driven apps","Microsoft Dataverse","Managed Environments","Power Platform admin centre"],lic:"Power Apps per-app or per-user",docs:"https://learn.microsoft.com/en-us/power-apps/powerapps-overview",pos:"Leading enterprise low-code with real governance controls; cost at scale and licensing complexity are the usual objections rather than capability.",cov:"Native",alt:["OutSystems","Mendix (Siemens)"]},
+"06.7":{ms:"Azure Logic Apps Enterprise Integration Pack",comp:["Integration accounts","AS2","X12 & EDIFACT","RosettaNet","Trading partner management"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-enterprise-integration-overview",pos:"The cloud successor to the retiring BizTalk Server and covers core EDI protocols; dedicated value-added networks still dominate high-volume trading-partner operations.",cov:"Partial",alt:["OpenText Business Network","SPS Commerce","Cleo"]},
+"06.8":{ms:"Azure Monitor and Fabric Monitoring hub",comp:["Fabric Monitoring hub","Fabric Workspace Monitoring","Fabric Activator","Application Insights","Logic Apps run history & resubmit"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub",pos:"Per-engine run history is strong and each surface works well on its own. What is missing is a single console spanning Fabric, Logic Apps, Power Automate and Functions, one-click resubmission of dead-lettered messages, and any first-party reconciliation of source against destination record counts — that connecting tissue is always built or bought.",cov:"Partial",alt:["Datadog","Monte Carlo"]},
+
+/* 07 Business Applications */
+"07.1":{ms:"Dynamics 365 Finance",comp:["General ledger","Accounts payable & receivable","Fixed assets","Financial reporting","Subscription billing"],lic:"Dynamics 365 Finance",docs:"https://learn.microsoft.com/en-us/dynamics365/finance/",pos:"Capable mid to upper-market ERP, but genuinely weaker than SAP S/4HANA and Oracle Fusion at large multinational scale, statutory complexity and high-volume consolidation.",cov:"Partial",alt:["SAP S/4HANA","Oracle Fusion"]},
+"07.2":{ms:"Dynamics 365 Supply Chain Management",comp:["Asset Management module","Asset register","Maintenance work orders","Preventive maintenance","Condition assessment"],lic:"Dynamics 365 Supply Chain Management",docs:"https://learn.microsoft.com/en-us/dynamics365/supply-chain/asset-management/",pos:"Adequate for asset-light operations, but asset-intensive industries overwhelmingly run IBM Maximo or SAP for reliability-centred maintenance depth. A material gap for infrastructure portfolios.",cov:"Partial",alt:["IBM Maximo","Hexagon EAM","SAP EAM"]},
+"07.3":{ms:"Dynamics 365 Human Resources",comp:["Core HR record","Leave & absence","Benefits management","Personnel management","Dayforce / ADP integration"],lic:"Dynamics 365 Human Resources",docs:"https://learn.microsoft.com/en-us/dynamics365/human-resources/hr-admin-overview",pos:"Core HR only — Microsoft has no native payroll and integrates to Dayforce or ADP. Workday and SuccessFactors dominate enterprise HCM, talent and global payroll.",cov:"Partial",alt:["Workday","SAP SuccessFactors"]},
+"07.4":{ms:"Dynamics 365 Supply Chain Management",comp:["Procurement & sourcing","Inventory & warehouse management","Master planning","Logistics","Vendor collaboration"],lic:"Dynamics 365 Supply Chain Management",docs:"https://learn.microsoft.com/en-us/dynamics365/supply-chain/",pos:"Broad supply chain suite, but SAP Ariba and Coupa lead dedicated source-to-pay and Blue Yonder or Kinaxis lead advanced planning.",cov:"Partial",alt:["SAP Ariba","Coupa"]},
+"07.5":{ms:"Dynamics 365 Sales",comp:["Dynamics 365 Sales","Customer Insights - Data","Customer Insights - Journeys","Dataverse","Copilot for Sales"],lic:"Dynamics 365 Sales",docs:"https://learn.microsoft.com/en-us/dynamics365/customer-insights/overview",pos:"Strong CRM and customer data platform especially alongside Microsoft 365; Salesforce leads overall CRM and specialist tools are usually needed for billing and revenue recognition.",cov:"Partial",alt:["Salesforce","HubSpot"]},
+"07.6":{ms:"Dynamics 365 Field Service",comp:["Work order management","Resource scheduling","Field Service mobile","Connected Field Service (IoT)","Inspections"],lic:"Dynamics 365 Field Service",docs:"https://learn.microsoft.com/en-us/dynamics365/field-service/overview",pos:"Genuinely competitive and well integrated — a real strength for dispersed field workforces; ServiceMax competes in the most complex asset-OEM service scenarios.",cov:"Native",alt:["IFS","ServiceMax (PTC)"]},
+"07.9":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"No first-party application portfolio management tool. Azure Migrate covers infrastructure discovery only, not application lifecycle, ownership or rationalisation.",cov:"Gap",alt:["SAP LeanIX","ServiceNow APM","Bizzdesign"]},
+
+/* 08 Software Engineering & Product Technology */
+"08.1":{ms:"GitHub",comp:["GitHub repositories","Pull requests","Branch protection rules","Azure Repos","CODEOWNERS"],lic:"GitHub Enterprise",docs:"https://learn.microsoft.com/en-us/azure/devops/user-guide/what-is-azure-devops",pos:"GitHub is the market leader for source hosting and Microsoft-owned; GitLab is the main alternative where a single self-hosted DevOps suite is preferred.",cov:"Native",alt:["GitLab","Atlassian Bitbucket"]},
+"08.2":{ms:"GitHub Actions",comp:["GitHub Actions","Azure Pipelines","Environments & approvals","Azure Artifacts","Self-hosted runners"],lic:"GitHub Enterprise",docs:"https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines",pos:"Ubiquitous and well supported; Jenkins persists in established self-hosted estates rather than being chosen for new build.",cov:"Native",alt:["GitLab CI","Jenkins"]},
+"08.3":{ms:"GitHub Codespaces & Windows 365",comp:["GitHub Codespaces","Windows 365 Cloud PC","Visual Studio / VS Code","Dev Home","Microsoft Dev Box (maintenance mode)"],lic:"Standalone SKU",docs:"https://learn.microsoft.com/en-us/windows-365/overview",pos:"Note that Microsoft Dev Box is now in maintenance mode with investment shifting to Windows 365; a true internal developer platform still requires assembly.",cov:"Partial",alt:["JetBrains","Gitpod"]},
+"08.4":{ms:"Azure Test Plans & Playwright",comp:["Azure Test Plans","Playwright","Azure Load Testing","Pipeline quality gates","Test impact analysis"],lic:"Standalone SKU",docs:"https://learn.microsoft.com/en-us/azure/devops/test/overview",pos:"Covers manual, automated and load testing adequately; enterprise test management and non-web application testing commonly need a specialist.",cov:"Partial",alt:["Tricentis","SmartBear"]},
+"08.5":{ms:"GitHub Advanced Security",comp:["Code scanning (CodeQL)","Secret scanning","Dependency review & Dependabot","DevOps security in Defender for Cloud","Artifact attestation"],lic:"Add-on: GitHub Advanced Security",docs:"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction",pos:"Strong code-to-cloud coverage native to GitHub and Azure DevOps; Snyk and Veracode are chosen for broader multi-ecosystem scanning and policy depth.",cov:"Native",alt:["Snyk","Checkmarx","Veracode"]},
+"08.6":{ms:"Application Insights",comp:["Application Insights","OpenTelemetry ingestion","Live metrics","Microsoft Clarity","Usage analytics"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview",pos:"Solid application performance telemetry on OpenTelemetry; product analytics for customer-facing software is usually a separate product-team purchase.",cov:"Partial",alt:["Amplitude","Pendo","Mixpanel"]},
+"08.7":{ms:"—",comp:["Azure Kubernetes Service","Azure App Service","Azure Front Door","Azure Monitor","Deployment stamps pattern"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview",pos:"Azure supplies every building block, but tenant isolation, service level management and public status reporting are architecture and build efforts — there is no SaaS operations product.",cov:"Gap",alt:["Atlassian Statuspage","PagerDuty","Datadog"]},
+
+/* 09 Productivity & Collaboration */
+"09.1":{ms:"Microsoft Exchange Online",comp:["Exchange Online","Outlook","Exchange Online Protection","Shared mailboxes","Mail flow rules"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/exchange/exchange-online",pos:"Enterprise-grade cloud mail with built-in hygiene; dedicated secure email gateways still win for advanced anti-phishing in complex multi-tenant mail estates.",cov:"Native",alt:["Google Workspace"]},
+"09.2":{ms:"Microsoft Teams",comp:["Microsoft Teams","Teams Phone","Teams Rooms","Teams Premium","Dynamics 365 Contact Center"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/microsoftteams/teams-overview",pos:"Unified chat, meetings, rooms and telephony, and Microsoft now has a first-party contact centre in Dynamics 365 Contact Center; Genesys and NICE remain established in complex contact-centre estates.",cov:"Native",alt:["Zoom","Cisco Webex","Genesys"]},
+"09.3":{ms:"SharePoint & OneDrive",comp:["SharePoint Online","OneDrive for Business","Co-authoring","Version history","Secure external sharing"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/sharepoint/introduction",pos:"Core document storage and co-authoring across the suite; specialist ECM vendors still win for engineering drawings and records-centric content outside Microsoft 365.",cov:"Native",alt:["Box","Google Drive"]},
+"09.4":{ms:"Microsoft Viva Connections & Engage",comp:["Viva Connections","Viva Engage","Viva Amplify","SharePoint communication sites","Boosted news"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/viva/connections/viva-connections-overview",pos:"Covers intranet, campaigns and communities; dedicated intranet products still win on richer publishing and multi-brand governance.",cov:"Native",alt:["Staffbase","Simpplr","Unily"]},
+"09.5":{ms:"Microsoft Purview Records Management",comp:["Records management","Retention labels & policies","File plan","Disposition review","Event-based retention"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/purview/records-management",pos:"Native records declaration and defensible disposition for Microsoft 365 content; requires E5 and specialists still lead for regulated records held outside the suite.",cov:"Native",alt:["OpenText","Iron Mountain"]},
+"09.6":{ms:"Microsoft Search",comp:["Microsoft Search","Microsoft Graph connectors","Copilot connectors","Semantic search","Search verticals"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/microsoftsearch/overview-microsoft-search",pos:"Strong within Microsoft 365 with connectors for external repositories; Glean is the common choice where search must span many non-Microsoft systems. Note Viva Topics was retired.",cov:"Partial",alt:["Glean","Elastic Enterprise Search"]},
+"09.7":{ms:"Microsoft 365 for frontline workers",comp:["Shifts","Walkie Talkie","Tasks","Approvals","Viva Connections"],lic:"Microsoft 365 F1/F3",docs:"https://learn.microsoft.com/en-us/microsoft-365/frontline/flw-licensing-options",pos:"Purpose-built deskless tooling at materially lower cost than knowledge-worker licences. Note F1 excludes a mailbox and Office apps, so most frontline users needing email require F3.",cov:"Native",alt:["Beekeeper","Blink","WorkJam"]},
+"09.8":{ms:"Microsoft Viva Insights",comp:["Viva Insights","Copilot Dashboard","Advanced insights","Viva Glint","Intune Endpoint Analytics"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/insights/introduction",pos:"Measures collaboration patterns and Copilot adoption; dedicated experience platforms still win on sentiment depth and endpoint friction. Licensing spans Viva Suite and Intune Suite add-ons.",cov:"Partial",alt:["Nexthink","Qualtrics","Medallia"]},
+
+/* 10 AI & Agents */
+"10.1":{ms:"Microsoft 365 Copilot",comp:["Microsoft 365 Copilot","Copilot Chat","Copilot in Word / Excel / Teams","Researcher & Analyst agents","Copilot Pages"],lic:"Add-on: Microsoft 365 Copilot",docs:"https://learn.microsoft.com/en-us/microsoft-365-copilot/microsoft-365-copilot-overview",pos:"Grounding in your own Graph data is the real differentiator. Copilot Chat is included with most Microsoft 365 SKUs; the full Copilot remains a paid per-user add-on.",cov:"Native",alt:["Google Gemini for Workspace","ChatGPT Enterprise"]},
+"10.2":{ms:"Microsoft Copilot Studio & Foundry Agent Service",comp:["Copilot Studio","Microsoft Foundry Agent Service","Agent Framework","Tool catalog","Agent flows"],lic:"Standalone SKU",docs:"https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio",pos:"Two-track model — low-code Copilot Studio for business makers and pro-code Foundry Agent Service for developers, which also hosts third-party frameworks.",cov:"Native",alt:["LangGraph","CrewAI"]},
+"10.3":{ms:"Azure AI Search",comp:["Azure AI Search","Copilot connectors","Foundry knowledge & retrieval","Vector & hybrid search","Agent memory"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search",pos:"The primary retrieval store for custom agents, with Graph connectors grounding Copilot in governed content; standalone platforms still compete on connector breadth.",cov:"Native",alt:["Elastic","Pinecone"]},
+"10.4":{ms:"Microsoft Foundry Models",comp:["Foundry Models catalog","Model Router","Azure OpenAI in Foundry Models","Provisioned throughput","Data zone deployments"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/foundry-models-overview",pos:"Very broad model catalogue with a router that selects on cost and quality per prompt. Note Azure AI Foundry is now named Microsoft Foundry.",cov:"Native",alt:["Amazon Bedrock","Google Vertex AI"]},
+"10.5":{ms:"Azure Machine Learning",comp:["Azure Machine Learning","Pipelines","Model registry","Managed online endpoints","Responsible AI dashboard"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning",pos:"Full custom-model training and MLOps; Databricks and pure-play tooling still win for lakehouse-centric and experiment-heavy teams.",cov:"Native",alt:["Databricks MLflow","Weights & Biases"]},
+"10.6":{ms:"Microsoft Foundry observability",comp:["Foundry tracing","Azure AI Evaluation SDK","Agent & model dashboards","Application Insights integration","Continuous evaluation"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/observability",pos:"Built-in tracing and evaluation for agents in Foundry; independent observability tools still win for framework-agnostic, multi-vendor tracing.",cov:"Native",alt:["Arize","LangSmith"]},
+"10.7":{ms:"Microsoft Purview & Azure AI Content Safety",comp:["Purview DSPM for AI","Purview AI governance","Azure AI Content Safety","Prompt Shields","Groundedness detection (preview)"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/purview/ai-microsoft-purview",pos:"Purview governs data risk across Copilots and AI apps while Content Safety filters harmful content and jailbreaks; premium features require E5 or Copilot licensing.",cov:"Native",alt:["Credo AI","Holistic AI"]},
+"10.8":{ms:"Azure AI Document Intelligence",comp:["Document Intelligence","Prebuilt & custom models","Layout and OCR","Content Understanding","Classification models"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/overview",pos:"Mature intelligent document processing extended by multimodal content understanding; specialists still win on very high-accuracy production pipelines.",cov:"Native",alt:["ABBYY","Instabase"]},
+
+/* 11 Cyber Security */
+"11.1":{ms:"Microsoft Sentinel",comp:["Sentinel SIEM","Defender XDR","Automation rules & playbooks","Content hub solutions","Security Copilot"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/sentinel/overview",pos:"Strong cloud-native SIEM now unified in the Defender portal, but Splunk still wins on very large-scale log economics. Note Sentinel is consumption-billed, not included in E5.",cov:"Native",alt:["Splunk (Cisco)","Google SecOps"]},
+"11.2":{ms:"Microsoft Defender for Endpoint",comp:["Defender for Endpoint P2","Automated investigation & response","Attack surface reduction","Live response","Defender for Servers"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",pos:"Best-in-class for Windows estates and included in E5, but CrowdStrike and SentinelOne still lead on cross-platform breadth and analyst-preferred workflows.",cov:"Native",alt:["CrowdStrike Falcon","SentinelOne"]},
+"11.3":{ms:"Microsoft Security Exposure Management",comp:["Security Exposure Management","Defender Vulnerability Management","Defender EASM","Attack path analysis","Critical asset management"],lic:"Microsoft 365 E5 Security",docs:"https://learn.microsoft.com/en-us/security-exposure-management/microsoft-security-exposure-management",pos:"Good unified exposure view for Microsoft-heavy estates, but Tenable and Qualys retain broader coverage of network devices, appliances and unmanaged assets.",cov:"Partial",alt:["Tenable","Qualys","Rapid7"]},
+"11.4":{ms:"Microsoft Purview Information Protection",comp:["Sensitivity labels","Data Loss Prevention","Insider Risk Management","Data Security Posture Management","Azure Rights Management"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/information-protection",pos:"Deep label-driven classification across Microsoft 365 and a prerequisite for safe Copilot deployment; network and CASB-centric egress control still favours Netskope or Zscaler.",cov:"Native",alt:["Netskope","Forcepoint"]},
+"11.5":{ms:"Microsoft Defender for Office 365",comp:["Defender for Office 365 P2","Safe Links & Safe Attachments","Anti-phishing policies","Automated investigation","Threat Explorer"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/defender-office-365/mdo-about",pos:"Strong native coverage across Exchange, Teams and SharePoint, but Abnormal and Proofpoint still lead on behavioural business email compromise detection.",cov:"Native",alt:["Proofpoint","Abnormal Security"]},
+"11.6":{ms:"Microsoft Defender for Cloud",comp:["Defender CSPM","Cloud workload protection","DevOps security","Container & Kubernetes security","Attack path analysis"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",pos:"A full multicloud CNAPP spanning posture, workload and container security; Wiz still wins on agentless depth and risk correlation, and entitlement analysis is less mature since Entra Permissions Management was retired.",cov:"Native",alt:["Wiz","Palo Alto Prisma Cloud"]},
+"11.7":{ms:"Microsoft Defender for IoT",comp:["Enterprise IoT device discovery","Agentless network monitoring","Device vulnerability assessment","Defender XDR integration"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/defender-for-iot/microsoft-defender-iot",pos:"Reasonable for discovering unmanaged and embedded devices alongside Defender XDR; Armis and Forescout lead on breadth of device fingerprinting across mixed estates.",cov:"Partial",alt:["Armis","Forescout","Claroty"]},
+"11.8":{ms:"Microsoft Incident Response",comp:["Microsoft Incident Response","Sentinel SOAR playbooks","Automatic attack disruption","Defender XDR investigation","Unified Support"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/security/operations/incident-response-overview",pos:"Strong detection and automatic disruption, but immutable cyber recovery is a genuine gap and retainers are commonly held with a specialist independent of the platform vendor.",cov:"Partial",alt:["Mandiant (Google)","CrowdStrike Services","Rubrik (recovery)"]},
+"11.9":{ms:"—",comp:["GitHub Advanced Security (software supply chain only)"],lic:"Not applicable",docs:"",pos:"Software supply chain is covered by GitHub Advanced Security, but Microsoft has no third-party or vendor risk management capability — that is owned entirely by dedicated platforms.",cov:"Gap",alt:["ServiceNow VRM","OneTrust","SecurityScorecard","Bitsight"]},
+"11.10":{ms:"Attack Simulation Training",comp:["Attack simulation training","Phishing payload library","Training assignment","Repeat offender tracking","Vulnerable user insights"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-get-started",pos:"Convenient native simulation included with E5, but KnowBe4 and Hoxhunt lead on content depth, behavioural risk scoring and adaptive programmes.",cov:"Partial",alt:["KnowBe4","Proofpoint Security Awareness","Hoxhunt"]},
+
+/* 12 Governance, Risk & Compliance */
+"12.1":{ms:"Microsoft Purview Compliance Manager",comp:["Compliance Manager","Control assessments","Framework templates","Improvement actions","Azure Policy (technical controls)"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/compliance-manager",pos:"A usable control catalogue and framework mapping for the Microsoft estate, but not a policy lifecycle or exception engine — ServiceNow and Archer own enterprise control frameworks.",cov:"Partial",alt:["ServiceNow IRM","LogicGate","Archer"]},
+"12.2":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"Genuine gap — Microsoft has no enterprise risk register or risk management platform. Purview Insider Risk Management addresses employee risk only, which is a different problem.",cov:"Gap",alt:["ServiceNow IRM","Archer","Riskonnect","MetricStream"]},
+"12.3":{ms:"Microsoft Purview Compliance Manager",comp:["Regulatory assessment templates","Control mapping","Improvement actions","Evidence collection","Compliance score"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/compliance-manager-assessments",pos:"Useful for tracking controls against many regulations, but lacks a true obligation register, jurisdiction overlays and regulatory horizon scanning for sector regimes.",cov:"Partial",alt:["ServiceNow IRM","MetricStream","OneTrust"]},
+"12.4":{ms:"Microsoft Priva",comp:["Priva Privacy Risk Management","Subject Rights Requests","Purview data classification","Consent management","Data minimisation policies"],lic:"Add-on: Microsoft Priva",docs:"https://learn.microsoft.com/en-us/privacy/priva/priva-overview",pos:"Handles privacy risk and subject rights well inside the tenant, but OneTrust still leads on cross-estate processing records, impact assessments and transfer management.",cov:"Partial",alt:["OneTrust","TrustArc"]},
+"12.5":{ms:"Microsoft Purview Audit",comp:["Purview Audit (Standard & Premium)","eDiscovery","Compliance Manager evidence","Service Trust Portal","Audit log retention"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/audit-solutions-overview",pos:"Provides audit logs and evidence for the Microsoft estate, but there is no internal audit management workflow — fieldwork and certification lifecycle belong elsewhere.",cov:"Partial",alt:["AuditBoard","Workiva"]},
+"12.6":{ms:"—",comp:["Azure Well-Architected Framework (guidance)","Cloud Adoption Framework (guidance)"],lic:"Not applicable",docs:"https://learn.microsoft.com/en-us/azure/well-architected/",pos:"Genuine gap — Microsoft offers architecture guidance but no enterprise architecture repository, standards catalogue or design authority tooling.",cov:"Gap",alt:["SAP LeanIX","Ardoq","Bizzdesign"]},
+"12.7":{ms:"—",comp:["Azure Site Recovery (technical DR only)","Azure Backup (technical DR only)"],lic:"Not applicable",docs:"",pos:"Genuine gap, and distinct from technical disaster recovery which Azure does cover. There is no business impact analysis, continuity planning or exercising capability.",cov:"Gap",alt:["Fusion Risk Management","Castellan","Riskonnect"]},
+"12.8":{ms:"Microsoft Sustainability Manager",comp:["Emissions data ingestion","Scope 1-3 calculation","Water & waste tracking","ESG disclosure reporting","Fabric / Power Platform extensibility"],lic:"Standalone SKU",docs:"https://learn.microsoft.com/en-us/industry/sustainability/sustainability-manager-overview",pos:"A capable collection and reporting hub, but for audit-grade regulated disclosure the specialists still lead on assurance-ready methodology and framework certification.",cov:"Partial",alt:["Watershed","Persefoni","Sphera"]},
+
+/* 13 IT Service Management & Operations */
+"13.1":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"The single largest first-party gap in the model. Power Platform can be assembled into a service desk, but there is no Microsoft ITSM product and the market standard fully owns this.",cov:"Gap",alt:["ServiceNow ITSM","Ivanti Neurons","Jira Service Management"]},
+"13.2":{ms:"—",comp:["Azure Monitor","Microsoft Sentinel"],lic:"Not applicable",docs:"",pos:"Microsoft detects technical incidents natively, but has no incident management discipline — triage workflow, escalation, major incident command and communications belong to ITSM tooling.",cov:"Gap",alt:["ServiceNow ITSM","PagerDuty","Jira Service Management"]},
+"13.3":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"No first-party problem management — no known error database, root cause tracking or permanent fix workflow. Entirely owned by ITSM platforms.",cov:"Gap",alt:["ServiceNow ITSM","Ivanti Neurons","BMC Helix"]},
+"13.4":{ms:"—",comp:["Azure DevOps","GitHub"],lic:"Not applicable",docs:"",pos:"Microsoft covers software release engineering but has no ITSM change management. Change advisory approval and outage-window coordination — critical for operational estates — are absent.",cov:"Gap",alt:["ServiceNow Change Management","BMC Helix","Jira Service Management"]},
+"13.5":{ms:"Microsoft Intune & Azure Resource Graph",comp:["Intune device inventory","Azure Resource Graph","Resource change history","Defender device inventory","Microsoft Graph API"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/azure/governance/resource-graph/overview",pos:"A genuine partial play — Intune inventories devices and Resource Graph queries cloud resources with change history, but there is no enterprise configuration management database.",cov:"Partial",alt:["ServiceNow CMDB","Device42","Lansweeper"]},
+"13.6":{ms:"Azure Monitor",comp:["Azure Monitor","Application Insights","Log Analytics","Alert rules & action groups","Microsoft Sentinel"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/overview",pos:"Strong monitoring, correlation and alerting for cloud and hybrid, but on-call scheduling and incident orchestration are absent from the definition of this capability and are routinely filled by PagerDuty.",cov:"Partial",alt:["Datadog","PagerDuty","Dynatrace"]},
+"13.7":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"No IT service catalogue or service level management product. Dynamics 365 Customer Service has service levels but is built for external customers, not internal IT.",cov:"Gap",alt:["ServiceNow Service Catalog","Ivanti Neurons"]},
+"13.8":{ms:"SharePoint & Azure Automation",comp:["SharePoint Online","Microsoft Loop","Azure Automation runbooks","Azure Arc","OneNote"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/azure/automation/overview",pos:"Holds operational documentation and runs Azure runbooks, but there is no support knowledge lifecycle — article states, review workflow and deflection analytics are absent.",cov:"Partial",alt:["ServiceNow Knowledge","Atlassian Confluence"]},
+"13.9":{ms:"Azure Monitor & Azure Advisor",comp:["Azure Advisor","Azure Monitor","Azure Load Testing","Well-Architected reviews","Reservation recommendations"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/advisor/advisor-overview",pos:"Gives capacity, reliability and availability signals for Azure, but enterprise-wide demand forecasting and non-cloud capacity planning are not covered.",cov:"Partial",alt:["IBM Turbonomic","ServiceNow ITOM"]},
+
+/* 14 Technology Business Management */
+"14.1":{ms:"Microsoft Cost Management",comp:["Cost analysis","Budgets & alerts","Cost allocation rules","Tag inheritance","Power BI reporting"],lic:"Included",docs:"https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/overview-cost-management",pos:"Covers Microsoft Cloud spend only. It is not a technology business management platform spanning labour, datacentre, hardware and all-vendor IT cost.",cov:"Partial",alt:["Apptio (IBM)","ServiceNow ITFM"]},
+"14.2":{ms:"Microsoft Cost Management & FinOps toolkit",comp:["Cost Management","FinOps toolkit","FinOps hubs","FOCUS data format","Azure Advisor recommendations"],lic:"Included",docs:"https://learn.microsoft.com/en-us/cloud-computing/finops/toolkit/finops-toolkit-overview",pos:"Native and strong for Microsoft Cloud including commitment management. Multi-cloud is possible via FOCUS ingestion into FinOps hubs, but that is a build-your-own data platform rather than a product.",cov:"Native",alt:["Apptio Cloudability","Flexera One"]},
+"14.3":{ms:"—",comp:["Intune software inventory (signal only)"],lic:"Not applicable",docs:"",pos:"Honest gap — Microsoft has no software asset management product, not even for its own licensing position. Intune supplies installed-software signal but no entitlement reconciliation.",cov:"Gap",alt:["Flexera One","ServiceNow SAM Pro","USU"]},
+"14.4":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"No contract lifecycle management — no contract register, renewal calendar, obligation tracking or vendor performance management. Icertis is notable as an Azure-built alternative.",cov:"Gap",alt:["Icertis","SAP Ariba","ServiceNow VMW"]},
+"14.5":{ms:"Dynamics 365 Supply Chain Management",comp:["Procurement & sourcing","Purchase agreements","Vendor collaboration","Requisitions","Power BI spend analysis"],lic:"Dynamics 365 Supply Chain Management",docs:"https://learn.microsoft.com/en-us/dynamics365/supply-chain/",pos:"Can execute purchase agreements, but IT-specific technology sourcing strategy and negotiation are not its focus. Dedicated procurement suites own this.",cov:"Partial",alt:["SAP Ariba","Coupa","GEP SMART"]},
+"14.6":{ms:"Microsoft Planner",comp:["Microsoft Planner","Planner Premium","Power Platform intake","Power BI"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/planner/",pos:"Adequate for delivery tracking, but thin for investment portfolio and demand management at portfolio scale. Note Project for the web has been folded into the unified Planner.",cov:"Partial",alt:["Planview","ServiceNow SPM","Broadcom Clarity"]},
+"14.7":{ms:"Microsoft Viva",comp:["Viva Learning","Viva Glint","Viva Insights","Skills in Viva"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/",pos:"Supports skills development and workforce insight, but organisation design and sourcing mix are advisory and core human capital management belongs to Workday or SuccessFactors.",cov:"Partial",alt:["Degreed","Workday Skills Cloud"]},
+"14.8":{ms:"—",comp:["Entra cross-tenant synchronisation","Tenant-to-tenant migration","Microsoft Purview"],lic:"Not applicable",docs:"",pos:"Largely a gap — merger diligence, day-one readiness and carve-outs are services-led. Microsoft contributes tenant migration and cross-tenant sync tooling for execution only.",cov:"Gap",alt:["Quest On Demand Migration","AvePoint Fly","BitTitan"]}
+};
+
+const COV_PAL={Native:["#5ec75e","#0b6a08"],Partial:["#e6ad3c","#835b00"],
+  Gap:["#f1707b","#c50f1f"],"N/A":["#a0a0a0","#616161"]};
+
+/* Capability tier — scope and sequencing, independent of Microsoft coverage.
+   Essential  do first; non-negotiable wherever the capability applies
+   Standard   the default where there is a real technology function
+   Advanced   scale, regulatory pressure, or technology as a differentiator   */
+const TIER={
+"01.1":"Essential","01.2":"Essential","01.3":"Essential","01.4":"Essential","01.5":"Standard",
+"01.6":"Standard","01.7":"Advanced","01.8":"Standard","01.9":"Advanced",
+"02.1":"Essential","02.2":"Essential","02.3":"Essential","02.4":"Standard","02.5":"Standard",
+"02.6":"Standard","02.8":"Advanced","02.9":"Standard",
+"03.1":"Standard","03.2":"Essential","03.3":"Essential","03.4":"Standard","03.5":"Standard",
+"03.6":"Essential","03.7":"Standard","03.8":"Standard",
+"04.1":"Essential","04.2":"Essential","04.3":"Essential","04.4":"Standard","04.5":"Standard",
+"04.6":"Standard","04.7":"Essential","04.8":"Standard","04.9":"Standard",
+"05.1":"Standard","05.2":"Standard","05.3":"Advanced","05.4":"Standard","05.5":"Advanced",
+"05.6":"Essential","05.7":"Advanced","05.8":"Advanced","05.9":"Advanced",
+"06.1":"Standard","06.2":"Standard","06.3":"Advanced","06.4":"Standard","06.5":"Advanced",
+"06.6":"Standard","06.7":"Advanced","06.8":"Standard",
+"07.1":"Essential","07.2":"Standard","07.3":"Essential","07.4":"Standard","07.5":"Standard",
+"07.6":"Advanced","07.9":"Standard",
+"08.1":"Standard","08.2":"Standard","08.3":"Advanced","08.4":"Advanced","08.5":"Standard",
+"08.6":"Advanced","08.7":"Advanced",
+"09.1":"Essential","09.2":"Essential","09.3":"Essential","09.4":"Standard","09.5":"Standard",
+"09.6":"Advanced","09.7":"Standard","09.8":"Advanced",
+"10.1":"Standard","10.2":"Advanced","10.3":"Advanced","10.4":"Advanced","10.5":"Advanced",
+"10.6":"Advanced","10.7":"Standard","10.8":"Advanced",
+
+
+"11.1":"Essential","11.2":"Essential","11.3":"Standard","11.4":"Standard","11.5":"Essential",
+"11.6":"Standard","11.7":"Standard","11.8":"Essential","11.9":"Advanced","11.10":"Standard",
+"12.1":"Standard","12.2":"Standard","12.3":"Standard","12.4":"Essential","12.5":"Standard",
+"12.6":"Advanced","12.7":"Standard","12.8":"Advanced",
+"13.1":"Essential","13.2":"Essential","13.3":"Standard","13.4":"Standard","13.5":"Standard",
+"13.6":"Essential","13.7":"Standard","13.8":"Standard","13.9":"Advanced",
+"14.1":"Standard","14.2":"Standard","14.3":"Essential","14.4":"Essential","14.5":"Standard",
+"14.6":"Advanced","14.7":"Standard","14.8":"Standard"
+};
+const TIER_DESC={Essential:"Do first — non-negotiable wherever it applies",
+  Standard:"The default where there is a real technology function",
+  Advanced:"Scale, regulatory pressure, or technology as a differentiator"};
+const TIER_ORDER=["Essential","Standard","Advanced"];
+/* explicit fill + stroke per theme — alpha tints disappear on a white surface */
+const COV_FILL={
+  Native:["rgba(94,199,94,.16)","#d3ecd3"], Partial:["rgba(230,173,60,.16)","#fbeab8"],
+  Gap:["rgba(241,112,123,.16)","#fbdadd"], "N/A":["rgba(160,160,160,.16)","#e8e8e8"]};
+const COV_STROKE={
+  Native:["rgba(94,199,94,.62)","#5a9e5a"], Partial:["rgba(230,173,60,.62)","#b8862b"],
+  Gap:["rgba(241,112,123,.66)","#d16b74"], "N/A":["rgba(160,160,160,.64)","#8f8f8f"]};
+let COV_COLOR={},COV_BG={},COV_BD={};
+function setCov(){const i=THEME==="dark"?0:1;
+  Object.keys(COV_PAL).forEach(k=>{COV_COLOR[k]=COV_PAL[k][i];COV_BG[k]=COV_FILL[k][i];COV_BD[k]=COV_STROKE[k][i];});}
+setCov();
+
+/* remember which palette key each group used; areas inherit their group's colour
+   so colour signals the group band rather than decorating every row */
+(function tagPaletteKeys(){
+  const inv={};
+  Object.keys(PAL).forEach(k=>{inv[PAL[k][0].toLowerCase()]=k;inv[PAL[k][1].toLowerCase()]=k;});
+  GROUPS.forEach(g=>g.pk=inv[(g.color||"").toLowerCase()]);
+  AREAS.forEach(a=>{const g=GROUPS.find(x=>x.id===a.g); a.pk=g?g.pk:inv[(a.color||"").toLowerCase()];});
+})();
+function reresolveColors(){
+  GROUPS.forEach(g=>{if(g.pk)g.color=pick(g.pk);});
+  AREAS.forEach(a=>{if(a.pk)a.color=pick(a.pk);});
+}
+reresolveColors();
+
+const COV_DESC={Native:"Microsoft substantially covers it",Partial:"Covers part, commonly supplemented",
+  Gap:"No meaningful first-party product","N/A":"Outside the Microsoft addressable space"};
+
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n;};
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const allCaps=()=>AREAS.flatMap(a=>a.caps.map(c=>({...c,area:a})));
+/* coverage ratings actually in use — a rating with no capabilities is not shown */
+function covCounts(){
+  const n={};Object.keys(COV_COLOR).forEach(k=>n[k]=0);
+  allCaps().forEach(c=>{const m=MAP[c.id];if(m&&n[m.cov]!==undefined)n[m.cov]++;});
+  return n;
+}
+const activeCovs=()=>{const n=covCounts();return Object.keys(COV_COLOR).filter(k=>n[k]>0);};
+const covPill=cov=>'<span class="pillN" style="color:'+COV_COLOR[cov]+';border:1px solid '+COV_BD[cov]+';background:'+COV_BG[cov]+'">'+esc(cov)+'</span>';
+
+/* coverage mix per area */
+function areaMix(a){
+  const m={Native:0,Partial:0,Gap:0,"N/A":0};
+  a.caps.forEach(c=>{const x=MAP[c.id];if(x&&m[x.cov]!==undefined)m[x.cov]++;});
+  return m;
+}
+
+/* build */
+function build(){
+  const host=$("#host");host.innerHTML="";
+  GROUPS.forEach(g=>{
+    const h=el("h2","grouphdr",'<span class="gn">'+esc(g.name)+'</span><span class="gd">'+esc(g.desc)+'</span>');
+    h.style.setProperty("--gc",g.color);
+    h.dataset.group=g.id;
+    host.appendChild(h);
+
+    AREAS.filter(a=>a.g===g.id).forEach(a=>{
+      const wrap=el("div","area");
+      wrap.style.setProperty("--ac",a.color);
+      wrap.dataset.area=a.id;
+
+      const mix=areaMix(a);
+      const mixHtml=Object.keys(mix).filter(k=>mix[k]>0)
+        .map(k=>'<span class="pillN" style="color:'+COV_COLOR[k]+';background:'+COV_BG[k]+';border:1px solid '+COV_BD[k]+'">'+mix[k]+' '+esc(k)+'</span>').join("");
+
+      const btn=el("button","area-btn");
+      btn.setAttribute("aria-expanded","false");
+      btn.setAttribute("aria-controls","body-"+a.id);
+      btn.innerHTML='<span class="chev" aria-hidden="true">&#9654;</span>'+
+        '<span class="code">'+a.id+'</span>'+
+        '<span><span class="nm">'+esc(a.name)+'</span><span class="df">'+esc(a.desc)+'</span></span>'+
+        '<span class="meta">'+mixHtml+'<span class="count">'+a.caps.length+'</span></span>';
+      btn.addEventListener("click",()=>{
+        const open=wrap.classList.toggle("open");
+        btn.setAttribute("aria-expanded",String(open));
+      });
+      wrap.appendChild(btn);
+
+      const body=el("div","area-body");
+      body.id="body-"+a.id;
+      a.caps.forEach(c=>{
+        const m=MAP[c.id]||{ms:"—",alt:[],cov:"—"};
+        const cap=el("div","cap");
+        cap.dataset.cap=c.id;
+        cap.dataset.cov=m.cov;
+
+        const cb=el("button","cap-btn");
+        cb.setAttribute("aria-expanded","false");
+        cb.setAttribute("aria-controls","body-"+c.id.replace(".","-"));
+        cb.innerHTML='<span class="chev" aria-hidden="true">&#9654;</span>'+
+          '<span class="cc">'+c.id+'</span>'+
+          '<span><span class="cn">'+esc(c.name)+'</span><span class="cd">'+esc(c.def)+'</span></span>'+
+          '<span class="meta"><span class="tiermark">'+esc(TIER[c.id]||"")+'</span>'+covPill(m.cov)+'</span>';
+        cb.addEventListener("click",e=>{
+          e.stopPropagation();
+          const open=cap.classList.toggle("open");
+          cb.setAttribute("aria-expanded",String(open));
+        });
+        cap.appendChild(cb);
+
+        const cbody=el("div","cap-body");
+        cbody.id="body-"+c.id.replace(".","-");
+        let g2="";
+        g2+='<div class="mrow"><div class="mk">Microsoft</div><div class="mv'+(m.ms==="—"?" none":"")+'">'+
+            (m.ms==="—"?"No first-party product":'<span class="msprod">'+esc(m.ms)+'</span>')+'</div></div>';
+        if(m.comp&&m.comp.length)
+          g2+='<div class="mrow"><div class="mk">Components</div><div class="mv"><div class="chips">'+
+              m.comp.map(x=>'<span>'+esc(x)+'</span>').join("")+'</div></div></div>';
+        g2+='<div class="mrow"><div class="mk">Alternatives</div><div class="mv alt'+(m.alt&&m.alt.length?"":" none")+'">'+
+            (m.alt&&m.alt.length?m.alt.map(x=>esc(x)).join(" &middot; "):"None noted")+'</div></div>';
+        if(m.pos)
+          g2+='<div class="mrow"><div class="mk">Positioning</div><div class="mv"><div class="pos">'+esc(m.pos)+'</div></div></div>';
+        if(m.docs)
+          g2+='<div class="mrow"><div class="mk">Reference</div><div class="mv"><a class="docs" href="'+esc(m.docs)+
+              '" target="_blank" rel="noopener">Microsoft Learn <span aria-hidden="true">&#8599;</span></a></div></div>';
+        cbody.innerHTML=g2;
+        cap.appendChild(cbody);
+        body.appendChild(cap);
+      });
+      wrap.appendChild(body);
+      host.appendChild(wrap);
+    });
+  });
+
+  const lg=$("#legend");
+  lg.innerHTML=activeCovs().map(k=>
+    '<span><span class="pillN" style="color:'+COV_COLOR[k]+';border:1px solid '+COV_BD[k]+';background:'+COV_BG[k]+'">'+k+'</span> '+esc(COV_DESC[k]||"")+'</span>').join("");
+}
+
+/* coverage + tier filter chips */
+let covFilter="all",tierFilter="all";
+function buildCovBar(){
+  const counts=covCounts();
+  const bar=$("#covbar");
+  bar.innerHTML='<button class="covbtn" data-cov="all" aria-pressed="'+(covFilter==="all")+'">All</button>'+
+    activeCovs().map(k=>'<button class="covbtn" data-cov="'+k+'" aria-pressed="'+(covFilter===k)+'"><span style="color:'+COV_COLOR[k]+';font-weight:700">'+counts[k]+'</span> '+k+'</button>').join("");
+  bar.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    covFilter=b.dataset.cov;
+    bar.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    apply();
+  }));
+
+  const tcounts={Essential:0,Standard:0,Advanced:0};
+  allCaps().forEach(c=>{const t=TIER[c.id];if(t&&tcounts[t]!==undefined)tcounts[t]++;});
+  const tb=$("#tierbar");
+  tb.innerHTML='<button class="covbtn" data-tier="all" aria-pressed="'+(tierFilter==="all")+'">All tiers</button>'+
+    TIER_ORDER.map(k=>'<button class="covbtn" data-tier="'+k+'" title="'+esc(TIER_DESC[k])+'" aria-pressed="'+(tierFilter===k)+'"><span style="font-weight:700">'+tcounts[k]+'</span> '+k+'</button>').join("");
+  tb.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    tierFilter=b.dataset.tier;
+    tb.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    apply();
+  }));
+}
+
+/* filter */
+function apply(){
+  const q=($("#q").value||"").trim().toLowerCase();
+  let shown=0;
+  AREAS.forEach(a=>{
+    const an=document.querySelector('[data-area="'+a.id+'"]');
+    if(!an)return;
+    let anyCap=false;
+    a.caps.forEach(c=>{
+      const cn=an.querySelector('[data-cap="'+c.id+'"]');
+      if(!cn)return;
+      const m=MAP[c.id]||{ms:"",alt:[],cov:"",comp:[],lic:"",pos:""};
+      const hay=(c.id+" "+c.name+" "+c.def+" "+a.id+" "+a.name+" "+a.desc+" "+m.ms+" "+
+                 (m.alt||[]).join(" ")+" "+(m.comp||[]).join(" ")+" "+(m.pos||"")).toLowerCase();
+      const hit=(!q||hay.includes(q))&&(covFilter==="all"||m.cov===covFilter)&&(tierFilter==="all"||TIER[c.id]===tierFilter);
+      cn.classList.toggle("hide",!hit);
+      if(hit){anyCap=true;shown++;}
+    });
+    an.classList.toggle("hide",!anyCap);
+    // auto-open when filtering
+    if((q||covFilter!=="all"||tierFilter!=="all")&&anyCap){
+      an.classList.add("open");
+      an.querySelector(".area-btn").setAttribute("aria-expanded","true");
+    }
+  });
+  GROUPS.forEach(g=>{
+    const gh=document.querySelector('[data-group="'+g.id+'"]');
+    if(!gh)return;
+    const any=AREAS.filter(a=>a.g===g.id).some(a=>{
+      const an=document.querySelector('[data-area="'+a.id+'"]');
+      return an&&!an.classList.contains("hide");
+    });
+    gh.classList.toggle("hide",!any);
+  });
+  $("#empty").style.display=shown?"none":"";
+  $("#rescount").textContent=(q||covFilter!=="all"||tierFilter!=="all")?shown+" of "+allCaps().length+" capabilities":allCaps().length+" capabilities";
+}
+
+$("#q").addEventListener("input",apply);
+$("#expandAll").addEventListener("click",()=>{
+  document.querySelectorAll(".area").forEach(a=>{a.classList.add("open");a.querySelector(".area-btn").setAttribute("aria-expanded","true");});
+  document.querySelectorAll(".cap").forEach(c=>{c.classList.add("open");c.querySelector(".cap-btn").setAttribute("aria-expanded","true");});
+});
+$("#collapseAll").addEventListener("click",()=>{
+  document.querySelectorAll(".area,.cap").forEach(n=>n.classList.remove("open"));
+  document.querySelectorAll(".area-btn,.cap-btn").forEach(b=>b.setAttribute("aria-expanded","false"));
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){$("#q").value="";covFilter="all";tierFilter="all";
+    $("#covbar").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.cov==="all")));
+    $("#tierbar").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.tier==="all")));
+    apply();}
+});
+
+/* theme */
+const ICON_SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>';
+const ICON_MOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>';
+function applyTheme(){
+  document.documentElement.setAttribute("data-theme",THEME);
+  $("#themebtn").innerHTML=(THEME==="dark"?ICON_SUN:ICON_MOON)+"<span>"+(THEME==="dark"?"Light":"Dark")+"</span>";
+  $("#themebtn").setAttribute("aria-label","Switch to "+(THEME==="dark"?"light":"dark")+" theme");
+}
+function toggleTheme(){
+  // preserve open/closed state and filters across rebuild
+  const openAreas=[...document.querySelectorAll(".area.open")].map(n=>n.dataset.area);
+  const openCaps=[...document.querySelectorAll(".cap.open")].map(n=>n.dataset.cap);
+  THEME=THEME==="dark"?"light":"dark";
+  localStorage.setItem("ptom-theme",THEME);
+  setPalette();setCov();reresolveColors();applyTheme();
+  build();buildCovBar();
+  if(typeof buildRI==="function")buildRI();
+  openAreas.forEach(id=>{const n=document.querySelector('[data-area="'+id+'"]');
+    if(n){n.classList.add("open");n.querySelector(".area-btn").setAttribute("aria-expanded","true");}});
+  openCaps.forEach(id=>{const n=document.querySelector('[data-cap="'+id+'"]');
+    if(n){n.classList.add("open");n.querySelector(".cap-btn").setAttribute("aria-expanded","true");}});
+  const b=$("#covbar").querySelector('[data-cov="'+covFilter+'"]');
+  if(b){$("#covbar").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));}
+  apply();
+}
+$("#themebtn").addEventListener("click",toggleTheme);
+applyTheme();
+
+build();buildCovBar();apply();
+
+/* ============ Reference implementation view ============ */
+const RI={
+  title:"Microsoft Fabric Analytics & ERP Synchronisation",
+  intro:"One initiative expressed against the capability model. The spine follows the reference architecture; each stage lists the capabilities it draws on. Coverage dots carry through from the capability model, so a red dot marks a point where the design depends on something Microsoft does not provide.",
+  src:"Source: Microsoft Fabric Analytics and ERP Synchronization — reference architecture, August 2026.",
+  shared:[
+    {k:"S",n:"Source systems",d:"Source ERPs, operational databases, cloud services and external storage. Each source is registered with the ingestion method its capabilities and latency target allow.",caps:["07.1"]},
+    {k:"1",n:"Shared ingestion",d:"Method chosen per source: Mirroring, Shortcuts, Copy Job, Dataflow Gen2, Eventstream, or pipelines and notebooks. Ingested once and shared by both downstream paths.",caps:["05.2","06.2"],cond:["05.9","03.7"]},
+    {k:"2",n:"Bronze — raw and replayable",d:"Source-aligned landing zone in OneLake. Record identifiers must be stable and immutable, because dispatch rows hold pointers to them rather than copies of the payload — pointer integrity and Bronze retention are therefore coupled.",caps:["05.1","05.8"]}
+  ],
+  pathA:{n:"Path A — Governed analytics",steps:[
+    {k:"A1",n:"Silver — conformed",d:"Quality rules, cleansing, validation and standardisation into conformed datasets.",caps:["05.5"]},
+    {k:"A2",n:"Gold — curated products",d:"Joins, aggregations and business-rule enrichment into curated, business-ready data products.",caps:["05.1"]},
+    {k:"A3",n:"Consumption & AI",d:"Power BI, semantic models and governed exploration, plus agents grounded on curated data. Retrieval scope inherits whatever labelling and OneLake security were applied upstream, so a governance gap at Bronze becomes an AI exposure here.",caps:["05.6","10.3"],cond:["10.4"]}
+  ]},
+  pathB:{n:"Path B — Controlled ERP synchronisation",steps:[
+    {k:"B1",n:"Sync control store",d:"Mapping registry, dispatch work table and attempt history in SQL database in Fabric. The work table is a durable queue, so it needs claim semantics — leasing, competing-worker safety and atomic status transitions. Each work item must bind to the mapping version used, so a retry cannot silently adopt a newer transform.",caps:["04.4","06.2","06.3"]},
+    {k:"B2",n:"Dispatch and workers",d:"Worker resolves the registered update method and invokes an API, Durable Function, desktop flow, computer-use agent or human-assisted step. Execution is at-least-once, so every destination write must be idempotent against a defined key. Retry policy, attempt limits and poison-record disposition belong here. Where the worker is an agent it writes into a production ERP rather than advising, and needs least privilege, approval thresholds and a kill switch.",caps:["04.2","06.4"],cond:["06.5","10.2","10.6","10.7","06.1","02.2"]},
+    {k:"B3",n:"Destination ERPs",d:"Records written into destination ERP platforms and the outcome returned to the orchestration layer.",caps:["07.1"]}
+  ]},
+  ops:{k:"OPS",n:"Run operations and recovery",d:"Monitor pending, successful, failed, incomplete and excluded work; investigate exceptions, retry and resynchronise on demand without rerunning the analytics pipeline. Reconciliation must prove source intent equals destination state rather than that a worker reported success. Backpressure — destination outage, ERP throttling and queue growth — is a capacity question, not just an alerting one.",caps:["06.8","04.7","13.8","13.9"]},
+  cols:[{k:"ING",n:"Ingest"},{k:"BRZ",n:"Bronze"},{k:"ANL",n:"Analytics"},{k:"SYN",n:"Sync"},{k:"OPS",n:"Operations"}],
+  planes:[
+    {k:"IAM",n:"Identity & execution authority",at:["ING","BRZ","ANL","SYN","OPS"],caps:["01.3","01.8","01.4"],
+     d:"Workload and managed identity so no connection runs on a stored secret, and explicit entitlements deciding which destination each worker may write to. Privileged access matters because a sync worker holds write authority in a production finance system."},
+    {k:"DATA",n:"Data governance & protection",at:["BRZ","ANL","SYN"],caps:["05.4","11.4"],
+     d:"Classification and labelling applied as data lands in Bronze, catalogue and lineage across the analytics path, and label-aware access at consumption. This plane stops at the boundary — once a record is written into a destination ERP, the label does not travel with it."},
+    {k:"NET",n:"Secure platform & connectivity",at:["ING","BRZ","ANL","SYN"],caps:["03.5","04.8"],cond:["03.7"],
+     d:"Private endpoints and trust boundaries between Fabric, the worker layer and each destination ERP. Platform telemetry complements rather than replaces the work-item observability in the operations layer."},
+    {k:"ASR",n:"Worker safety & execution assurance",at:["SYN","OPS"],caps:["08.4"],cond:["11.9"],
+     d:"Testing here is not generic release quality — it is idempotency under replay, queue contention between competing workers, and irreversible side effects in a destination system. Third-party assurance applies where a pluggable worker is not first-party code."}
+  ],
+  watch:[
+    ["05.8","Dispatch rows hold pointers into Bronze and the mapping registry assumes source field stability. Nothing first-party detects a breaking schema change before it propagates, so contract enforcement is a build."],
+    ["06.8","Per-engine run history is good, but the work-queue console, dead-letter resubmission and source-to-destination reconciliation are custom. Note this is partly a consequence of choosing a SQL-backed queue — Service Bus provides dead-letter mechanics natively."]
+  ],
+  design:[
+    "Delivery guarantee is at-least-once; destination writes must be idempotent against a defined key.",
+    "Work items must bind to the mapping version used, so retries do not adopt newer transforms.",
+    "Reconciliation must compare source intent to destination state, not to worker-reported success."
+  ]
+};
+
+const capName=id=>{for(const a of AREAS){const c=a.caps.find(x=>x.id===id);if(c)return c.name;}return id;};
+const capArea=id=>AREAS.find(a=>a.caps.some(c=>c.id===id));
+
+function riChip(id){
+  const m=MAP[id]||{},cov=m.cov||"Gap";
+  const b=el("button","rchip");
+  b.type="button";
+  b.innerHTML='<span class="rdot" style="background:'+(COV_COLOR[cov]||"#888")+'"></span>'+
+    '<span class="rid">'+esc(id)+'</span> '+esc(capName(id));
+  b.title=capName(id)+" — "+cov+(m.ms&&m.ms!=="—"?" · "+m.ms:"");
+  b.setAttribute("aria-label",id+" "+capName(id)+", coverage "+cov+" — open details");
+  b.addEventListener("click",()=>openCapDialog(id,b));
+  return b;
+}
+function riChips(ids,cond){
+  const w=el("div","chips-row");
+  [].concat(ids||[],cond||[]).forEach(i=>w.appendChild(riChip(i)));
+  return w;
+}
+function riStage(s,color){
+  const d=el("div","stage");
+  d.dataset.k=s.k;
+  if(color)d.style.setProperty("--sc",color);
+  d.innerHTML='<div class="stage-hd"><span class="stage-k">'+esc(s.k)+'</span><span class="stage-n">'+esc(s.n)+'</span></div>'+
+    '<p class="stage-d">'+esc(s.d)+'</p>';
+  d.appendChild(riChips(s.caps,s.cond));
+  return d;
+}
+function buildRI(){
+  const host=$("#view-ri");host.innerHTML="";
+  const gc=n=>{const g=GROUPS.find(x=>x.name===n);return g?g.color:null;};
+  host.appendChild(el("p","ri-kicker","Reference implementation"));
+  host.appendChild(el("h2","ri-title",esc(RI.title)));
+  host.appendChild(el("p","ri-intro",esc(RI.intro)));
+  host.appendChild(el("p","ri-src",esc(RI.src)));
+
+  const dw=el("div","dg-wrap");dw.appendChild(buildDiagram());host.appendChild(dw);
+  host.appendChild(el("p","ri-src","Select any stage or control plane to jump to its detail below; select any capability to open its platform mapping. A control-plane band begins at the stage where that plane first applies."));
+
+  host.appendChild(el("div","ri-band","Shared foundation — ingest once"));
+  RI.shared.forEach(s=>host.appendChild(riStage(s,gc("Data, Integration & Applications"))));
+
+  host.appendChild(el("div","ri-band","Two independent downstream paths"));
+  const split=el("div","ri-split");
+  [[RI.pathA,gc("Data, Integration & Applications")],[RI.pathB,gc("Workplace & AI")]].forEach(([p,col])=>{
+    const box=el("div","ri-path");
+    box.appendChild(el("h3",null,esc(p.n)));
+    p.steps.forEach(s=>box.appendChild(riStage(s,col)));
+    split.appendChild(box);
+  });
+  host.appendChild(split);
+
+  host.appendChild(el("div","ri-band","Operations"));
+  host.appendChild(riStage(RI.ops,gc("Service & Business Management")));
+
+  host.appendChild(el("div","ri-band","Control planes"));
+  const cPlane=gc("Security & Governance");
+  RI.planes.forEach(p=>host.appendChild(riStage(p,cPlane)));
+
+  const note=el("div","ri-note");
+  note.appendChild(el("h3",null,"Custom controls and unresolved design dependencies"));
+  RI.watch.forEach(([id,txt])=>{
+    const p=el("p",null,'<strong>'+esc(id)+' '+esc(capName(id))+'</strong> — '+esc(txt));
+    note.appendChild(p);
+  });
+  if(RI.design&&RI.design.length){
+    note.appendChild(el("p",null,'<strong>Design decisions the source document leaves open</strong>'));
+    const ul=el("ul","ri-dl");
+    RI.design.forEach(t=>ul.appendChild(el("li",null,esc(t))));
+    note.appendChild(ul);
+  }
+  host.appendChild(note);
+
+  const all=[...new Set([].concat(
+    RI.shared.flatMap(s=>[].concat(s.caps||[],s.cond||[])),
+    RI.pathA.steps.flatMap(s=>[].concat(s.caps||[],s.cond||[])),
+    RI.pathB.steps.flatMap(s=>[].concat(s.caps||[],s.cond||[])),
+    [].concat(RI.ops.caps||[],RI.ops.cond||[]),
+    RI.planes.flatMap(f=>[].concat(f.caps||[],f.cond||[]))))];
+  const bad=all.filter(i=>!MAP[i]);
+  if(bad.length)console.warn("RI references unknown capability ids:",bad);
+  host.appendChild(el("p","ri-src",all.length+" capabilities engaged · "+
+    RI.watch.length+" material custom-control gaps."));
+}
+/* jump from the diagram into the model */
+function openInModel(id){
+  showView("model");
+  covFilter="all";tierFilter="all";$("#q").value="";
+  buildCovBar();apply();
+  const a=capArea(id);if(!a)return;
+  const ae=document.querySelector('.area[data-area="'+a.id+'"]');
+  const ce=document.querySelector('.cap[data-cap="'+id+'"]');
+  if(ae&&!ae.classList.contains("open"))ae.querySelector(".area-btn").click();
+  if(ce&&!ce.classList.contains("open"))ce.querySelector(".cap-btn").click();
+  if(ce){ce.scrollIntoView({block:"center",behavior:"smooth"});ce.querySelector(".cap-btn").focus({preventScroll:true});}
+}
+
+function showView(v){
+  const isM=v==="model";
+  $("#view-model").hidden=!isM;$("#view-ri").hidden=isM;
+  $("#tab-model").setAttribute("aria-selected",String(isM));
+  $("#tab-ri").setAttribute("aria-selected",String(!isM));
+  try{localStorage.setItem("ptom-view",v);}catch(e){}
+}
+$("#tab-model").addEventListener("click",()=>showView("model"));
+$("#tab-ri").addEventListener("click",()=>{showView("ri");});
+document.querySelector(".tabs").addEventListener("keydown",e=>{
+  if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
+  const t=[...document.querySelectorAll(".tab")],i=t.indexOf(document.activeElement);
+  if(i<0)return;e.preventDefault();
+  const n=t[(i+(e.key==="ArrowRight"?1:t.length-1))%t.length];n.focus();n.click();
+});
+
+/* ============ capability dialog ============ */
+const DLG=$("#capdlg");let dlgReturn=null,dlgId=null;
+function dRow(k,v){return '<div class="mrow"><div class="mk">'+esc(k)+'</div><div class="mv">'+v+'</div></div>';}
+function openCapDialog(id,invoker){
+  const a=capArea(id);if(!a)return;
+  const g=GROUPS.find(x=>x.id===a.g)||{name:""};
+  const cap=a.caps.find(c=>c.id===id)||{};
+  const m=MAP[id]||{},cov=m.cov||"Gap",tier=TIER[id]||"";
+  dlgId=id;dlgReturn=invoker||document.activeElement;
+
+  $("#dlg-crumb").textContent=g.name+" › "+a.id+" "+a.name;
+  $("#dlg-title").textContent=id+"  "+cap.name;
+  $("#dlg-def").textContent=cap.def||"";
+
+  let h='<div class="mrow"><div class="mk">Area</div><div class="mv">'+esc(a.desc||"")+'</div></div>';
+  if(m.ms&&m.ms!=="—"){
+    h+=dRow("Microsoft",'<span class="msprod">'+esc(m.ms)+'</span>');
+    if(m.comp&&m.comp.length)
+      h+=dRow("Components",'<div class="chips">'+m.comp.map(c=>'<span class="cc">'+esc(c)+'</span>').join("")+'</div>');
+  }else{
+    h+=dRow("Microsoft",'<span class="none">No first-party product</span>');
+  }
+  if(m.alt&&m.alt.length)h+=dRow("Alternatives",m.alt.map(esc).join(" · "));
+  if(m.pos)h+=dRow("Positioning",esc(m.pos));
+  if(m.docs)h+=dRow("Reference",'<a class="docs" href="'+esc(m.docs)+'" target="_blank" rel="noopener">Microsoft Learn ↗</a>');
+  $("#dlg-body").innerHTML=h;
+
+  if(typeof DLG.showModal==="function")DLG.showModal();else DLG.setAttribute("open","");
+}
+function closeDlg(){
+  if(typeof DLG.close==="function")DLG.close();else DLG.removeAttribute("open");
+}
+/* remember whether the user is driving with pointer or keyboard, so restoring
+   focus after the dialog closes does not leave a ring on a mouse-clicked chip */
+let lastPointer=false;
+addEventListener("pointerdown",()=>{lastPointer=true;},true);
+addEventListener("keydown",()=>{lastPointer=false;},true);
+DLG.addEventListener("close",()=>{
+  const t=dlgReturn;
+  if(!t||!document.contains(t))return;
+  if(lastPointer){
+    t.setAttribute("data-noring","");
+    t.addEventListener("blur",()=>t.removeAttribute("data-noring"),{once:true});
+  }
+  try{t.focus({preventScroll:true,focusVisible:!lastPointer});}
+  catch(e){t.focus({preventScroll:true});}
+});
+$("#dlg-x").addEventListener("click",closeDlg);
+$("#dlg-close").addEventListener("click",closeDlg);
+$("#dlg-goto").addEventListener("click",()=>{const id=dlgId;closeDlg();if(id)openInModel(id);});
+DLG.addEventListener("click",e=>{if(e.target===DLG)closeDlg();});
+
+/* ============ functional diagram (inline SVG, no dependencies) ============ */
+const SVGNS="http://www.w3.org/2000/svg";
+const sv=(t,at)=>{const n=document.createElementNS(SVGNS,t);for(const k in at)n.setAttribute(k,at[k]);return n;};
+function dgNode(x,y,w,h,st,color){
+  const g=sv("g",{class:"dg-node",tabindex:"0",role:"button",transform:"translate("+x+","+y+")"});
+  g.setAttribute("aria-label",st.n+" — "+((st.caps||[]).length+(st.cond||[]).length)+" capabilities. Show detail.");
+  g.appendChild(sv("rect",{class:"bx",x:0,y:0,width:w,height:h,rx:6}));
+  g.appendChild(sv("rect",{x:0,y:0,width:3,height:h,rx:1.5,fill:color}));
+  const k=sv("text",{class:"dg-k",x:11,y:15,fill:color});k.textContent=st.k;g.appendChild(k);
+  const t=sv("text",{class:"dg-t",x:11,y:34});t.textContent=st.n.replace(/ — .*$/,"");g.appendChild(t);
+
+  const cc=st.caps||[],co=st.cond||[];
+  [].concat(cc,co).slice(0,7).forEach((id,i)=>{
+    const cv=(MAP[id]||{}).cov||"Gap";
+    g.appendChild(sv("circle",{cx:14+i*13,cy:h-13,r:4,fill:COV_COLOR[cv]||"#888"}));
+  });
+  const s=sv("text",{class:"dg-s",x:14+Math.min(cc.length+co.length,7)*13+2,y:h-10});
+  const tot=cc.length+co.length;s.textContent=tot+" cap"+(tot===1?"":"s");g.appendChild(s);
+  const go=()=>flashStage(st.k);
+  g.addEventListener("click",go);
+  g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});
+  return g;
+}
+function flashStage(k){
+  const el=document.querySelector('.stage[data-k="'+CSS.escape(k)+'"]');
+  if(!el)return;
+  el.scrollIntoView({block:"center",behavior:"smooth"});
+  el.classList.remove("flash");void el.offsetWidth;el.classList.add("flash");
+  el.addEventListener("animationend",()=>el.classList.remove("flash"),{once:true});
+}
+function buildDiagram(){
+  const W=1192,BW=152,BH=66,yA=24,yS=137,yB=250;
+  const BY0=470,BSTEP0=29,H=BY0+BSTEP0*RI.planes.length+8;
+  const gc=n=>{const g=GROUPS.find(x=>x.name===n);return g?g.color:"#888";};
+  const cData=gc("Data, Integration & Applications"),cSync=gc("Workplace & AI"),cOps=gc("Service & Business Management"),cPlane=gc("Security & Governance");
+  const svg=sv("svg",{class:"dg",viewBox:"0 0 "+W+" "+H,role:"img","aria-labelledby":"dgt dgd"});
+  const ti=sv("title",{id:"dgt"});ti.textContent="Functional flow of the Fabric analytics and ERP synchronisation architecture";
+  const de=sv("desc",{id:"dgd"});de.textContent="Sources feed shared ingestion into a Bronze layer. Bronze branches into two independent paths: a governed analytics path through Silver, Gold and consumption, and an ERP synchronisation path through a sync control store, dispatch workers and destination ERPs, with a retry and replay loop. A run operations layer spans both paths.";
+  svg.appendChild(ti);svg.appendChild(de);
+
+  const defs=sv("defs");
+  const mk=sv("marker",{id:"ah",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(sv("path",{d:"M0,0 L10,5 L0,10 z",fill:"currentColor"}));
+  defs.appendChild(mk);svg.appendChild(defs);
+  const edge=(d,dash)=>{const p=sv("path",{class:dash?"dg-edge-d":"dg-edge",d:d,"marker-end":"url(#ah)"});p.style.color="var(--tx-3)";svg.appendChild(p);};
+
+  const xs=[20,212,404],xp=[636,828,1020],BWb=BW+20;
+  svg.appendChild(sv("rect",{class:"dg-lanebox",x:616,y:0,width:556,height:104,rx:6}));
+  svg.appendChild(sv("rect",{class:"dg-lanebox",x:616,y:226,width:556,height:124,rx:6}));
+  const lab=(x,y,t,anc)=>{const e=sv("text",{class:"dg-lane",x:x,y:y});if(anc)e.setAttribute("text-anchor",anc);e.textContent=t;svg.appendChild(e);};
+  lab(626,18,"PATH A — GOVERNED ANALYTICS");
+  lab(626,244,"PATH B — CONTROLLED ERP SYNCHRONISATION");
+  lab(20,129,"SHARED — INGEST ONCE");
+
+  const cA=yA+BH/2,cB=yB+BH/2,cS=yS+BH/2;
+  edge("M"+(xs[0]+BW)+","+cS+" H"+(xs[1]-6));
+  edge("M"+(xs[1]+BW)+","+cS+" H"+(xs[2]-6));
+  edge("M"+(xs[2]+BWb)+","+cS+" C"+(xp[0]-46)+","+cS+" "+(xp[0]-46)+","+cA+" "+(xp[0]-6)+","+cA);
+  edge("M"+(xs[2]+BWb)+","+cS+" C"+(xp[0]-46)+","+cS+" "+(xp[0]-46)+","+cB+" "+(xp[0]-6)+","+cB);
+  edge("M"+(xp[0]+BW)+","+cA+" H"+(xp[1]-6));
+  edge("M"+(xp[1]+BW)+","+cA+" H"+(xp[2]-6));
+  edge("M"+(xp[0]+BW)+","+cB+" H"+(xp[1]-6));
+  edge("M"+(xp[1]+BW)+","+cB+" H"+(xp[2]-6));
+  /* retry loop: orthogonal so the final approach is a straight vertical run.
+     A curved approach left the last dash short of the arrowhead, which made
+     the marker look detached and pointing the wrong way. */
+  (function(){
+    const x1=xp[0]+BW/2,x2=xp[1]+BW/2,y0=yB+BH,yd=yB+BH+24,yTip=yB+BH+2,r=9;
+    edge("M"+x1+","+y0+" L"+x1+","+(yd-r)+" Q"+x1+","+yd+" "+(x1+r)+","+yd+
+         " L"+(x2-r)+","+yd+" Q"+x2+","+yd+" "+x2+","+(yd-r)+" L"+x2+","+yTip,true);
+  })();
+  const rl=sv("text",{class:"dg-elbl",x:(xp[0]+xp[1]+BW)/2,y:yB+BH+44,"text-anchor":"middle"});
+  rl.textContent="retry / replay from durable work state";svg.appendChild(rl);
+
+  RI.shared.forEach((s,i)=>svg.appendChild(dgNode(xs[i],yS,i===2?BWb:BW,BH,s,cData)));
+  RI.pathA.steps.forEach((s,i)=>svg.appendChild(dgNode(xp[i],yA,BW,BH,s,cData)));
+  RI.pathB.steps.forEach((s,i)=>svg.appendChild(dgNode(xp[i],yB,BW,BH,s,cSync)));
+  svg.appendChild(dgNode(20,376,W-40,BH,RI.ops,cOps));
+
+  /* control planes as foundation bands beneath the flow. A band starts at the
+     stage where the plane first applies and runs to the right edge, so a
+     shortened bar means the plane does not reach that far upstream. */
+  const zoneX={ING:xs[0],BRZ:xs[2],ANL:xp[0],SYN:xp[0],OPS:xs[0]};
+  const BY=BY0,BHB=24,BSTEP=BSTEP0;
+  const bl=sv("text",{class:"dg-lane",x:20,y:BY-12});bl.textContent="CONTROL PLANES";svg.appendChild(bl);
+  RI.planes.forEach((p,i)=>{
+    const y=BY+BSTEP*i;
+    const bx=zoneX[p.at[0]]!==undefined?zoneX[p.at[0]]:xs[0], bw=W-20-bx;
+    const pc=[].concat(p.caps||[],p.cond||[]),pco=[];const gapCt=pc.filter(id=>(MAP[id]||{}).cov==="Gap").length;
+    const g=sv("g",{class:"dg-node",tabindex:"0",role:"button"});
+    g.setAttribute("aria-label",p.n+" — applies at "+
+      p.at.map(k=>(RI.cols.find(z=>z.k===k)||{}).n||k).join(", ")+". "+
+      pc.length+" capabilities"+(gapCt?", "+gapCt+" gap"+(gapCt>1?"s":""):"")+". Show detail.");
+    const bar=sv("rect",{class:"pl-bar",x:bx,y:y,width:bw,height:BHB,rx:BHB/2});
+    bar.setAttribute("fill",cPlane);bar.setAttribute("fill-opacity",".10");
+    bar.setAttribute("stroke",cPlane);bar.setAttribute("stroke-opacity",".55");
+    g.appendChild(bar);
+    const t=sv("text",{class:"pl-n",x:bx+14,y:y+16});t.textContent=p.n;g.appendChild(t);
+    const dx=W-30-(gapCt?38:0)-pc.length*11;
+    pc.forEach((id,j)=>{
+      const cv=(MAP[id]||{}).cov||"Gap";
+      g.appendChild(sv("circle",{cx:dx+j*11,cy:y+BHB/2,r:3.6,fill:COV_COLOR[cv]||"#888"}));
+    });
+    if(gapCt){
+      const gt=sv("text",{class:"pl-gap",x:W-28,y:y+16,"text-anchor":"end"});
+      gt.textContent=gapCt+" gap"+(gapCt>1?"s":"");g.appendChild(gt);
+    }
+    const go=()=>flashStage(p.k);
+    g.addEventListener("click",go);
+    g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});
+    svg.appendChild(g);
+  });
+  return svg;
+}
+
+buildRI();
+try{if(localStorage.getItem("ptom-view")==="ri")showView("ri");}catch(e){}</script>
+</body>
+</html>
