@@ -76,6 +76,8 @@ h1{margin:0;font-size:25px;font-weight:600;letter-spacing:-.02em}
   background:var(--bg);padding:12px 0 10px}
 .tierlabel{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3)}
 .tiermark{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--tx-3);white-space:nowrap}
+.kindmark{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx-3);
+  border:1px dashed var(--line-solid);border-radius:10px;padding:1px 7px;white-space:nowrap}
 .search{flex:1;min-width:220px;max-width:360px;position:relative}
 .search input{width:100%;background:var(--panel);border:1px solid var(--line-solid);color:var(--tx);padding:9px 12px 9px 32px;border-radius:8px;font-size:13px;outline:none}
 .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
@@ -635,12 +637,12 @@ const MAP={
 
 /* 12 Governance, Risk & Compliance */
 "12.1":{ms:"Microsoft Purview Compliance Manager",comp:["Compliance Manager","Control assessments","Framework templates","Improvement actions","Azure Policy (technical controls)"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/compliance-manager",pos:"A usable control catalogue and framework mapping for the Microsoft estate, but not a policy lifecycle or exception engine — ServiceNow and Archer own enterprise control frameworks.",cov:"Partial",alt:["ServiceNow IRM","LogicGate","Archer"]},
-"12.2":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"Genuine gap — Microsoft has no enterprise risk register or risk management platform. Purview Insider Risk Management addresses employee risk only, which is a different problem.",cov:"Gap",alt:["ServiceNow IRM","Archer","Riskonnect","MetricStream"]},
+"12.2":{kind:"practice",ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"Genuine gap — Microsoft has no enterprise risk register or risk management platform. Purview Insider Risk Management addresses employee risk only, which is a different problem.",cov:"Gap",alt:["ServiceNow IRM","Archer","Riskonnect","MetricStream"]},
 "12.3":{ms:"Microsoft Purview Compliance Manager",comp:["Regulatory assessment templates","Control mapping","Improvement actions","Evidence collection","Compliance score"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/compliance-manager-assessments",pos:"Useful for tracking controls against many regulations, but lacks a true obligation register, jurisdiction overlays and regulatory horizon scanning for sector regimes.",cov:"Partial",alt:["ServiceNow IRM","MetricStream","OneTrust"]},
 "12.4":{ms:"Microsoft Priva",comp:["Priva Privacy Risk Management","Subject Rights Requests","Purview data classification","Consent management","Data minimisation policies"],lic:"Add-on: Microsoft Priva",docs:"https://learn.microsoft.com/en-us/privacy/priva/priva-overview",pos:"Handles privacy risk and subject rights well inside the tenant, but OneTrust still leads on cross-estate processing records, impact assessments and transfer management.",cov:"Partial",alt:["OneTrust","TrustArc"]},
-"12.5":{ms:"Microsoft Purview Audit",comp:["Purview Audit (Standard & Premium)","eDiscovery","Compliance Manager evidence","Service Trust Portal","Audit log retention"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/audit-solutions-overview",pos:"Provides audit logs and evidence for the Microsoft estate, but there is no internal audit management workflow — fieldwork and certification lifecycle belong elsewhere.",cov:"Partial",alt:["AuditBoard","Workiva"]},
-"12.6":{ms:"—",comp:["Azure Well-Architected Framework (guidance)","Cloud Adoption Framework (guidance)"],lic:"Not applicable",docs:"https://learn.microsoft.com/en-us/azure/well-architected/",pos:"Genuine gap — Microsoft offers architecture guidance but no enterprise architecture repository, standards catalogue or design authority tooling.",cov:"Gap",alt:["SAP LeanIX","Ardoq","Bizzdesign"]},
-"12.7":{ms:"—",comp:["Azure Site Recovery (technical DR only)","Azure Backup (technical DR only)"],lic:"Not applicable",docs:"",pos:"Genuine gap, and distinct from technical disaster recovery which Azure does cover. There is no business impact analysis, continuity planning or exercising capability.",cov:"Gap",alt:["Fusion Risk Management","Castellan","Riskonnect"]},
+"12.5":{kind:"practice",ms:"Microsoft Purview Audit",comp:["Purview Audit (Standard & Premium)","eDiscovery","Compliance Manager evidence","Service Trust Portal","Audit log retention"],lic:"Microsoft 365 E5 Compliance",docs:"https://learn.microsoft.com/en-us/purview/audit-solutions-overview",pos:"Provides audit logs and evidence for the Microsoft estate, but there is no internal audit management workflow — fieldwork and certification lifecycle belong elsewhere.",cov:"Partial",alt:["AuditBoard","Workiva"]},
+"12.6":{kind:"practice",ms:"—",comp:["Azure Well-Architected Framework (guidance)","Cloud Adoption Framework (guidance)"],lic:"Not applicable",docs:"https://learn.microsoft.com/en-us/azure/well-architected/",pos:"Genuine gap — Microsoft offers architecture guidance but no enterprise architecture repository, standards catalogue or design authority tooling.",cov:"Gap",alt:["SAP LeanIX","Ardoq","Bizzdesign"]},
+"12.7":{kind:"practice",ms:"—",comp:["Azure Site Recovery (technical DR only)","Azure Backup (technical DR only)"],lic:"Not applicable",docs:"",pos:"Genuine gap, and distinct from technical disaster recovery which Azure does cover. There is no business impact analysis, continuity planning or exercising capability.",cov:"Gap",alt:["Fusion Risk Management","Castellan","Riskonnect"]},
 "12.8":{ms:"Microsoft Sustainability Manager",comp:["Emissions data ingestion","Scope 1-3 calculation","Water & waste tracking","ESG disclosure reporting","Fabric / Power Platform extensibility"],lic:"Standalone SKU",docs:"https://learn.microsoft.com/en-us/industry/sustainability/sustainability-manager-overview",pos:"A capable collection and reporting hub, but for audit-grade regulated disclosure the specialists still lead on assurance-ready methodology and framework certification.",cov:"Partial",alt:["Watershed","Persefoni","Sphera"]},
 
 /* 13 IT Service Management & Operations */
@@ -660,9 +662,9 @@ const MAP={
 "14.3":{ms:"—",comp:["Intune software inventory (signal only)"],lic:"Not applicable",docs:"",pos:"Honest gap — Microsoft has no software asset management product, not even for its own licensing position. Intune supplies installed-software signal but no entitlement reconciliation.",cov:"Gap",alt:["Flexera One","ServiceNow SAM Pro","USU"]},
 "14.4":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"No contract lifecycle management — no contract register, renewal calendar, obligation tracking or vendor performance management. Icertis is notable as an Azure-built alternative.",cov:"Gap",alt:["Icertis","SAP Ariba","ServiceNow VMW"]},
 "14.5":{ms:"Dynamics 365 Supply Chain Management",comp:["Procurement & sourcing","Purchase agreements","Vendor collaboration","Requisitions","Power BI spend analysis"],lic:"Dynamics 365 Supply Chain Management",docs:"https://learn.microsoft.com/en-us/dynamics365/supply-chain/",pos:"Can execute purchase agreements, but IT-specific technology sourcing strategy and negotiation are not its focus. Dedicated procurement suites own this.",cov:"Partial",alt:["SAP Ariba","Coupa","GEP SMART"]},
-"14.6":{ms:"Microsoft Planner",comp:["Microsoft Planner","Planner Premium","Power Platform intake","Power BI"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/planner/",pos:"Adequate for delivery tracking, but thin for investment portfolio and demand management at portfolio scale. Note Project for the web has been folded into the unified Planner.",cov:"Partial",alt:["Planview","ServiceNow SPM","Broadcom Clarity"]},
-"14.7":{ms:"Microsoft Viva",comp:["Viva Learning","Viva Glint","Viva Insights","Skills in Viva"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/",pos:"Supports skills development and workforce insight, but organisation design and sourcing mix are advisory and core human capital management belongs to Workday or SuccessFactors.",cov:"Partial",alt:["Degreed","Workday Skills Cloud"]},
-"14.8":{ms:"—",comp:["Entra cross-tenant synchronisation","Tenant-to-tenant migration","Microsoft Purview"],lic:"Not applicable",docs:"",pos:"Largely a gap — merger diligence, day-one readiness and carve-outs are services-led. Microsoft contributes tenant migration and cross-tenant sync tooling for execution only.",cov:"Gap",alt:["Quest On Demand Migration","AvePoint Fly","BitTitan"]}
+"14.6":{kind:"practice",ms:"Microsoft Planner",comp:["Microsoft Planner","Planner Premium","Power Platform intake","Power BI"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/planner/",pos:"Adequate for delivery tracking, but thin for investment portfolio and demand management at portfolio scale. Note Project for the web has been folded into the unified Planner.",cov:"Partial",alt:["Planview","ServiceNow SPM","Broadcom Clarity"]},
+"14.7":{kind:"practice",ms:"Microsoft Viva",comp:["Viva Learning","Viva Glint","Viva Insights","Skills in Viva"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/",pos:"Supports skills development and workforce insight, but organisation design and sourcing mix are advisory and core human capital management belongs to Workday or SuccessFactors.",cov:"Partial",alt:["Degreed","Workday Skills Cloud"]},
+"14.8":{kind:"practice",ms:"—",comp:["Entra cross-tenant synchronisation","Tenant-to-tenant migration","Microsoft Purview"],lic:"Not applicable",docs:"",pos:"Largely a gap — merger diligence, day-one readiness and carve-outs are services-led. Microsoft contributes tenant migration and cross-tenant sync tooling for execution only.",cov:"Gap",alt:["Quest / AvePoint / BitTitan (migration execution only)","Advisory-led for diligence, day-one and carve-out"]}
 };
 
 const COV_PAL={Native:["#5ec75e","#0b6a08"],Partial:["#e6ad3c","#835b00"],
@@ -802,7 +804,8 @@ function build(){
         cb.innerHTML='<span class="chev" aria-hidden="true">&#9654;</span>'+
           '<span class="cc">'+c.id+'</span>'+
           '<span><span class="cn">'+esc(c.name)+'</span><span class="cd">'+esc(c.def)+'</span></span>'+
-          '<span class="meta"><span class="tiermark">'+esc(TIER[c.id]||"")+'</span>'+covPill(m.cov)+'</span>';
+          '<span class="meta">'+(m.kind==="practice"?'<span class="kindmark" title="An operating discipline — tooling supports it but does not constitute it">Practice</span>':'')+
+          '<span class="tiermark">'+esc(TIER[c.id]||"")+'</span>'+covPill(m.cov)+'</span>';
         cb.addEventListener("click",e=>{
           e.stopPropagation();
           const open=cap.classList.toggle("open");
@@ -836,7 +839,9 @@ function build(){
 
   const lg=$("#legend");
   lg.innerHTML=activeCovs().map(k=>
-    '<span><span class="pillN" style="color:'+COV_COLOR[k]+';border:1px solid '+COV_BD[k]+';background:'+COV_BG[k]+'">'+k+'</span> '+esc(COV_DESC[k]||"")+'</span>').join("");
+    '<span><span class="pillN" style="color:'+COV_COLOR[k]+';border:1px solid '+COV_BD[k]+';background:'+COV_BG[k]+'">'+k+'</span> '+esc(COV_DESC[k]||"")+'</span>').join("")+
+    (allCaps().some(c=>(MAP[c.id]||{}).kind==="practice")
+      ? '<span><span class="kindmark">Practice</span> An operating discipline — coverage describes tooling support, not a deficiency</span>' : "");
 }
 
 /* coverage + tier filter chips */
@@ -877,7 +882,7 @@ function apply(){
       if(!cn)return;
       const m=MAP[c.id]||{ms:"",alt:[],cov:"",comp:[],lic:"",pos:""};
       const hay=(c.id+" "+c.name+" "+c.def+" "+a.id+" "+a.name+" "+a.desc+" "+m.ms+" "+
-                 (m.alt||[]).join(" ")+" "+(m.comp||[]).join(" ")+" "+(m.pos||"")).toLowerCase();
+                 (m.alt||[]).join(" ")+" "+(m.comp||[]).join(" ")+" "+(m.pos||"")+" "+(m.kind||"")).toLowerCase();
       const hit=(!q||hay.includes(q))&&(covFilter==="all"||m.cov===covFilter)&&(tierFilter==="all"||TIER[c.id]===tierFilter);
       cn.classList.toggle("hide",!hit);
       if(hit){anyCap=true;shown++;}
