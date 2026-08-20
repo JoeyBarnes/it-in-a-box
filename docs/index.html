@@ -506,7 +506,8 @@ const AREAS=[
  {id:"14.5",name:"Sourcing & Procurement",def:"Technology sourcing strategy, negotiation and portfolio-level purchasing agreements."},
  {id:"14.6",name:"Portfolio & Demand Management",def:"Investment portfolio, demand intake, prioritisation and benefits tracking."},
  {id:"14.7",name:"Workforce, Skills & Organisation",def:"Operating model design, sourcing mix, role definition, skills and capability development."},
- {id:"14.8",name:"Merger, Integration & Separation",def:"Technology diligence, day-one readiness, integration execution and carve-out and divestiture."}
+ {id:"14.8",name:"Merger, Integration & Separation",def:"Technology diligence, day-one readiness, integration execution and carve-out and divestiture."},
+ {id:"14.9",name:"Concentration, Portability & Exit",def:"Identification of technology concentration and lock-in risk, maintenance of substitutability, and tested plans to exit a platform or provider."}
  ]}
 ];
 
@@ -664,7 +665,8 @@ const MAP={
 "14.5":{ms:"Dynamics 365 Supply Chain Management",comp:["Procurement & sourcing","Purchase agreements","Vendor collaboration","Requisitions","Power BI spend analysis"],lic:"Dynamics 365 Supply Chain Management",docs:"https://learn.microsoft.com/en-us/dynamics365/supply-chain/",pos:"Can execute purchase agreements, but IT-specific technology sourcing strategy and negotiation are not its focus. Dedicated procurement suites own this.",cov:"Partial",alt:["SAP Ariba","Coupa","GEP SMART"]},
 "14.6":{kind:"practice",ms:"Microsoft Planner",comp:["Microsoft Planner","Planner Premium","Power Platform intake","Power BI"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/planner/",pos:"Adequate for delivery tracking, but thin for investment portfolio and demand management at portfolio scale. Note Project for the web has been folded into the unified Planner.",cov:"Partial",alt:["Planview","ServiceNow SPM","Broadcom Clarity"]},
 "14.7":{kind:"practice",ms:"Microsoft Viva",comp:["Viva Learning","Viva Glint","Viva Insights","Skills in Viva"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/",pos:"Supports skills development and workforce insight, but organisation design and sourcing mix are advisory and core human capital management belongs to Workday or SuccessFactors.",cov:"Partial",alt:["Degreed","Workday Skills Cloud"]},
-"14.8":{kind:"practice",ms:"—",comp:["Entra cross-tenant synchronisation","Tenant-to-tenant migration","Microsoft Purview"],lic:"Not applicable",docs:"",pos:"Largely a gap — merger diligence, day-one readiness and carve-outs are services-led. Microsoft contributes tenant migration and cross-tenant sync tooling for execution only.",cov:"Gap",alt:["Quest / AvePoint / BitTitan (migration execution only)","Advisory-led for diligence, day-one and carve-out"]}
+"14.8":{kind:"practice",ms:"—",comp:["Entra cross-tenant synchronisation","Tenant-to-tenant migration","Microsoft Purview"],lic:"Not applicable",docs:"",pos:"Largely a gap — merger diligence, day-one readiness and carve-outs are services-led. Microsoft contributes tenant migration and cross-tenant sync tooling for execution only.",cov:"Gap",alt:["Quest / AvePoint / BitTitan (migration execution only)","Advisory-led for diligence, day-one and carve-out"]},
+"14.9":{kind:"practice",ms:"—",comp:["Azure Arc (workload portability only)","Open formats — Delta, Parquet, OpenAPI","Data export APIs"],lic:"Not applicable",docs:"",pos:"Genuine gap, and one Microsoft has little commercial incentive to close. Open formats and Arc help portability, but concentration analysis, substitutability testing and a rehearsed exit are a discipline the organisation owns. Distinct from backup, which assumes the provider is still available. Regulatory drivers such as DORA now require documented exit plans for providers supporting critical functions.",cov:"Gap",alt:["ServiceNow IRM / Archer (concentration tracking only)","Advisory-led for exit planning and testing"]}
 };
 
 const COV_PAL={Native:["#5ec75e","#0b6a08"],Partial:["#e6ad3c","#835b00"],
@@ -704,7 +706,7 @@ const TIER={
 "13.1":"Essential","13.2":"Essential","13.3":"Standard","13.4":"Standard","13.5":"Standard",
 "13.6":"Essential","13.7":"Standard","13.8":"Standard","13.9":"Advanced",
 "14.1":"Standard","14.2":"Standard","14.3":"Essential","14.4":"Essential","14.5":"Standard",
-"14.6":"Advanced","14.7":"Standard","14.8":"Standard"
+"14.6":"Advanced","14.7":"Standard","14.8":"Standard","14.9":"Advanced"
 };
 const TIER_DESC={Essential:"Do first — non-negotiable wherever it applies",
   Standard:"The default where there is a real technology function",
