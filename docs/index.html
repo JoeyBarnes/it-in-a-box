@@ -203,14 +203,22 @@ button.ovc:focus-visible,.ovc-hd:focus-visible,.ovcap:focus-visible{outline:2px 
 .ovcap:hover{color:var(--tx);text-decoration:underline;text-underline-offset:2px}
 .ovcaps.inl .ovcap:not(:last-child)::after{content:" \00b7";color:var(--line-solid)}
 
-.ovr{justify-content:center;align-items:center;padding:14px 9px;min-width:48px}
-.ovr-in{writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;
-  gap:14px;white-space:nowrap;padding:5px 0}
-.ovr .ovbar{width:4px;height:72px;margin:0;flex-direction:column;flex:0 0 auto}
+/* Rail content sits in side-by-side perpendicular columns, so the rail's height
+   is the tallest single element rather than the sum of all of them. Stacking
+   them in one vertical line makes the rail outgrow the stack it is meant to
+   span, and the grid then stretches to fit the rail. */
+.ovr{flex-direction:row;justify-content:center;align-items:center;gap:8px;padding:14px 6px;min-width:50px}
+.ovr-col{writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;
+  gap:11px;white-space:nowrap}
+/* the bar rides in the name column so the rail stays narrow. It deliberately
+   carries no transform of its own: inside the rotated column it reads
+   bottom-to-top like the rail text, and once the column un-rotates on narrow
+   screens it reads left-to-right like the cards. */
+.ovr .ovbar{width:4px;height:84px;margin:0;flex:0 0 auto;flex-direction:column;border-radius:2px}
 .ovr .ovbar i{min-width:0;min-height:3px}
 .ovr-nm{font-size:14px;font-weight:600;color:var(--tx);line-height:1.2}
 .ovr .ovc-code{padding:5px 1px}
-.ovr-sub{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+.ovr-meta{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
 button.ovr:hover .ovr-nm{color:var(--ac);text-decoration:underline;text-underline-offset:2px}
 
 .ov-groups{display:flex;flex-wrap:wrap;gap:7px 20px;margin-top:18px;padding-top:13px;
@@ -221,11 +229,11 @@ button.ovr:hover .ovr-nm{color:var(--ac);text-decoration:underline;text-underlin
 
 @media(max-width:1080px){
   .stack{grid-template-columns:minmax(0,1fr)}
-  .ovr{padding:11px 13px;justify-content:flex-start;align-items:stretch}
-  .ovr-in{writing-mode:horizontal-tb;transform:none;padding:0}
-  .ovr .ovbar{width:150px;height:4px;flex:0 0 auto;flex-direction:row;align-self:center}
+  .ovr{padding:11px 13px;justify-content:flex-start;align-items:center}
+  .ovr-col{writing-mode:horizontal-tb;transform:none}
+  .ovr .ovbar{width:150px;height:4px;flex-direction:row}
   .ovr .ovbar i{min-height:0;min-width:3px}
-  .ovr-sub{margin-left:auto}
+  .ovr-meta{margin-left:auto}
   .ovc.r{border-right:1px solid var(--line-solid);border-left:4px solid var(--ac)}
   .ov-row[data-n="4"],.ov-row[data-n="3"]{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -1141,9 +1149,10 @@ function ovRail(a,right){
   b.dataset.ovarea=a.id;
   b.title=ovLabel(a);
   b.setAttribute("aria-label",ovLabel(a));
-  b.innerHTML='<span class="ovr-in" aria-hidden="true"><span class="ovc-code">'+a.id+'</span>'+
-    '<span class="ovr-nm">'+esc(a.name)+'</span>'+ovBar(a)+
-    '<span class="ovr-sub">'+a.caps.length+' caps \u00b7 '+esc(ovMixText(a))+'</span></span>';
+  b.innerHTML='<span class="ovr-col ovr-main" aria-hidden="true"><span class="ovc-code">'+a.id+
+    '</span><span class="ovr-nm">'+esc(a.name)+'</span>'+ovBar(a)+'</span>'+
+    '<span class="ovr-col ovr-meta" aria-hidden="true">'+a.caps.length+' caps \u00b7 '+
+    esc(ovMixText(a))+'</span>';
   b.addEventListener("click",()=>openAreaInModel(a.id));
   return b;
 }
