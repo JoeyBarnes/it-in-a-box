@@ -151,6 +151,77 @@ html[data-theme="dark"] .lic.verify{color:#f0c674;background:rgba(230,173,60,.14
 .pagefoot p{margin:0;font-size:12px;line-height:1.55;color:var(--tx-3);max-width:940px}
 .pagefoot strong{color:var(--tx-2);font-weight:600}
 .pagefoot p.foot-meta{margin-top:13px;padding-top:11px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--tx-3)}
+
+/* ===== overview stack ===== */
+.ov-lead{margin:0 0 15px;font-size:13px;line-height:1.62;color:var(--tx-2);max-width:1020px}
+.ov-lead b{color:var(--tx);font-weight:600}
+.ov-lead .ovstat{display:block;margin-top:6px;font-family:var(--mono);font-size:11.5px;color:var(--tx-3)}
+.stack{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:stretch}
+.ov-mid{display:flex;flex-direction:column;gap:9px;min-width:0}
+.ov-rail{display:flex;flex-direction:column;gap:9px}
+.ov-rail>.ovc{flex:1 1 0}
+.ov-row{display:grid;gap:9px;min-width:0}
+.ov-row[data-n="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+.ov-row[data-n="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+.ov-row[data-n="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ov-row[data-n="1"]{grid-template-columns:minmax(0,1fr)}
+
+.ovc{position:relative;display:flex;flex-direction:column;min-width:0;background:var(--panel);
+  border:1px solid var(--line-solid);border-left:4px solid var(--ac);border-radius:var(--radius);
+  padding:11px 13px 12px 12px;text-align:left}
+.ovc.r{border-left:1px solid var(--line-solid);border-right:4px solid var(--ac)}
+button.ovc{font:inherit;color:inherit;cursor:pointer;appearance:none}
+button.ovc:focus-visible,.ovc-hd:focus-visible,.ovcap:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+.ovc-hd{appearance:none;background:none;border:0;padding:0;margin:0;cursor:pointer;width:100%;
+  display:flex;align-items:baseline;gap:8px;font:inherit;color:inherit;text-align:left}
+.ovc-hd:hover .ovc-nm{color:var(--ac);text-decoration:underline;text-underline-offset:2px}
+.ovc-code{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--ac);
+  background:var(--panel-2);border:1px solid var(--line-solid);border-radius:4px;padding:1px 5px}
+.ovc-nm{font-size:14px;font-weight:600;color:var(--tx);line-height:1.25}
+.ovc-ct{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--tx-3);white-space:nowrap}
+
+.ovbar{display:flex;height:4px;gap:1px;border-radius:3px;overflow:hidden;margin:8px 0 0;
+  background:var(--panel-2)}
+.ovbar i{display:block;min-width:3px}
+
+.ovcaps{display:flex;margin-top:8px;min-width:0}
+.ovcaps.col{flex-direction:column;align-items:flex-start;gap:1px}
+.ovcaps.inl{flex-wrap:wrap;gap:0 5px}
+.ovcap{appearance:none;background:none;border:0;padding:1px 0;font:inherit;font-size:11.5px;
+  line-height:1.52;color:var(--tx-3);cursor:pointer;text-align:left}
+.ovcap:hover{color:var(--tx);text-decoration:underline;text-underline-offset:2px}
+.ovcaps.inl .ovcap:not(:last-child)::after{content:" \00b7";color:var(--line-solid)}
+
+.ovr{justify-content:center;align-items:center;padding:14px 9px;min-width:48px}
+.ovr-in{writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;
+  gap:14px;white-space:nowrap;padding:5px 0}
+.ovr .ovbar{width:4px;height:72px;margin:0;flex-direction:column;flex:0 0 auto}
+.ovr .ovbar i{min-width:0;min-height:3px}
+.ovr-nm{font-size:14px;font-weight:600;color:var(--tx);line-height:1.2}
+.ovr .ovc-code{padding:5px 1px}
+.ovr-sub{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+button.ovr:hover .ovr-nm{color:var(--ac);text-decoration:underline;text-underline-offset:2px}
+
+.ov-groups{display:flex;flex-wrap:wrap;gap:7px 20px;margin-top:18px;padding-top:13px;
+  border-top:1px solid var(--line);font-size:12px;color:var(--tx-2)}
+.ov-groups span.g{display:flex;align-items:center;gap:7px}
+.ov-groups i{width:10px;height:10px;border-radius:3px;display:block;flex:0 0 auto}
+.ov-groups .ids{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+
+@media(max-width:1080px){
+  .stack{grid-template-columns:minmax(0,1fr)}
+  .ovr{padding:11px 13px;justify-content:flex-start;align-items:stretch}
+  .ovr-in{writing-mode:horizontal-tb;transform:none;padding:0}
+  .ovr .ovbar{width:150px;height:4px;flex:0 0 auto;flex-direction:row;align-self:center}
+  .ovr .ovbar i{min-height:0;min-width:3px}
+  .ovr-sub{margin-left:auto}
+  .ovc.r{border-right:1px solid var(--line-solid);border-left:4px solid var(--ac)}
+  .ov-row[data-n="4"],.ov-row[data-n="3"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:660px){
+  .ov-row[data-n="4"],.ov-row[data-n="3"],.ov-row[data-n="2"]{grid-template-columns:minmax(0,1fr)}
+}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 14px;padding-bottom:13px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12.5px;color:var(--tx-3)}
 .legend span{display:flex;align-items:center;gap:6px}
 kbd{background:var(--panel-2);border:1px solid var(--line-solid);border-bottom-width:2px;border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:11px}
@@ -255,14 +326,26 @@ dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
     <h1>IT-in-a-Box</h1>
     <p class="sub" id="sub"><span class="sub-lead">A complete model of an enterprise technology function — every capability a business needs in order to operate, expressed as a reusable standard rather than as any one company's organisation chart.</span><span class="sub-p">It exists to make a recurring assessment repeatable. A business joining a portfolio arrives with a technology function already in place — its own platforms, vendors and decisions — so the question is rarely what is missing. It is how that estate compares to the standard, where convergence is worth the cost, and where the business is better left to run its own. Doing that from a blank page each time is slow and produces answers that cannot be compared across the portfolio. Each capability is mapped to the Microsoft platform, so what is already owned and what still has to be bought fall out of the same view.</span></p>
     <div class="tabs" role="tablist" aria-label="View">
-      <button class="tab" id="tab-model" role="tab" aria-selected="true" aria-controls="view-model">Capability Model</button>
+      <button class="tab" id="tab-overview" role="tab" aria-selected="true" aria-controls="view-overview">Overview</button>
+      <button class="tab" id="tab-model" role="tab" aria-selected="false" aria-controls="view-model">Capability Model</button>
       <button class="tab" id="tab-ri" role="tab" aria-selected="false" aria-controls="view-ri">Reference Implementation</button>
     </div>
   </div>
 </header>
 
 <main class="wrap">
-<section id="view-model" role="tabpanel" aria-labelledby="tab-model">
+<section id="view-overview" role="tabpanel" aria-labelledby="tab-overview">
+  <p class="ov-lead">Every functional area on one page. <b>Cyber security</b> runs the full height
+  because it qualifies every layer rather than occupying one of them, and <b>governance</b> and
+  <b>business management</b> do the same on the right. The four areas across the top are what the
+  business actually touches; everything beneath them is what makes those work. The bar under each
+  area shows its Microsoft coverage mix. Select any area or capability to open it in the model &#8212;
+  the three spanning areas list their capabilities there.
+  <span class="ovstat" id="ovstat"></span></p>
+  <div id="ovhost"></div>
+</section>
+
+<section id="view-model" role="tabpanel" aria-labelledby="tab-model" hidden>
   <div class="legend" id="legend"></div>
   <div class="toolbar" role="search">
     <div class="search">
@@ -957,6 +1040,7 @@ function toggleTheme(){
   localStorage.setItem("ptom-theme",THEME);
   setPalette();setCov();reresolveColors();applyTheme();
   build();buildCovBar();
+  if(typeof buildOverview==="function")buildOverview();
   if(typeof buildRI==="function")buildRI();
   openAreas.forEach(id=>{const n=document.querySelector('[data-area="'+id+'"]');
     if(n){n.classList.add("open");n.querySelector(".area-btn").setAttribute("aria-expanded","true");}});
@@ -970,6 +1054,112 @@ $("#themebtn").addEventListener("click",toggleTheme);
 applyTheme();
 
 build();buildCovBar();apply();
+
+/* ============ overview stack ============
+   Layout only — every label, count and colour is read from AREAS/MAP at build
+   time, so the overview cannot drift from the model. Any area the layout does
+   not place is appended rather than silently dropped. */
+const STACK={
+  railL:"11",
+  railR:["12","14"],
+  rows:[["09","07","08","10"],["05","06"],["01"],["02","03"],["04"],["13"]]
+};
+
+const ovArea=id=>AREAS.find(a=>a.id===id);
+function ovMixLabel(a){
+  const m=areaMix(a);
+  return Object.keys(m).filter(k=>m[k]>0).map(k=>m[k]+" "+k).join(", ");
+}
+function ovBar(a){
+  const m=areaMix(a);
+  return '<span class="ovbar" aria-hidden="true">'+
+    Object.keys(m).filter(k=>m[k]>0)
+      .map(k=>'<i style="flex:'+m[k]+';background:'+COV_COLOR[k]+'"></i>').join("")+'</span>';
+}
+function ovCaps(a,inline){
+  const w=el("div","ovcaps "+(inline?"inl":"col"));
+  a.caps.forEach(c=>{
+    const m=MAP[c.id]||{};
+    const b=el("button","ovcap",esc(c.name));
+    b.type="button";
+    b.title=c.id+" "+c.name+" \u2014 "+(m.cov||"\u2014")+(m.ms&&m.ms!=="\u2014"?" \u00b7 "+m.ms:"");
+    b.addEventListener("click",()=>openInModel(c.id));
+    w.appendChild(b);
+  });
+  return w;
+}
+function ovLabel(a){
+  return a.id+" "+a.name+", "+a.caps.length+" capabilities \u2014 "+ovMixLabel(a)+
+         ". Open in the capability model.";
+}
+function ovCell(a,inline,right){
+  const c=el("div","ovc"+(right?" r":""));
+  c.style.setProperty("--ac",a.color);
+  c.dataset.area=a.id;
+  const hd=el("button","ovc-hd");
+  hd.type="button";
+  hd.innerHTML='<span class="ovc-code">'+a.id+'</span><span class="ovc-nm">'+esc(a.name)+
+    '</span><span class="ovc-ct" aria-hidden="true">'+a.caps.length+'</span>';
+  hd.title=ovLabel(a);
+  hd.setAttribute("aria-label",ovLabel(a));
+  hd.addEventListener("click",()=>openAreaInModel(a.id));
+  c.appendChild(hd);
+  c.insertAdjacentHTML("beforeend",ovBar(a));
+  c.appendChild(ovCaps(a,inline));
+  return c;
+}
+function ovRail(a,right){
+  const b=el("button","ovc ovr"+(right?" r":""));
+  b.type="button";
+  b.style.setProperty("--ac",a.color);
+  b.dataset.area=a.id;
+  b.title=ovLabel(a);
+  b.setAttribute("aria-label",ovLabel(a));
+  b.innerHTML='<span class="ovr-in" aria-hidden="true"><span class="ovc-code">'+a.id+'</span>'+
+    '<span class="ovr-nm">'+esc(a.name)+'</span>'+ovBar(a)+
+    '<span class="ovr-sub">'+a.caps.length+' capabilities</span></span>';
+  b.addEventListener("click",()=>openAreaInModel(a.id));
+  return b;
+}
+function buildOverview(){
+  const host=$("#ovhost");host.innerHTML="";
+  const placed=new Set();
+  const stack=el("div","stack");
+
+  const L=ovArea(STACK.railL);
+  if(L){placed.add(L.id);stack.appendChild(ovRail(L,false));}
+
+  const railR=el("div","ov-rail");
+  STACK.railR.forEach(id=>{const a=ovArea(id);if(!a)return;placed.add(id);railR.appendChild(ovRail(a,true));});
+
+  const mid=el("div","ov-mid");
+  const addRow=(areas,inline)=>{
+    if(!areas.length)return;
+    const r=el("div","ov-row");
+    r.dataset.n=String(Math.min(areas.length,4));
+    areas.forEach(a=>r.appendChild(ovCell(a,inline,false)));
+    mid.appendChild(r);
+  };
+  STACK.rows.forEach((row,i)=>{
+    const areas=row.map(ovArea).filter(Boolean);
+    areas.forEach(a=>placed.add(a.id));
+    addRow(areas,i>0);
+  });
+  addRow(AREAS.filter(a=>!placed.has(a.id)),true);
+
+  stack.appendChild(mid);
+  if(railR.children.length)stack.appendChild(railR);
+  host.appendChild(stack);
+
+  const gl=el("div","ov-groups");
+  gl.innerHTML=GROUPS.map(g=>'<span class="g"><i style="background:'+g.color+'"></i>'+esc(g.name)+
+    ' <span class="ids">'+AREAS.filter(a=>a.g===g.id).map(a=>a.id).join(" \u00b7 ")+'</span></span>').join("");
+  host.appendChild(gl);
+
+  $("#ovstat").textContent=allCaps().length+" capabilities \u00b7 "+AREAS.length+
+    " functional areas \u00b7 "+GROUPS.length+" groups";
+}
+buildOverview();
 
 /* ============ Reference implementation view ============ */
 const RI={
@@ -1098,11 +1288,14 @@ function buildRI(){
   host.appendChild(el("p","ri-src",all.length+" capabilities engaged · "+
     RI.watch.length+" material custom-control gaps."));
 }
-/* jump from the diagram into the model */
-function openInModel(id){
-  showView("model");
+/* jump from the diagram or the overview into the model */
+function resetModelFilters(){
   covFilter="all";tierFilter="all";$("#q").value="";
   buildCovBar();apply();
+}
+function openInModel(id){
+  showView("model");
+  resetModelFilters();
   const a=capArea(id);if(!a)return;
   const ae=document.querySelector('.area[data-area="'+a.id+'"]');
   const ce=document.querySelector('.cap[data-cap="'+id+'"]');
@@ -1110,16 +1303,26 @@ function openInModel(id){
   if(ce&&!ce.classList.contains("open"))ce.querySelector(".cap-btn").click();
   if(ce){ce.scrollIntoView({block:"center",behavior:"smooth"});ce.querySelector(".cap-btn").focus({preventScroll:true});}
 }
+function openAreaInModel(id){
+  showView("model");
+  resetModelFilters();
+  const ae=document.querySelector('.area[data-area="'+id+'"]');
+  if(!ae)return;
+  if(!ae.classList.contains("open"))ae.querySelector(".area-btn").click();
+  ae.scrollIntoView({block:"start",behavior:"smooth"});
+  ae.querySelector(".area-btn").focus({preventScroll:true});
+}
 
+const VIEWS=["overview","model","ri"];
 function showView(v){
-  const isM=v==="model";
-  $("#view-model").hidden=!isM;$("#view-ri").hidden=isM;
-  $("#tab-model").setAttribute("aria-selected",String(isM));
-  $("#tab-ri").setAttribute("aria-selected",String(!isM));
+  if(VIEWS.indexOf(v)<0)v=VIEWS[0];
+  VIEWS.forEach(x=>{
+    $("#view-"+x).hidden=(x!==v);
+    $("#tab-"+x).setAttribute("aria-selected",String(x===v));
+  });
   try{localStorage.setItem("ptom-view",v);}catch(e){}
 }
-$("#tab-model").addEventListener("click",()=>showView("model"));
-$("#tab-ri").addEventListener("click",()=>{showView("ri");});
+VIEWS.forEach(v=>$("#tab-"+v).addEventListener("click",()=>showView(v)));
 document.querySelector(".tabs").addEventListener("keydown",e=>{
   if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
   const t=[...document.querySelectorAll(".tab")],i=t.indexOf(document.activeElement);
@@ -1295,6 +1498,6 @@ function buildDiagram(){
 }
 
 buildRI();
-try{if(localStorage.getItem("ptom-view")==="ri")showView("ri");}catch(e){}</script>
+try{const v=localStorage.getItem("ptom-view");if(v&&VIEWS.indexOf(v)>=0)showView(v);}catch(e){}</script>
 </body>
 </html>

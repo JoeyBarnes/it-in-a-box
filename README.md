@@ -14,6 +14,12 @@ https://joeybarnes.github.io/it-in-a-box/
 
 ## What it contains
 
+**Overview** — the whole stack on one page. Cyber security spans the full height as the left
+rail, governance and business management as the right rail, the four business-facing areas
+across the top, and the data, platform and operating layers descending beneath them. Every
+label, count and coverage bar is read from the model at build time, so the view cannot drift
+from the data behind it. Selecting any area or capability opens it in the Capability Model.
+
 **Capability Model** — 120 capabilities across 14 functional areas and 5 groups. Each
 capability is sized as a single product decision and carries:
 
@@ -31,10 +37,9 @@ Capabilities that are a management discipline rather than a product purchase are
 interactive flow diagram, control planes, and a closing note on where the design depends
 on custom build rather than a first-party product.
 
-**Overview graphic** — a one-page stack view of all 14 areas for decks, documents and
-Teams. Security spans the stack as the left rail, governance and business management as
-the right rail, business-facing areas across the top, and the platform and operating
-layers descending beneath them.
+**Overview graphic** — a standalone one-page stack view for decks, documents and Teams, using
+the same arrangement as the in-page Overview tab. Unlike the tab, this one carries its own copy
+of the area names and counts, so it must be regenerated when the model changes.
 
 | File | Use |
 | --- | --- |
