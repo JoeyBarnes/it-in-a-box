@@ -156,6 +156,12 @@ html[data-theme="dark"] .lic.verify{color:#f0c674;background:rgba(230,173,60,.14
 .ov-lead{margin:0 0 15px;font-size:13px;line-height:1.62;color:var(--tx-2);max-width:1020px}
 .ov-lead b{color:var(--tx);font-weight:600}
 .ov-lead .ovstat{display:block;margin-top:6px;font-family:var(--mono);font-size:11.5px;color:var(--tx-3)}
+.ov-key{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 15px;padding-bottom:12px;
+  border-bottom:1px solid var(--line);font-size:12px;color:var(--tx-3)}
+.ov-key span{display:flex;align-items:center;gap:7px}
+.ov-key i{width:10px;height:10px;border-radius:3px;display:block;flex:0 0 auto}
+.ov-key b{color:var(--tx-2);font-weight:600}
+.ovmix{margin-top:6px;font-family:var(--mono);font-size:10.5px;line-height:1.45;color:var(--tx-3)}
 .stack{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:stretch}
 .ov-mid{display:flex;flex-direction:column;gap:9px;min-width:0}
 .ov-rail{display:flex;flex-direction:column;gap:9px}
@@ -1066,10 +1072,12 @@ const STACK={
 };
 
 const ovArea=id=>AREAS.find(a=>a.id===id);
-function ovMixLabel(a){
+function ovMixList(a){
   const m=areaMix(a);
-  return Object.keys(m).filter(k=>m[k]>0).map(k=>m[k]+" "+k).join(", ");
+  return Object.keys(m).filter(k=>m[k]>0).map(k=>m[k]+" "+k);
 }
+const ovMixLabel=a=>ovMixList(a).join(", ");
+const ovMixText=a=>ovMixList(a).join(" \u00b7 ");
 function ovBar(a){
   const m=areaMix(a);
   return '<span class="ovbar" aria-hidden="true">'+
@@ -1082,7 +1090,9 @@ function ovCaps(a,inline){
     const m=MAP[c.id]||{};
     const b=el("button","ovcap",esc(c.name));
     b.type="button";
-    b.title=c.id+" "+c.name+" \u2014 "+(m.cov||"\u2014")+(m.ms&&m.ms!=="\u2014"?" \u00b7 "+m.ms:"");
+    b.title=c.id+" "+c.name+" \u2014 "+(m.cov||"\u2014")+(m.ms&&m.ms!=="\u2014"?" \u00b7 "+m.ms:"")+
+      ". Open in the capability model.";
+    b.setAttribute("aria-label",b.title);
     b.addEventListener("click",()=>openInModel(c.id));
     w.appendChild(b);
   });
@@ -1099,12 +1109,14 @@ function ovCell(a,inline,right){
   const hd=el("button","ovc-hd");
   hd.type="button";
   hd.innerHTML='<span class="ovc-code">'+a.id+'</span><span class="ovc-nm">'+esc(a.name)+
-    '</span><span class="ovc-ct" aria-hidden="true">'+a.caps.length+'</span>';
+    '</span><span class="ovc-ct" aria-hidden="true">'+a.caps.length+' caps</span>';
   hd.title=ovLabel(a);
   hd.setAttribute("aria-label",ovLabel(a));
   hd.addEventListener("click",()=>openAreaInModel(a.id));
   c.appendChild(hd);
   c.insertAdjacentHTML("beforeend",ovBar(a));
+  /* the mix in words as well as colour — the bar must not be the only channel */
+  c.insertAdjacentHTML("beforeend",'<div class="ovmix">'+esc(ovMixText(a))+'</div>');
   c.appendChild(ovCaps(a,inline));
   return c;
 }
@@ -1117,12 +1129,20 @@ function ovRail(a,right){
   b.setAttribute("aria-label",ovLabel(a));
   b.innerHTML='<span class="ovr-in" aria-hidden="true"><span class="ovc-code">'+a.id+'</span>'+
     '<span class="ovr-nm">'+esc(a.name)+'</span>'+ovBar(a)+
-    '<span class="ovr-sub">'+a.caps.length+' capabilities</span></span>';
+    '<span class="ovr-sub">'+a.caps.length+' caps \u00b7 '+esc(ovMixText(a))+'</span></span>';
   b.addEventListener("click",()=>openAreaInModel(a.id));
   return b;
 }
 function buildOverview(){
   const host=$("#ovhost");host.innerHTML="";
+
+  /* coverage key — the overview is the landing view, so the colour code has to
+     be decodable here rather than only on the model tab */
+  const key=el("div","ov-key");
+  key.innerHTML=activeCovs().map(k=>'<span><i style="background:'+COV_COLOR[k]+'"></i><b>'+
+    esc(k)+'</b> '+esc(COV_DESC[k]||"")+'</span>').join("");
+  host.appendChild(key);
+
   const placed=new Set();
   const stack=el("div","stack");
 
@@ -1145,7 +1165,10 @@ function buildOverview(){
     areas.forEach(a=>placed.add(a.id));
     addRow(areas,i>0);
   });
-  addRow(AREAS.filter(a=>!placed.has(a.id)),true);
+  /* safety net: anything the layout does not place still appears, in rows the
+     grid can actually style */
+  const leftover=AREAS.filter(a=>!placed.has(a.id));
+  for(let i=0;i<leftover.length;i+=3)addRow(leftover.slice(i,i+3),true);
 
   stack.appendChild(mid);
   if(railR.children.length)stack.appendChild(railR);
@@ -1158,6 +1181,16 @@ function buildOverview(){
 
   $("#ovstat").textContent=allCaps().length+" capabilities \u00b7 "+AREAS.length+
     " functional areas \u00b7 "+GROUPS.length+" groups";
+
+  /* placement invariant — an area listed twice renders twice, which the
+     leftover path cannot detect. Fail loudly in the console rather than
+     shipping a silently duplicated area. */
+  const listed=[STACK.railL].concat(STACK.railR,...STACK.rows);
+  const dupes=listed.filter((id,i)=>listed.indexOf(id)!==i);
+  const rendered=host.querySelectorAll(".stack .ovc").length;
+  if(dupes.length)console.warn("Overview: area listed more than once in STACK:",dupes);
+  if(rendered!==AREAS.length)
+    console.warn("Overview: rendered "+rendered+" cells for "+AREAS.length+" areas");
 }
 buildOverview();
 
@@ -1319,8 +1352,11 @@ const VIEWS=["overview","model","ri"];
 function showView(v){
   if(VIEWS.indexOf(v)<0)v=VIEWS[0];
   VIEWS.forEach(x=>{
-    $("#view-"+x).hidden=(x!==v);
-    $("#tab-"+x).setAttribute("aria-selected",String(x===v));
+    const sel=(x===v);
+    $("#view-"+x).hidden=!sel;
+    const t=$("#tab-"+x);
+    t.setAttribute("aria-selected",String(sel));
+    t.tabIndex=sel?0:-1;
   });
 }
 VIEWS.forEach(v=>$("#tab-"+v).addEventListener("click",()=>showView(v)));
