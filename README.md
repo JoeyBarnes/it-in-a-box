@@ -37,26 +37,30 @@ Capabilities that are a management discipline rather than a product purchase are
 interactive flow diagram, control planes, and a closing note on where the design depends
 on custom build rather than a first-party product.
 
-**Overview graphic** — a standalone one-page stack view for decks, documents and Teams, using
-the same arrangement as the in-page Overview tab. Unlike the tab, this one carries its own copy
-of the area names and counts, so it must be regenerated when the model changes.
+**Overview graphic** — the Overview tab has **Download SVG** and **Download PNG** buttons. The
+graphic is generated in the browser from the model itself at click time, in whichever theme is
+active, so a download always matches what is on screen and can never drift from the data. Text
+is laid out using real canvas metrics rather than estimated widths, so cells are sized to their
+actual content.
+
+A snapshot of that same output is committed for direct linking:
 
 | File | Use |
 | --- | --- |
-| `docs/it-in-a-box-stack.svg` | vector — documents, print, scaling |
-| `docs/it-in-a-box-stack.png` | 3440×1840 raster — Teams, PowerPoint, chat |
+| `docs/it-in-a-box-overview.svg` | vector — documents, print, scaling |
+| `docs/it-in-a-box-overview.png` | 3440×2316 raster — Teams, PowerPoint, chat |
 
 ## Structure
 
 ```
 docs/
-  index.html               # the self-contained SPA — no build step, no external assets
-  it-in-a-box-stack.svg    # one-page overview graphic (generated)
-  it-in-a-box-stack.png    # 2x raster of the same (generated)
-  .nojekyll                # serve files as-is, skip Jekyll processing
+  index.html                  # the self-contained SPA — no build step, no external assets
+  it-in-a-box-overview.svg    # snapshot of the in-page graphic (generated)
+  it-in-a-box-overview.png    # 2x raster of the same (generated)
+  .nojekyll                   # serve files as-is, skip Jekyll processing
 tools/
-  make_stack_svg.py        # regenerates the overview graphic
-archive/                   # superseded iterations, not published (gitignored)
+  export-graphic.ps1          # drives the page's own generator to refresh the two snapshots
+archive/                      # superseded iterations, not published (gitignored)
 ```
 
 ## Updating
@@ -71,21 +75,15 @@ git push
 
 Pages redeploys automatically from `main` / `/docs`.
 
-### Regenerating the overview graphic
+### Refreshing the committed graphic
 
-The graphic carries its own copy of the area names and counts, so it must be updated
-when the model changes. The generator asserts 14 areas and 120 capabilities and reports
-any rail text that would overflow its cell, so a drift will fail loudly rather than
-render wrong.
+The graphic has no separate definition — `overviewSVG()` in `docs/index.html` builds it from
+`AREAS`/`MAP`. The export script drives that function in headless Edge and saves the result, so
+there is no second copy of the model to keep in step:
 
 ```powershell
-python tools\make_stack_svg.py
-
-# re-render the raster from the SVG
-$edge = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-& $edge --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 `
-        --screenshot="docs\it-in-a-box-stack.png" --window-size=1720,920 `
-        ([System.Uri]"$PWD\docs\it-in-a-box-stack.svg").AbsoluteUri
+pwsh tools\export-graphic.ps1            # light theme, 2x PNG
+pwsh tools\export-graphic.ps1 -Theme dark
 ```
 
 ## Design constraints

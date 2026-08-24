@@ -156,11 +156,15 @@ html[data-theme="dark"] .lic.verify{color:#f0c674;background:rgba(230,173,60,.14
 .ov-lead{margin:0 0 15px;font-size:13px;line-height:1.62;color:var(--tx-2);max-width:1020px}
 .ov-lead b{color:var(--tx);font-weight:600}
 .ov-lead .ovstat{display:block;margin-top:6px;font-family:var(--mono);font-size:11.5px;color:var(--tx-3)}
-.ov-key{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 15px;padding-bottom:12px;
-  border-bottom:1px solid var(--line);font-size:12px;color:var(--tx-3)}
+.ov-bar{display:flex;align-items:flex-start;gap:18px;margin:0 0 15px;padding-bottom:12px;
+  border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ov-key{display:flex;flex-wrap:wrap;gap:8px 20px;flex:1 1 420px;min-width:0;
+  font-size:12px;color:var(--tx-3)}
 .ov-key span{display:flex;align-items:center;gap:7px}
 .ov-key i{width:10px;height:10px;border-radius:3px;display:block;flex:0 0 auto}
 .ov-key b{color:var(--tx-2);font-weight:600}
+.ov-dl{display:flex;gap:7px;flex:0 0 auto;align-items:center}
+.ov-dl .dlnote{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
 .ovmix{margin-top:6px;font-family:var(--mono);font-size:10.5px;line-height:1.45;color:var(--tx-3)}
 .stack{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:stretch}
 .ov-mid{display:flex;flex-direction:column;gap:9px;min-width:0}
@@ -348,6 +352,14 @@ dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
   area shows its Microsoft coverage mix. Select any area or capability to open it in the model &#8212;
   the three spanning areas list their capabilities there.
   <span class="ovstat" id="ovstat"></span></p>
+  <div class="ov-bar">
+    <div class="ov-key" id="ovkey"></div>
+    <div class="ov-dl">
+      <button class="tbtn" id="dl-svg" type="button">Download SVG</button>
+      <button class="tbtn" id="dl-png" type="button">Download PNG</button>
+      <span class="dlnote" id="dlnote" role="status" aria-live="polite"></span>
+    </div>
+  </div>
   <div id="ovhost"></div>
 </section>
 
@@ -1140,10 +1152,9 @@ function buildOverview(){
 
   /* coverage key — the overview is the landing view, so the colour code has to
      be decodable here rather than only on the model tab */
-  const key=el("div","ov-key");
+  const key=$("#ovkey");
   key.innerHTML=activeCovs().map(k=>'<span><i style="background:'+COV_COLOR[k]+'"></i><b>'+
     esc(k)+'</b> '+esc(COV_DESC[k]||"")+'</span>').join("");
-  host.appendChild(key);
 
   const placed=new Set();
   const stack=el("div","stack");
@@ -1196,7 +1207,250 @@ function buildOverview(){
 }
 buildOverview();
 
-/* ============ Reference implementation view ============ */
+/* ============ downloadable one-page graphic ============
+   Built from AREAS/MAP/STACK at click time and coloured from the live CSS
+   variables, so a download always matches what is on screen. Text is measured
+   with canvas metrics rather than estimated, so cells are sized to their real
+   content. Self-contained: no external reference, no library. */
+const MEAS=document.createElement("canvas").getContext("2d");
+const SANS='"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif';
+const MONO2='Consolas,"Cascadia Mono",monospace';
+const FT={
+  h1:['700 30px '+SANS,30,700,SANS],
+  sub:['400 14px '+SANS,14,400,SANS],
+  meta:['400 12px '+MONO2,12,400,MONO2],
+  nm:['600 16px '+SANS,16,600,SANS],
+  railNm:['700 17px '+SANS,17,700,SANS],
+  cap:['400 11.8px '+SANS,11.8,400,SANS],
+  mix:['400 10.6px '+MONO2,10.6,400,MONO2],
+  chip:['700 10.5px '+MONO2,10.5,700,MONO2],
+  small:['400 10.5px '+SANS,10.5,400,SANS]
+};
+const tw=(s,f)=>{MEAS.font=f[0];return MEAS.measureText(s).width;};
+function svgT(x,y,s,f,fill,anchor){
+  return '<text x="'+x+'" y="'+y+'" font-family="'+f[3].replace(/"/g,"'")+'" font-size="'+f[1]+
+    '" font-weight="'+f[2]+'" fill="'+fill+'"'+(anchor?' text-anchor="'+anchor+'"':'')+'>'+esc(s)+'</text>';
+}
+function wrapW(text,max,f){
+  const out=[];let line="";
+  text.split(" ").forEach(w=>{const c=line?line+" "+w:w;
+    if(line&&tw(c,f)>max){out.push(line);line=w;}else line=c;});
+  if(line)out.push(line);
+  return out;
+}
+function wrapList(names,max,f,sep){
+  const out=[];let line="";
+  names.forEach((n,i)=>{const piece=n+(i<names.length-1?sep:"");
+    const c=line+piece;
+    if(line&&tw(c,f)>max){out.push(line);line=piece;}else line=c;});
+  if(line)out.push(line);
+  return out;
+}
+const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function overviewSVG(){
+  const PAPER=cssVar("--panel"),WELL=cssVar("--panel-2"),LINE=cssVar("--line-solid"),
+        INK=cssVar("--tx"),INK2=cssVar("--tx-2"),INK3=cssVar("--tx-3"),CHIPBG=cssVar("--panel-2");
+  const W=1720,M=30,RAIL=104,G=12,HEAD=104,PADX=18;
+  const MX=M+RAIL+G,MW=W-2*M-2*RAIL-2*G;
+  const s=[];
+
+  const bar=(x,y,w,a)=>{
+    const mix=areaMix(a),ks=Object.keys(mix).filter(k=>mix[k]>0);
+    const tot=ks.reduce((n,k)=>n+mix[k],0);let cx=x,o="";
+    ks.forEach(k=>{const seg=(w-(ks.length-1))*mix[k]/tot;
+      o+='<rect x="'+cx+'" y="'+y+'" width="'+seg+'" height="4" rx="2" fill="'+COV_COLOR[k]+'"/>';
+      cx+=seg+1;});
+    return o;
+  };
+  const chip=(x,y,id,c)=>
+    '<rect x="'+x+'" y="'+y+'" width="27" height="17" rx="4" fill="'+CHIPBG+'" stroke="'+c+
+    '" stroke-opacity="0.45"/>'+svgT(x+13.5,y+12.4,id,FT.chip,c,"middle");
+  const card=(x,y,w,h,c,right)=>{
+    const r=7,sw=6,x2=x+w;
+    const sp=right
+      ? 'M'+(x2-sw)+' '+y+' H'+(x2-r)+' A'+r+' '+r+' 0 0 1 '+x2+' '+(y+r)+' V'+(y+h-r)+
+        ' A'+r+' '+r+' 0 0 1 '+(x2-r)+' '+(y+h)+' H'+(x2-sw)+' Z'
+      : 'M'+(x+sw)+' '+y+' H'+(x+r)+' A'+r+' '+r+' 0 0 0 '+x+' '+(y+r)+' V'+(y+h-r)+
+        ' A'+r+' '+r+' 0 0 0 '+(x+r)+' '+(y+h)+' H'+(x+sw)+' Z';
+    return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+r+'" fill="'+PAPER+
+      '" stroke="'+LINE+'"/><path d="'+sp+'" fill="'+c+'"/>';
+  };
+
+  const plan=(a,w,inline)=>{
+    const inner=w-PADX-16,p={a:a,w:w,inline:inline,mix:ovMixText(a)};
+    if(inline){
+      p.nameY=27;p.barY=42;p.mixY=59;p.capY=78;
+      p.capLines=wrapList(a.caps.map(c=>c.name),inner,FT.cap," \u00b7 ");
+      p.h=p.capY+(p.capLines.length-1)*17+16;
+    }else{
+      p.nameLines=wrapW(a.name,inner-52,FT.nm);
+      p.nameY=52;
+      p.barY=p.nameY+(p.nameLines.length-1)*20+13;
+      p.mixY=p.barY+17;
+      p.capY=p.mixY+21;
+      p.capLines=[];
+      a.caps.forEach(c=>wrapW(c.name,inner,FT.cap).forEach(l=>p.capLines.push(l)));
+      p.h=p.capY+(p.capLines.length-1)*18+16;
+    }
+    return p;
+  };
+  const rows=[],seen=new Set(),cw=(MW-3*G)/4;
+  STACK.rows.forEach((ids,i)=>{
+    const as=ids.map(ovArea).filter(Boolean);
+    if(!as.length)return;
+    as.forEach(a=>seen.add(a.id));
+    const w=as.length===4?cw:(MW-G*(as.length-1))/as.length;
+    rows.push(as.map(a=>plan(a,w,i>0)));
+  });
+  const left=AREAS.filter(a=>!seen.has(a.id)&&a.id!==STACK.railL&&STACK.railR.indexOf(a.id)<0);
+  for(let i=0;i<left.length;i+=3){
+    const gp=left.slice(i,i+3),w=(MW-G*(gp.length-1))/gp.length;
+    rows.push(gp.map(a=>plan(a,w,true)));
+  }
+  /* align the bar, mix and capability list across a row even when one card's
+     name wraps to two lines, then square the row off to its tallest card */
+  rows.forEach(r=>{
+    if(!r[0].inline){
+      const mn=Math.max.apply(null,r.map(p=>p.nameLines.length));
+      r.forEach(p=>{
+        p.barY=p.nameY+(mn-1)*20+13;
+        p.mixY=p.barY+17;
+        p.capY=p.mixY+21;
+        p.h=p.capY+(p.capLines.length-1)*18+16;
+      });
+    }
+    const h=Math.max.apply(null,r.map(p=>p.h));r.forEach(p=>{p.h=h;});
+  });
+  const SH=rows.reduce((n,r)=>n+r[0].h+G,0)-G;
+
+  s.push(svgT(M,46,"IT-in-a-Box",FT.h1,INK));
+  s.push(svgT(M,70,"Enterprise technology capability model \u2014 what a complete IT estate has to answer for",FT.sub,INK2));
+  s.push(svgT(M,90,allCaps().length+" capabilities \u00b7 "+AREAS.length+" functional areas \u00b7 "+GROUPS.length+" groups",FT.meta,INK3));
+  s.push(svgT(W-M,46,"joeybarnes.github.io/it-in-a-box",FT.meta,INK3,"end"));
+
+  const railBlock=(x,y,h,a,right)=>{
+    s.push(card(x,y,RAIL,h,a.color,right));
+    const cx=x+RAIL/2,cy=y+h/2;
+    const rot=(off,txt,f,fill)=>'<g transform="translate('+(cx+off)+','+cy+') rotate(-90)">'+
+      svgT(0,0,txt,f,fill,"middle")+'</g>';
+    s.push(rot(24,a.name,FT.railNm,INK));
+    s.push(rot(2,a.caps.length+" capabilities \u00b7 "+ovMixText(a),FT.mix,INK3));
+    const mix=areaMix(a),ks=Object.keys(mix).filter(k=>mix[k]>0);
+    const tot=ks.reduce((n,k)=>n+mix[k],0),BH=Math.max(60,Math.min(150,h-190));
+    let by=cy-BH/2;
+    ks.forEach(k=>{const seg=(BH-(ks.length-1))*mix[k]/tot;
+      s.push('<rect x="'+(cx-16)+'" y="'+by+'" width="4" height="'+seg+'" rx="2" fill="'+COV_COLOR[k]+'"/>');
+      by+=seg+1;});
+    s.push('<g transform="translate('+(cx-28)+','+(y+h-14)+') rotate(-90)">'+
+      svgT(0,0,a.id,FT.chip,a.color,"start")+'</g>');
+  };
+  const L=ovArea(STACK.railL);
+  if(L)railBlock(M,HEAD,SH,L,false);
+  const rr=STACK.railR.map(ovArea).filter(Boolean);
+  if(rr.length===2&&rows.length>1){
+    const split=rows[0][0].h+G+rows[1][0].h;
+    railBlock(W-M-RAIL,HEAD,split,rr[0],true);
+    railBlock(W-M-RAIL,HEAD+split+G,SH-split-G,rr[1],true);
+  }else{
+    let ry=HEAD;const hh=(SH-G*(rr.length-1))/(rr.length||1);
+    rr.forEach(a=>{railBlock(W-M-RAIL,ry,hh,a,true);ry+=hh+G;});
+  }
+
+  let y=HEAD;
+  rows.forEach(r=>{
+    let x=MX;
+    r.forEach(p=>{
+      const a=p.a,tx=x+PADX;
+      s.push(card(x,y,p.w,p.h,a.color,false));
+      if(p.inline){
+        s.push(chip(tx,y+14,a.id,a.color));
+        s.push(svgT(tx+36,y+p.nameY,a.name,FT.nm,INK));
+        s.push(svgT(x+p.w-16,y+p.nameY,a.caps.length+" caps",FT.mix,INK3,"end"));
+      }else{
+        s.push(chip(tx,y+16,a.id,a.color));
+        s.push(svgT(x+p.w-16,y+29,a.caps.length+" caps",FT.mix,INK3,"end"));
+        p.nameLines.forEach((l,i)=>s.push(svgT(tx,y+p.nameY+i*20,l,FT.nm,INK)));
+      }
+      s.push(bar(tx,y+p.barY,p.w-PADX-16,a));
+      s.push(svgT(tx,y+p.mixY,p.mix,FT.mix,INK3));
+      p.capLines.forEach((l,i)=>s.push(svgT(tx,y+p.capY+i*(p.inline?17:18),l,FT.cap,INK2)));
+      x+=p.w+G;
+    });
+    y+=r[0].h+G;
+  });
+
+  let fy=HEAD+SH+34,lx=M;
+  s.push('<line x1="'+M+'" y1="'+(fy-20)+'" x2="'+(W-M)+'" y2="'+(fy-20)+'" stroke="'+LINE+'"/>');
+  activeCovs().forEach(k=>{
+    s.push('<rect x="'+lx+'" y="'+(fy-9)+'" width="10" height="10" rx="2.5" fill="'+COV_COLOR[k]+'"/>');
+    s.push(svgT(lx+15,fy,k,FT.small,INK2));
+    lx+=15+tw(k,FT.small)+8;
+    s.push(svgT(lx,fy,COV_DESC[k]||"",FT.small,INK3));
+    lx+=tw(COV_DESC[k]||"",FT.small)+22;
+  });
+  fy+=22;lx=M;
+  GROUPS.forEach(g=>{
+    s.push('<rect x="'+lx+'" y="'+(fy-9)+'" width="10" height="10" rx="2.5" fill="'+g.color+'"/>');
+    s.push(svgT(lx+15,fy,g.name,FT.small,INK2));
+    lx+=15+tw(g.name,FT.small)+7;
+    const ids=AREAS.filter(a=>a.g===g.id).map(a=>a.id).join(" \u00b7 ");
+    s.push(svgT(lx,fy,ids,FT.mix,INK3));
+    lx+=tw(ids,FT.mix)+22;
+  });
+  fy+=25;
+  s.push(svgT(M,fy,"Each capability is sized as a single product-selection decision and mapped to its Microsoft first-party answer with a coverage rating, named alternatives and a Microsoft Learn reference.",FT.small,INK3));
+  fy+=15;
+  s.push(svgT(M,fy,"Created with the assistance of Microsoft Scout, which uses AI \u2014 verify anything you intend to rely on for a decision. Capability model and platform mapping current as at August 2026.",FT.small,INK3));
+
+  const H=Math.ceil(fy+26);
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+    '<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+
+    '"><rect width="'+W+'" height="'+H+'" fill="'+WELL+'"/>'+s.join("")+'</svg>';
+}
+
+function dlNote(msg){
+  const n=$("#dlnote");n.textContent=msg;
+  if(msg)setTimeout(()=>{if(n.textContent===msg)n.textContent="";},5000);
+}
+function saveBlob(blob,name){
+  const u=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=u;a.download=name;document.body.appendChild(a);a.click();
+  a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+$("#dl-svg").addEventListener("click",()=>{
+  try{
+    saveBlob(new Blob([overviewSVG()],{type:"image/svg+xml;charset=utf-8"}),"it-in-a-box-overview.svg");
+    dlNote("SVG saved");
+  }catch(e){dlNote("SVG failed \u2014 "+e.message);}
+});
+$("#dl-png").addEventListener("click",()=>{
+  const btn=$("#dl-png");btn.disabled=true;dlNote("rendering\u2026");
+  const done=m=>{dlNote(m);btn.disabled=false;};
+  try{
+    const svg=overviewSVG();
+    const m=svg.match(/width="(\d+(?:\.\d+)?)" height="(\d+(?:\.\d+)?)"/);
+    const w=Math.round(+m[1]),h=Math.round(+m[2]),SC=2;
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const cv=document.createElement("canvas");
+        cv.width=w*SC;cv.height=h*SC;
+        const cx=cv.getContext("2d");
+        cx.setTransform(SC,0,0,SC,0,0);
+        cx.drawImage(img,0,0,w,h);
+        cv.toBlob(b=>{
+          if(!b)return done("PNG failed \u2014 use SVG");
+          saveBlob(b,"it-in-a-box-overview.png");
+          done(cv.width+"\u00d7"+cv.height+" PNG saved");
+        },"image/png");
+      }catch(e){done("PNG blocked \u2014 use SVG");}
+    };
+    img.onerror=()=>done("PNG failed \u2014 use SVG");
+    /* data: URL rather than blob: so the canvas is never tainted */
+    img.src="data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(svg)));
+  }catch(e){done("PNG failed \u2014 "+e.message);}
+});
 const RI={
   title:"Microsoft Fabric Analytics & ERP Synchronisation",
   intro:"One initiative expressed against the capability model. The spine follows the reference architecture; each stage lists the capabilities it draws on. Coverage dots carry through from the capability model, so a red dot marks a point where the design depends on something Microsoft does not provide.",
