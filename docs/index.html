@@ -1314,13 +1314,14 @@ function openAreaInModel(id){
 }
 
 const VIEWS=["overview","model","ri"];
+/* The overview is the front door — every visit starts there rather than
+   resuming whichever tab was open last. */
 function showView(v){
   if(VIEWS.indexOf(v)<0)v=VIEWS[0];
   VIEWS.forEach(x=>{
     $("#view-"+x).hidden=(x!==v);
     $("#tab-"+x).setAttribute("aria-selected",String(x===v));
   });
-  try{localStorage.setItem("ptom-view",v);}catch(e){}
 }
 VIEWS.forEach(v=>$("#tab-"+v).addEventListener("click",()=>showView(v)));
 document.querySelector(".tabs").addEventListener("keydown",e=>{
@@ -1498,6 +1499,7 @@ function buildDiagram(){
 }
 
 buildRI();
-try{const v=localStorage.getItem("ptom-view");if(v&&VIEWS.indexOf(v)>=0)showView(v);}catch(e){}</script>
+showView("overview");
+try{localStorage.removeItem("ptom-view");}catch(e){}</script>
 </body>
 </html>
