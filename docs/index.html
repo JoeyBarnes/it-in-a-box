@@ -981,11 +981,11 @@ function apply(){
   const q=($("#q").value||"").trim().toLowerCase();
   let shown=0;
   AREAS.forEach(a=>{
-    const an=document.querySelector('[data-area="'+a.id+'"]');
+    const an=document.querySelector('.area[data-area="'+a.id+'"]');
     if(!an)return;
     let anyCap=false;
     a.caps.forEach(c=>{
-      const cn=an.querySelector('[data-cap="'+c.id+'"]');
+      const cn=an.querySelector('.cap[data-cap="'+c.id+'"]');
       if(!cn)return;
       const m=MAP[c.id]||{ms:"",alt:[],cov:"",comp:[],lic:"",pos:""};
       const hay=(c.id+" "+c.name+" "+c.def+" "+a.id+" "+a.name+" "+a.desc+" "+m.ms+" "+
@@ -1002,10 +1002,10 @@ function apply(){
     }
   });
   GROUPS.forEach(g=>{
-    const gh=document.querySelector('[data-group="'+g.id+'"]');
+    const gh=document.querySelector('.grouphdr[data-group="'+g.id+'"]');
     if(!gh)return;
     const any=AREAS.filter(a=>a.g===g.id).some(a=>{
-      const an=document.querySelector('[data-area="'+a.id+'"]');
+      const an=document.querySelector('.area[data-area="'+a.id+'"]');
       return an&&!an.classList.contains("hide");
     });
     gh.classList.toggle("hide",!any);
@@ -1048,9 +1048,9 @@ function toggleTheme(){
   build();buildCovBar();
   if(typeof buildOverview==="function")buildOverview();
   if(typeof buildRI==="function")buildRI();
-  openAreas.forEach(id=>{const n=document.querySelector('[data-area="'+id+'"]');
+  openAreas.forEach(id=>{const n=document.querySelector('.area[data-area="'+id+'"]');
     if(n){n.classList.add("open");n.querySelector(".area-btn").setAttribute("aria-expanded","true");}});
-  openCaps.forEach(id=>{const n=document.querySelector('[data-cap="'+id+'"]');
+  openCaps.forEach(id=>{const n=document.querySelector('.cap[data-cap="'+id+'"]');
     if(n){n.classList.add("open");n.querySelector(".cap-btn").setAttribute("aria-expanded","true");}});
   const b=$("#covbar").querySelector('[data-cov="'+covFilter+'"]');
   if(b){$("#covbar").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));}
@@ -1105,7 +1105,9 @@ function ovLabel(a){
 function ovCell(a,inline,right){
   const c=el("div","ovc"+(right?" r":""));
   c.style.setProperty("--ac",a.color);
-  c.dataset.area=a.id;
+  /* deliberately not data-area — the model's filter queries that attribute and
+     this view sits earlier in the DOM */
+  c.dataset.ovarea=a.id;
   const hd=el("button","ovc-hd");
   hd.type="button";
   hd.innerHTML='<span class="ovc-code">'+a.id+'</span><span class="ovc-nm">'+esc(a.name)+
@@ -1124,7 +1126,7 @@ function ovRail(a,right){
   const b=el("button","ovc ovr"+(right?" r":""));
   b.type="button";
   b.style.setProperty("--ac",a.color);
-  b.dataset.area=a.id;
+  b.dataset.ovarea=a.id;
   b.title=ovLabel(a);
   b.setAttribute("aria-label",ovLabel(a));
   b.innerHTML='<span class="ovr-in" aria-hidden="true"><span class="ovc-code">'+a.id+'</span>'+
