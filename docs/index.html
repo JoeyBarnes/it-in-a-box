@@ -165,7 +165,7 @@ html[data-theme="dark"] .lic.verify{color:#f0c674;background:rgba(230,173,60,.14
 .ov-key b{color:var(--tx-2);font-weight:600}
 .ov-dl{display:flex;gap:7px;flex:0 0 auto;align-items:center}
 .ov-dl .dlnote{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
-.ovmix{margin-top:6px;font-family:var(--mono);font-size:10.5px;line-height:1.45;color:var(--tx-3)}
+.ovmix{display:block;margin-top:7px;font-family:var(--mono);font-size:10.5px;line-height:1.45;color:var(--tx-3)}
 .stack{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:stretch}
 .ov-mid{display:flex;flex-direction:column;gap:9px;min-width:0}
 .ov-rail{display:flex;flex-direction:column;gap:9px}
@@ -178,30 +178,24 @@ html[data-theme="dark"] .lic.verify{color:#f0c674;background:rgba(230,173,60,.14
 
 .ovc{position:relative;display:flex;flex-direction:column;min-width:0;background:var(--panel);
   border:1px solid var(--line-solid);border-left:4px solid var(--ac);border-radius:var(--radius);
-  padding:11px 13px 12px 12px;text-align:left}
+  padding:12px 14px 13px 13px;text-align:left}
 .ovc.r{border-left:1px solid var(--line-solid);border-right:4px solid var(--ac)}
-button.ovc{font:inherit;color:inherit;cursor:pointer;appearance:none}
-button.ovc:focus-visible,.ovc-hd:focus-visible,.ovcap:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+button.ovc{font:inherit;color:inherit;cursor:pointer;appearance:none;width:100%}
+button.ovc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.ovc:hover{border-color:var(--ac)}
+button.ovc:hover .ovc-nm{color:var(--ac)}
 
-.ovc-hd{appearance:none;background:none;border:0;padding:0;margin:0;cursor:pointer;width:100%;
-  display:flex;align-items:baseline;gap:8px;font:inherit;color:inherit;text-align:left}
-.ovc-hd:hover .ovc-nm{color:var(--ac);text-decoration:underline;text-underline-offset:2px}
+.ovc-hd{display:flex;align-items:baseline;gap:8px;width:100%}
 .ovc-code{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--ac);
   background:var(--panel-2);border:1px solid var(--line-solid);border-radius:4px;padding:1px 5px}
 .ovc-nm{font-size:14px;font-weight:600;color:var(--tx);line-height:1.25}
 .ovc-ct{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--tx-3);white-space:nowrap}
 
-.ovbar{display:flex;height:4px;gap:1px;border-radius:3px;overflow:hidden;margin:8px 0 0;
+.ovbar{display:flex;height:4px;gap:1px;border-radius:3px;overflow:hidden;margin:9px 0 0;
   background:var(--panel-2)}
 .ovbar i{display:block;min-width:3px}
 
-.ovcaps{display:flex;margin-top:8px;min-width:0}
-.ovcaps.col{flex-direction:column;align-items:flex-start;gap:1px}
-.ovcaps.inl{flex-wrap:wrap;gap:0 5px}
-.ovcap{appearance:none;background:none;border:0;padding:1px 0;font:inherit;font-size:11.5px;
-  line-height:1.52;color:var(--tx-3);cursor:pointer;text-align:left}
-.ovcap:hover{color:var(--tx);text-decoration:underline;text-underline-offset:2px}
-.ovcaps.inl .ovcap:not(:last-child)::after{content:" \00b7";color:var(--line-solid)}
+.ovc-desc{margin-top:9px;font-size:11.8px;line-height:1.5;color:var(--tx-3)}
 
 /* Rail content sits in side-by-side perpendicular columns, so the rail's height
    is the tallest single element rather than the sum of all of them. Stacking
@@ -357,8 +351,7 @@ dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
   because it qualifies every layer rather than occupying one of them, and <b>governance</b> and
   <b>business management</b> do the same on the right. The four areas across the top are what the
   business actually touches; everything beneath them is what makes those work. The bar under each
-  area shows its Microsoft coverage mix. Select any area or capability to open it in the model &#8212;
-  the three spanning areas list their capabilities there.
+  area shows its Microsoft coverage mix. Select any area to open its capabilities in the model.
   <span class="ovstat" id="ovstat"></span></p>
   <div class="ov-bar">
     <div class="ov-key" id="ovkey"></div>
@@ -1104,42 +1097,29 @@ function ovBar(a){
     Object.keys(m).filter(k=>m[k]>0)
       .map(k=>'<i style="flex:'+m[k]+';background:'+COV_COLOR[k]+'"></i>').join("")+'</span>';
 }
-function ovCaps(a,inline){
-  const w=el("div","ovcaps "+(inline?"inl":"col"));
-  a.caps.forEach(c=>{
-    const m=MAP[c.id]||{};
-    const b=el("button","ovcap",esc(c.name));
-    b.type="button";
-    b.title=c.id+" "+c.name+" \u2014 "+(m.cov||"\u2014")+(m.ms&&m.ms!=="\u2014"?" \u00b7 "+m.ms:"")+
-      ". Open in the capability model.";
-    b.setAttribute("aria-label",b.title);
-    b.addEventListener("click",()=>openInModel(c.id));
-    w.appendChild(b);
-  });
-  return w;
-}
 function ovLabel(a){
   return a.id+" "+a.name+", "+a.caps.length+" capabilities \u2014 "+ovMixLabel(a)+
          ". Open in the capability model.";
 }
-function ovCell(a,inline,right){
-  const c=el("div","ovc"+(right?" r":""));
+/* One card per area: what it is, how big it is, and how well Microsoft covers
+   it. The capability names live in the model tab — repeating all 120 here turns
+   an orientation view into a second copy of the model. */
+function ovCell(a){
+  const c=el("button","ovc");
+  c.type="button";
   c.style.setProperty("--ac",a.color);
   /* deliberately not data-area — the model's filter queries that attribute and
      this view sits earlier in the DOM */
   c.dataset.ovarea=a.id;
-  const hd=el("button","ovc-hd");
-  hd.type="button";
-  hd.innerHTML='<span class="ovc-code">'+a.id+'</span><span class="ovc-nm">'+esc(a.name)+
-    '</span><span class="ovc-ct" aria-hidden="true">'+a.caps.length+' caps</span>';
-  hd.title=ovLabel(a);
-  hd.setAttribute("aria-label",ovLabel(a));
-  hd.addEventListener("click",()=>openAreaInModel(a.id));
-  c.appendChild(hd);
-  c.insertAdjacentHTML("beforeend",ovBar(a));
-  /* the mix in words as well as colour — the bar must not be the only channel */
-  c.insertAdjacentHTML("beforeend",'<div class="ovmix">'+esc(ovMixText(a))+'</div>');
-  c.appendChild(ovCaps(a,inline));
+  c.title=ovLabel(a);
+  c.setAttribute("aria-label",ovLabel(a));
+  c.innerHTML='<span class="ovc-hd" aria-hidden="true"><span class="ovc-code">'+a.id+
+    '</span><span class="ovc-nm">'+esc(a.name)+'</span><span class="ovc-ct">'+
+    a.caps.length+' caps</span></span>'+ovBar(a)+
+    /* the mix in words as well as colour — the bar must not be the only channel */
+    '<span class="ovmix" aria-hidden="true">'+esc(ovMixText(a))+'</span>'+
+    '<span class="ovc-desc" aria-hidden="true">'+esc(a.desc)+'</span>';
+  c.addEventListener("click",()=>openAreaInModel(a.id));
   return c;
 }
 function ovRail(a,right){
@@ -1175,22 +1155,22 @@ function buildOverview(){
   STACK.railR.forEach(id=>{const a=ovArea(id);if(!a)return;placed.add(id);railR.appendChild(ovRail(a,true));});
 
   const mid=el("div","ov-mid");
-  const addRow=(areas,inline)=>{
+  const addRow=areas=>{
     if(!areas.length)return;
     const r=el("div","ov-row");
     r.dataset.n=String(Math.min(areas.length,4));
-    areas.forEach(a=>r.appendChild(ovCell(a,inline,false)));
+    areas.forEach(a=>r.appendChild(ovCell(a)));
     mid.appendChild(r);
   };
-  STACK.rows.forEach((row,i)=>{
+  STACK.rows.forEach(row=>{
     const areas=row.map(ovArea).filter(Boolean);
     areas.forEach(a=>placed.add(a.id));
-    addRow(areas,i>0);
+    addRow(areas);
   });
   /* safety net: anything the layout does not place still appears, in rows the
      grid can actually style */
   const leftover=AREAS.filter(a=>!placed.has(a.id));
-  for(let i=0;i<leftover.length;i+=3)addRow(leftover.slice(i,i+3),true);
+  for(let i=0;i<leftover.length;i+=3)addRow(leftover.slice(i,i+3));
 
   stack.appendChild(mid);
   if(railR.children.length)stack.appendChild(railR);
@@ -1213,6 +1193,22 @@ function buildOverview(){
   if(dupes.length)console.warn("Overview: area listed more than once in STACK:",dupes);
   if(rendered!==AREAS.length)
     console.warn("Overview: rendered "+rendered+" cells for "+AREAS.length+" areas");
+
+  /* Rail text is rotated and does not wrap, so a shorter stack clips it rather
+     than reflowing. Report it instead of shipping a truncated rail. Skipped
+     while the panel is hidden, where every measurement is zero. */
+  requestAnimationFrame(()=>{
+    host.querySelectorAll(".ovr").forEach(b=>{
+      const lim=b.getBoundingClientRect().height;
+      if(lim<=0)return;
+      b.querySelectorAll(".ovr-col").forEach(col=>{
+        const need=col.getBoundingClientRect().height;
+        if(need>lim-8)
+          console.warn("Overview: rail "+b.dataset.ovarea+" needs "+Math.round(need)+
+                       "px in "+Math.round(lim)+"px \u2014 "+col.textContent.trim());
+      });
+    });
+  });
 }
 buildOverview();
 
@@ -1247,14 +1243,6 @@ function wrapW(text,max,f){
   if(line)out.push(line);
   return out;
 }
-function wrapList(names,max,f,sep){
-  const out=[];let line="";
-  names.forEach((n,i)=>{const piece=n+(i<names.length-1?sep:"");
-    const c=line+piece;
-    if(line&&tw(c,f)>max){out.push(line);line=piece;}else line=c;});
-  if(line)out.push(line);
-  return out;
-}
 const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
 function overviewSVG(){
@@ -1286,49 +1274,43 @@ function overviewSVG(){
       '" stroke="'+LINE+'"/><path d="'+sp+'" fill="'+c+'"/>';
   };
 
-  const plan=(a,w,inline)=>{
-    const inner=w-PADX-16,p={a:a,w:w,inline:inline,mix:ovMixText(a)};
-    if(inline){
-      p.nameY=27;p.barY=42;p.mixY=59;p.capY=78;
-      p.capLines=wrapList(a.caps.map(c=>c.name),inner,FT.cap," \u00b7 ");
-      p.h=p.capY+(p.capLines.length-1)*17+16;
-    }else{
-      p.nameLines=wrapW(a.name,inner-52,FT.nm);
-      p.nameY=52;
-      p.barY=p.nameY+(p.nameLines.length-1)*20+13;
-      p.mixY=p.barY+17;
-      p.capY=p.mixY+21;
-      p.capLines=[];
-      a.caps.forEach(c=>wrapW(c.name,inner,FT.cap).forEach(l=>p.capLines.push(l)));
-      p.h=p.capY+(p.capLines.length-1)*18+16;
-    }
+  /* One card per area, matching the on-screen overview: name, size, coverage
+     bar, the mix in words, and the area's own one-line description. */
+  const plan=(a,w)=>{
+    const inner=w-PADX-16,p={a:a,w:w,mix:ovMixText(a)};
+    /* the chip sits on the first name line, as it does on screen */
+    p.nameLines=wrapW(a.name,inner-36-56,FT.nm);
+    p.nameY=27;
+    p.barY=p.nameY+(p.nameLines.length-1)*20+15;
+    p.mixY=p.barY+17;
+    p.descY=p.mixY+20;
+    p.descLines=wrapW(a.desc,inner,FT.cap);
+    p.h=p.descY+(p.descLines.length-1)*17+16;
     return p;
   };
   const rows=[],seen=new Set(),cw=(MW-3*G)/4;
-  STACK.rows.forEach((ids,i)=>{
+  STACK.rows.forEach(ids=>{
     const as=ids.map(ovArea).filter(Boolean);
     if(!as.length)return;
     as.forEach(a=>seen.add(a.id));
     const w=as.length===4?cw:(MW-G*(as.length-1))/as.length;
-    rows.push(as.map(a=>plan(a,w,i>0)));
+    rows.push(as.map(a=>plan(a,w)));
   });
   const left=AREAS.filter(a=>!seen.has(a.id)&&a.id!==STACK.railL&&STACK.railR.indexOf(a.id)<0);
   for(let i=0;i<left.length;i+=3){
     const gp=left.slice(i,i+3),w=(MW-G*(gp.length-1))/gp.length;
-    rows.push(gp.map(a=>plan(a,w,true)));
+    rows.push(gp.map(a=>plan(a,w)));
   }
-  /* align the bar, mix and capability list across a row even when one card's
-     name wraps to two lines, then square the row off to its tallest card */
+  /* align the bar, mix and description across a row even when one card's name
+     wraps to two lines, then square the row off to its tallest card */
   rows.forEach(r=>{
-    if(!r[0].inline){
-      const mn=Math.max.apply(null,r.map(p=>p.nameLines.length));
-      r.forEach(p=>{
-        p.barY=p.nameY+(mn-1)*20+13;
-        p.mixY=p.barY+17;
-        p.capY=p.mixY+21;
-        p.h=p.capY+(p.capLines.length-1)*18+16;
-      });
-    }
+    const mn=Math.max.apply(null,r.map(p=>p.nameLines.length));
+    r.forEach(p=>{
+      p.barY=p.nameY+(mn-1)*20+15;
+      p.mixY=p.barY+17;
+      p.descY=p.mixY+20;
+      p.h=p.descY+(p.descLines.length-1)*17+16;
+    });
     const h=Math.max.apply(null,r.map(p=>p.h));r.forEach(p=>{p.h=h;});
   });
   const SH=rows.reduce((n,r)=>n+r[0].h+G,0)-G;
@@ -1341,12 +1323,19 @@ function overviewSVG(){
   const railBlock=(x,y,h,a,right)=>{
     s.push(card(x,y,RAIL,h,a.color,right));
     const cx=x+RAIL/2,cy=y+h/2;
+    const meta=a.caps.length+" capabilities \u00b7 "+ovMixText(a);
+    /* rotated text does not wrap — report a rail that cannot hold its label
+       rather than emitting a graphic with text running outside the card */
+    const need=Math.max(tw(a.name,FT.railNm),tw(meta,FT.mix))+28;
+    if(need>h)console.warn("overviewSVG: rail "+a.id+" needs "+Math.round(need)+
+                           "px but has "+Math.round(h)+"px");
     const rot=(off,txt,f,fill)=>'<g transform="translate('+(cx+off)+','+cy+') rotate(-90)">'+
       svgT(0,0,txt,f,fill,"middle")+'</g>';
     s.push(rot(24,a.name,FT.railNm,INK));
-    s.push(rot(2,a.caps.length+" capabilities \u00b7 "+ovMixText(a),FT.mix,INK3));
+    s.push(rot(2,meta,FT.mix,INK3));
     const mix=areaMix(a),ks=Object.keys(mix).filter(k=>mix[k]>0);
-    const tot=ks.reduce((n,k)=>n+mix[k],0),BH=Math.max(60,Math.min(150,h-190));
+    const tot=ks.reduce((n,k)=>n+mix[k],0);
+    const BH=Math.max(48,Math.min(150,h-Math.max(tw(meta,FT.mix),tw(a.name,FT.railNm))-46));
     let by=cy-BH/2;
     ks.forEach(k=>{const seg=(BH-(ks.length-1))*mix[k]/tot;
       s.push('<rect x="'+(cx-16)+'" y="'+by+'" width="4" height="'+seg+'" rx="2" fill="'+COV_COLOR[k]+'"/>');
@@ -1357,8 +1346,19 @@ function overviewSVG(){
   const L=ovArea(STACK.railL);
   if(L)railBlock(M,HEAD,SH,L,false);
   const rr=STACK.railR.map(ovArea).filter(Boolean);
-  if(rr.length===2&&rows.length>1){
-    const split=rows[0][0].h+G+rows[1][0].h;
+  if(rr.length===2){
+    /* Split the right rail on whichever row boundary leaves both cells able to
+       hold their own rotated label. Falling back to a fixed boundary makes the
+       shorter cell clip as soon as the cards get smaller. */
+    const need=rr.map(a=>Math.max(tw(a.name,FT.railNm),
+      tw(a.caps.length+" capabilities \u00b7 "+ovMixText(a),FT.mix))+34);
+    const bounds=[];
+    let acc=0;
+    rows.forEach((r,i)=>{acc+=r[0].h+(i?G:0);if(i<rows.length-1)bounds.push(acc);});
+    const ideal=(SH-G)*need[0]/(need[0]+need[1]);
+    const ok=bounds.filter(b=>b>=need[0]&&(SH-b-G)>=need[1]);
+    const pick=(ok.length?ok:bounds).sort((p,q)=>Math.abs(p-ideal)-Math.abs(q-ideal))[0];
+    const split=pick===undefined?ideal:pick;
     railBlock(W-M-RAIL,HEAD,split,rr[0],true);
     railBlock(W-M-RAIL,HEAD+split+G,SH-split-G,rr[1],true);
   }else{
@@ -1372,18 +1372,12 @@ function overviewSVG(){
     r.forEach(p=>{
       const a=p.a,tx=x+PADX;
       s.push(card(x,y,p.w,p.h,a.color,false));
-      if(p.inline){
-        s.push(chip(tx,y+14,a.id,a.color));
-        s.push(svgT(tx+36,y+p.nameY,a.name,FT.nm,INK));
-        s.push(svgT(x+p.w-16,y+p.nameY,a.caps.length+" caps",FT.mix,INK3,"end"));
-      }else{
-        s.push(chip(tx,y+16,a.id,a.color));
-        s.push(svgT(x+p.w-16,y+29,a.caps.length+" caps",FT.mix,INK3,"end"));
-        p.nameLines.forEach((l,i)=>s.push(svgT(tx,y+p.nameY+i*20,l,FT.nm,INK)));
-      }
+      s.push(chip(tx,y+14,a.id,a.color));
+      s.push(svgT(x+p.w-16,y+p.nameY,a.caps.length+" caps",FT.mix,INK3,"end"));
+      p.nameLines.forEach((l,i)=>s.push(svgT(tx+36,y+p.nameY+i*20,l,FT.nm,INK)));
       s.push(bar(tx,y+p.barY,p.w-PADX-16,a));
       s.push(svgT(tx,y+p.mixY,p.mix,FT.mix,INK3));
-      p.capLines.forEach((l,i)=>s.push(svgT(tx,y+p.capY+i*(p.inline?17:18),l,FT.cap,INK2)));
+      p.descLines.forEach((l,i)=>s.push(svgT(tx,y+p.descY+i*17,l,FT.cap,INK3)));
       x+=p.w+G;
     });
     y+=r[0].h+G;

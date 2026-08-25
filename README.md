@@ -16,9 +16,11 @@ https://joeybarnes.github.io/it-in-a-box/
 
 **Overview** — the whole stack on one page. Cyber security spans the full height as the left
 rail, governance and business management as the right rail, the four business-facing areas
-across the top, and the data, platform and operating layers descending beneath them. Every
-label, count and coverage bar is read from the model at build time, so the view cannot drift
-from the data behind it. Selecting any area or capability opens it in the Capability Model.
+across the top, and the data, platform and operating layers descending beneath them. Each area
+shows its name, size, Microsoft coverage mix and one-line definition — the capability names
+themselves stay in the Capability Model, so this reads as an orientation view rather than a
+second copy of the model. Every label, count and coverage bar is read from the model at build
+time, so the view cannot drift from the data behind it. Selecting an area opens it there.
 
 **Capability Model** — 120 capabilities across 14 functional areas and 5 groups. Each
 capability is sized as a single product decision and carries:
