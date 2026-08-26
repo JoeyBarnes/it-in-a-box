@@ -22,7 +22,7 @@ themselves stay in the Capability Model, so this reads as an orientation view ra
 second copy of the model. Every label, count and coverage bar is read from the model at build
 time, so the view cannot drift from the data behind it. Selecting an area opens it there.
 
-**Capability Model** — 120 capabilities across 14 functional areas and 5 groups. Each
+**Capability Model** — 127 capabilities across 14 functional areas and 5 groups. Each
 capability is sized as a single product decision and carries:
 
 - the Microsoft first-party product and its key components
