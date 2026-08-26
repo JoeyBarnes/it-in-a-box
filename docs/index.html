@@ -481,7 +481,8 @@ const AREAS=[
  {id:"03.6",name:"DNS, DHCP & Address Management",def:"Name resolution, address allocation and authoritative IP address management."},
  {id:"03.7",name:"Cloud Interconnect & Peering",def:"Private circuits, peering and virtual network connectivity into cloud platforms."},
  {id:"03.8",name:"Network Monitoring & Assurance",def:"Flow, performance and availability monitoring, capacity planning and network fault management."},
- {id:"03.9",name:"OT Network Segregation & Secure Conduits",def:"Zone and conduit separation between corporate and operational networks, including unidirectional transfer and industrial protocol enforcement."}
+ {id:"03.9",name:"OT Network Segregation & Secure Conduits",def:"Zone and conduit separation between corporate and operational networks, including unidirectional transfer and industrial protocol enforcement."},
+ {id:"03.10",name:"Local Area & Wireless Network",def:"Campus and site switching, wireless access, structured cabling and the network access layer users and devices connect to."}
  ]},
 {id:"04",g:"G1",name:"Cloud Platform & Infrastructure",color:C.lime,
  desc:"Compute, storage, hosting topology and the automation and resilience standards applied to them.",
@@ -567,7 +568,8 @@ const AREAS=[
  {id:"09.5",name:"Records Management & Retention",def:"Retention schedules, legal hold, disposition and records classification."},
  {id:"09.6",name:"Enterprise Search & Knowledge",def:"Cross-repository search, knowledge bases and expertise discovery."},
  {id:"09.7",name:"Frontline Communications & Shift Management",def:"Shift handover, task assignment, safety briefings and deskless workforce communication."},
- {id:"09.8",name:"Digital Employee Experience",def:"Measurement of workplace experience, sentiment and technology friction."}
+ {id:"09.8",name:"Digital Employee Experience",def:"Measurement of workplace experience, sentiment and technology friction."},
+ {id:"09.9",name:"Meeting Room & Workplace AV",def:"Meeting room technology, room booking and displays, plus digital signage and site audio-visual systems."}
  ]},
 {id:"10",g:"G3",name:"AI & Agents",color:C.indigo,
  desc:"Assistive and autonomous capability layered over data, applications and operations.",
@@ -695,6 +697,7 @@ const MAP={
 "03.7":{ms:"Azure ExpressRoute",comp:["ExpressRoute","ExpressRoute Direct","Microsoft Peering Service","Private peering","ExpressRoute Global Reach"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/expressroute/expressroute-introduction",pos:"Mature private connectivity into Azure with a broad partner ecosystem; Equinix and Megaport are the usual physical interconnect layer beneath it.",cov:"Native",alt:["Equinix Fabric","Megaport"]},
 "03.8":{ms:"Azure Network Watcher",comp:["Network Watcher","Connection Monitor","NSG flow logs","Traffic Analytics","Azure Monitor network insights"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/overview",pos:"Good visibility inside Azure; end-to-end internet and SaaS path monitoring across a distributed site estate is a common gap filled by ThousandEyes.",cov:"Partial",alt:["ThousandEyes (Cisco)","Kentik"]},
 "03.9":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"Microsoft sells no industrial firewall, unidirectional gateway or data diode. Defender for IoT supplies the passive visibility that informs zone design and Microsoft publishes Zero Trust guidance for OT, but enforcement at the IT to OT boundary is bought elsewhere.",cov:"Gap",alt:["Fortinet OT","Waterfall Security","Owl Cyber Defense"]},
+"03.10":{ms:"—",comp:["Microsoft Cloud PKI for certificate-based Wi-Fi (identity only)","Entra ID with RADIUS or NPS (authentication only)"],lic:"Not applicable",docs:"",pos:"Microsoft makes no switches, access points or wireless controllers, and has no campus network management platform. Its only involvement is identity-side — Entra with RADIUS, and Microsoft Cloud PKI issuing the certificates that authenticate devices onto the wireless network. The access layer is a separate estate on its own refresh cycle.",cov:"Gap",alt:["Cisco","HPE Aruba","Juniper Mist","Ubiquiti"]},
 
 /* 04 Cloud Platform & Infrastructure */
 "04.1":{ms:"Azure landing zones",comp:["Azure landing zones","Management groups","Azure Policy","Cloud Adoption Framework","Entra tenant design"],lic:"Included",docs:"https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/",pos:"Well-documented reference architecture with accelerators — the tenancy and subscription decisions made here determine carve-out cost years later.",cov:"Native",alt:["AWS Control Tower","Google Cloud org policy"]},
@@ -770,6 +773,7 @@ const MAP={
 "09.6":{ms:"Microsoft Search",comp:["Microsoft Search","Microsoft Graph connectors","Copilot connectors","Semantic search","Search verticals"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/microsoftsearch/overview-microsoft-search",pos:"Strong within Microsoft 365 with connectors for external repositories; Glean is the common choice where search must span many non-Microsoft systems. Note Viva Topics was retired.",cov:"Partial",alt:["Glean","Elastic Enterprise Search"]},
 "09.7":{ms:"Microsoft 365 for frontline workers",comp:["Shifts","Walkie Talkie","Tasks","Approvals","Viva Connections"],lic:"Microsoft 365 F1/F3",docs:"https://learn.microsoft.com/en-us/microsoft-365/frontline/flw-licensing-options",pos:"Purpose-built deskless tooling at materially lower cost than knowledge-worker licences. Note F1 excludes a mailbox and Office apps, so most frontline users needing email require F3.",cov:"Native",alt:["Beekeeper","Blink","WorkJam"]},
 "09.8":{ms:"Microsoft Viva Insights",comp:["Viva Insights","Copilot Dashboard","Advanced insights","Viva Glint","Intune Endpoint Analytics"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/insights/introduction",pos:"Measures collaboration patterns and Copilot adoption; dedicated experience platforms still win on sentiment depth and endpoint friction. Licensing spans Viva Suite and Intune Suite add-ons.",cov:"Partial",alt:["Nexthink","Qualtrics","Medallia"]},
+"09.9":{ms:"Microsoft Teams Rooms",comp:["Teams Rooms Pro","Teams Rooms Basic","Teams Panels","Teams Rooms Pro Management","Certified room devices"],lic:"Teams Rooms Pro",docs:"https://learn.microsoft.com/en-us/microsoftteams/rooms/",pos:"A genuine first-party answer for the meeting room, with managed provisioning and health monitoring through Pro, and the default wherever Teams is the meeting platform. The room hardware itself comes from certified partners, and digital signage and wider site audio-visual stay with the AV integrator.",cov:"Partial",alt:["Zoom Rooms","Cisco Webex Rooms","Crestron"]},
 
 /* 10 AI & Agents */
 "10.1":{ms:"Microsoft 365 Copilot",comp:["Microsoft 365 Copilot","Copilot Chat","Copilot in Word / Excel / Teams","Researcher & Analyst agents","Copilot Pages"],lic:"Add-on: Microsoft 365 Copilot",docs:"https://learn.microsoft.com/en-us/microsoft-365-copilot/microsoft-365-copilot-overview",pos:"Grounding in your own Graph data is the real differentiator. Copilot Chat is included with most Microsoft 365 SKUs; the full Copilot remains a paid per-user add-on.",cov:"Native",alt:["Google Gemini for Workspace","ChatGPT Enterprise"]},
@@ -843,7 +847,7 @@ const TIER={
 "02.1":"Essential","02.2":"Essential","02.3":"Essential","02.4":"Standard","02.5":"Standard",
 "02.6":"Standard","02.7":"Standard","02.8":"Advanced","02.9":"Standard",
 "03.1":"Standard","03.2":"Essential","03.3":"Essential","03.4":"Standard","03.5":"Standard",
-"03.6":"Essential","03.7":"Standard","03.8":"Standard","03.9":"Essential",
+"03.6":"Essential","03.7":"Standard","03.8":"Standard","03.9":"Essential","03.10":"Essential",
 "04.1":"Essential","04.2":"Essential","04.3":"Essential","04.4":"Standard","04.5":"Standard",
 "04.6":"Standard","04.7":"Essential","04.8":"Standard","04.9":"Standard","04.10":"Advanced","04.11":"Advanced",
 "05.1":"Standard","05.2":"Standard","05.3":"Advanced","05.4":"Standard","05.5":"Advanced",
@@ -855,7 +859,7 @@ const TIER={
 "08.1":"Standard","08.2":"Standard","08.3":"Advanced","08.4":"Advanced","08.5":"Standard",
 "08.6":"Advanced","08.7":"Advanced",
 "09.1":"Essential","09.2":"Essential","09.3":"Essential","09.4":"Standard","09.5":"Standard",
-"09.6":"Advanced","09.7":"Standard","09.8":"Advanced",
+"09.6":"Advanced","09.7":"Standard","09.8":"Advanced","09.9":"Standard",
 "10.1":"Standard","10.2":"Advanced","10.3":"Advanced","10.4":"Advanced","10.5":"Advanced",
 "10.6":"Advanced","10.7":"Standard","10.8":"Advanced","10.9":"Essential",
 
