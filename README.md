@@ -22,7 +22,7 @@ themselves stay in the Capability Model, so this reads as an orientation view ra
 second copy of the model. Every label, count and coverage bar is read from the model at build
 time, so the view cannot drift from the data behind it. Selecting an area opens it there.
 
-**Capability Model** — 127 capabilities across 14 functional areas and 5 groups. Each
+**Capability Model** — 130 capabilities across 14 functional areas and 5 groups. Each
 capability is sized as a single product decision and carries:
 
 - the Microsoft first-party product and its key components
@@ -97,3 +97,21 @@ modification. Any change that introduces an external reference breaks that prope
 Product names and coverage ratings are researched against current Microsoft
 documentation rather than recalled, and gaps are stated honestly — the value of the
 model rests on it being trustworthy where it says Microsoft does not cover something.
+
+## What belongs in the model
+
+A capability earns its place if it is **a distinct estate category that an assessment
+must cover, and it is sized as one product-selection decision**. That is the operative
+test, and it is why the model carries capabilities Microsoft has no answer for at all —
+control systems, service desk, software asset management, EHS.
+
+A weaker test is sometimes reached for — *"a gap is only worth listing if a reader might
+assume Microsoft covers it"* — but that one does not describe the model. Nobody assumes
+Microsoft sells SCADA, and `07.11` is in here. It is useful only as a tiebreaker for
+genuinely borderline cases, and it is the reason LAN and Wi-Fi switching is deliberately
+absent.
+
+Things that fail the test and are excluded by design: treasury, tax, travel and expense,
+learning management and investor reporting. Each is a module of something already in the
+model — ERP, HCM or BI — rather than a separate estate. Breaking them out would turn
+area 07 into an application catalogue, which is what the compression is there to prevent.
