@@ -22,7 +22,7 @@ themselves stay in the Capability Model, so this reads as an orientation view ra
 second copy of the model. Every label, count and coverage bar is read from the model at build
 time, so the view cannot drift from the data behind it. Selecting an area opens it there.
 
-**Capability Model** — 130 capabilities across 14 functional areas and 5 groups. Each
+**Capability Model** — 138 capabilities across 15 functional areas and 6 groups. Each
 capability is sized as a single product decision and carries:
 
 - the Microsoft first-party product and its key components
@@ -103,13 +103,20 @@ model rests on it being trustworthy where it says Microsoft does not cover somet
 A capability earns its place if it is **a distinct estate category that an assessment
 must cover, and it is sized as one product-selection decision**. That is the operative
 test, and it is why the model carries capabilities Microsoft has no answer for at all —
-control systems, service desk, software asset management, EHS.
+control systems, service desk, software asset management, EHS, physical security.
 
 A weaker test is sometimes reached for — *"a gap is only worth listing if a reader might
 assume Microsoft covers it"* — but that one does not describe the model. Nobody assumes
 Microsoft sells SCADA, and `07.11` is in here. It is useful only as a tiebreaker for
 genuinely borderline cases, and it is the reason LAN and Wi-Fi switching is deliberately
 absent.
+
+Area 15 Operational & Engineering Systems is scoped by one rule: a capability belongs
+there if it exists **because the business owns physical things** rather than only
+information. Capabilities whose subject is operational but whose function is not —
+OT network segregation, the operational historian, industrial connectivity, OT security
+— deliberately stay in the network, data, integration and security areas, because the
+model is organised by function rather than by domain.
 
 Things that fail the test and are excluded by design: treasury, tax, travel and expense,
 learning management and investor reporting. Each is a module of something already in the
