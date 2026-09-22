@@ -62,28 +62,26 @@ function", Advanced "scale, regulatory pressure, or technology as a differentiat
 describes the capability rather than the company, so the page presents a starting shortlist and
 says so.
 
-**Cost and complexity appear only where there is something to weigh** — where Microsoft does not
-fully cover the capability, or where covering it needs a paid suite step. Where first-party covers
-it and the licence is already held, the row stays clean and shows only what carries it. That
-settles 16 of 35 capabilities at Small and 49 of 141 at Large.
+**Small uses Microsoft's SMB editions.** Fifteen capabilities carry a small-business edition
+applied below 300 seats — Business Central rather than Dynamics 365 Finance, Defender for Business
+rather than Defender for Endpoint, Intune Plan 1 and Defender for Office 365 Plan 1 inside
+Business Premium — each with a note on why the enterprise product is the wrong reach. Naming the
+wrong Microsoft product makes the Microsoft answer look more expensive than it is.
 
-They are **separate axes**, because they disagree on 24 of the 92 capabilities that carry a
-trade-off — application packaging is cheap to license and fiddly to land, device provisioning is
-the reverse. **Cost** is commercial exposure, derived from the licensing string: already inside a
-held licence, a distinct purchase, or a suite step and new vendor contracts. **Complexity** is
-implementation burden, derived from coverage: one product to configure, a supplement to join up
-and keep joined, or a vendor selected and integrated from scratch. Both rubrics are printed on the
-page. The model holds no pricing and none is invented.
+**Licence is stated against a baseline**, because a rating without one is not decidable:
+"included" is only cheap if the subscription is already held. The baseline is the suite the band
+implies — Business Premium below 300 seats, Microsoft 365 E3 above. Values are *carried*,
+*add-on*, *separate*, *metered*, or *not first-party*.
 
-**Alternatives follow the same test**, so a third party is named only where it is load-bearing — a
-partial gap someone has to fill, no first-party product at all, or a practice no product
-constitutes. Where Microsoft covers a capability substantially and it is already licensed, none is
-listed.
+**Implementation is deliberately not rated.** Deriving it from coverage was a category error —
+Sentinel, Fabric and Azure landing zones are all covered first-party and none is simple. Twelve
+capabilities where Microsoft's own documentation describes real design work say so in words
+instead.
 
-Size moves the cost rating where a documented Microsoft limit bites: endpoint provisioning,
-configuration management and endpoint detection carry a published seat limit at 300, and
-configuration and asset management at 2,500, so those rise a level once the chosen size passes the
-threshold and are marked as such.
+**Alternatives are named** where Microsoft covers a capability only partly or not at all, and
+where a practice is involved. Where first-party covers it, none is listed. That ordering is this
+page's own view, not Microsoft's published position — Microsoft frames partner products as
+extending and co-selling alongside its own rather than replacing them.
 
 Below that, collapsed, sits **what breaks as you grow** — eleven documented Microsoft limits with
 per-rule evidence gates, product constraints, seven worked decisions and the places where

@@ -454,6 +454,21 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 html[data-theme="dark"] .sh.cons{color:var(--accent)}
 .sh.none{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
 /* cost and complexity, shown only where a trade-off exists */
+.cst.carried{color:var(--ok);border-color:var(--okbd);background:var(--okbg)}
+.cst.addon{color:var(--warn);border-color:var(--warnbd);background:var(--warnbg)}
+.cst.separate{color:var(--tx-2);border-color:var(--line-solid);background:var(--panel-2)}
+.cst.metered{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+html[data-theme="dark"] .cst.metered{color:var(--accent)}
+.cst.none{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
+.cx.heavy{color:var(--warn);border-color:var(--warnbd);background:transparent;border-style:dashed}
+.pv-smb{margin:0 0 9px;padding:8px 11px;border-left:2px solid var(--accent);background:var(--accent-dim);
+  border-radius:0 6px 6px 0;font-size:12px;color:var(--tx-2);line-height:1.55;max-width:94ch}
+.pv-heavy{margin:9px 0 0;padding-top:8px;border-top:1px dotted var(--line-solid);
+  font-size:11.5px;color:var(--tx-3);line-height:1.55}
+.pv-heavy i{font-style:normal;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;
+  color:var(--warn);margin-right:5px;text-transform:uppercase}
+.pv-heavy b{color:var(--tx-2);font-weight:600}
+.pv.smb{border-left:3px solid var(--accent)}
 .cst,.cx{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;padding:2px 8px;
   white-space:nowrap;cursor:help;font-weight:700;border:1px solid}
 .cst{border-radius:99px}
@@ -463,8 +478,8 @@ html[data-theme="dark"] .sh.cons{color:var(--accent)}
 .cst.high,.cx.high{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
 .cx{opacity:.92}
 .fr-t{position:relative}
-.fr-t .cst::before,.pv-hd .cst::before{content:"Cost ";opacity:.6;font-weight:400}
-.fr-t .cx::before,.pv-hd .cx::before{content:"Build ";opacity:.6;font-weight:400}
+.fr-t .cst::before,.pv-hd .cst::before{content:"";opacity:.6;font-weight:400}
+.fr-t .cx::before,.pv-hd .cx::before{content:"";opacity:.6;font-weight:400}
 .fr.settled .fr-n{color:var(--tx-2)}
 .bite{font-family:var(--mono);font-size:9.5px;padding:2px 7px;border-radius:5px;white-space:nowrap;
   cursor:help;border:1px dashed var(--accent);color:var(--accent-2);background:var(--accent-dim)}
@@ -1134,7 +1149,7 @@ const MAP={
 /* 01 Identity & Access Management */
 "01.1":{ms:"Microsoft Entra ID",comp:["Entra ID","Lifecycle Workflows","Entra Connect / Cloud Sync","HR-driven provisioning","SCIM app provisioning"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/entra/fundamentals/what-is-entra",pos:"Authoritative cloud directory with HR-driven joiner/mover/leaver; Okta is still chosen where the estate is deliberately vendor-neutral or heavily non-Microsoft.",cov:"Native",alt:["Okta Workforce Identity","Ping Identity"]},
 "01.2":{ms:"Microsoft Entra ID",comp:["Conditional Access","Multifactor authentication","Passkeys / passwordless","Entra Verified ID","Federation & SSO"],lic:"Entra ID P1",docs:"https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",pos:"Conditional Access is the strongest policy engine in the market for Microsoft estates; Duo persists where MFA must sit in front of a heterogeneous VPN and network stack.",cov:"Native",alt:["Okta","Duo (Cisco)"]},
-"01.3":{ms:"Microsoft Entra ID",comp:["Role-based access control","Security & Microsoft 365 groups","App roles","Administrative units","Dynamic group membership"],lic:"Entra ID P1",docs:"https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",pos:"Solid for Microsoft workloads and apps federated to Entra; SailPoint and Saviynt lead where authorisation must span many non-Microsoft systems.",cov:"Native",alt:["SailPoint","Saviynt"]},
+"01.3":{ms:"Microsoft Entra ID",comp:["Role-based access control","Security & Microsoft 365 groups","App roles","Administrative units","Dynamic group membership"],lic:"Entra ID P2 or Entra ID Governance",docs:"https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",pos:"Solid for Microsoft workloads and apps federated to Entra; SailPoint and Saviynt lead where authorisation must span many non-Microsoft systems.",cov:"Native",alt:["SailPoint","Saviynt"]},
 "01.4":{ms:"Microsoft Entra Privileged Identity Management",comp:["Entra PIM","Just-in-time elevation","Approval workflows","Access reviews for roles","Azure Bastion"],lic:"Entra ID P2",docs:"https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",pos:"Covers Entra and Azure roles well; a dedicated vault is still required for servers, network devices and shared privileged accounts outside the Microsoft estate.",cov:"Partial",alt:["CyberArk","Delinea"]},
 "01.5":{ms:"Microsoft Entra ID Governance",comp:["Access reviews","Entitlement management","Access packages","Lifecycle Workflows","Separation of duties checks"],lic:"Add-on: Entra ID Governance",docs:"https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",pos:"Strong for Microsoft-centric estates and now a separate add-on SKU; SailPoint remains ahead on heterogeneous application connectors and complex certification campaigns.",cov:"Partial",alt:["SailPoint Identity Security Cloud","Saviynt"]},
 "01.6":{ms:"Microsoft Entra External ID",comp:["B2B collaboration","Cross-tenant access settings","Entra Verified ID","Guest access reviews","Multi-tenant organisation"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview",pos:"Mature B2B guest collaboration and cross-tenant controls — genuinely useful where assets are co-owned with consortium partners who run their own tenants.",cov:"Native",alt:["Okta","Ping Identity"]},
@@ -1238,7 +1253,7 @@ const MAP={
 "09.5":{ms:"Microsoft Purview Records Management",comp:["Records management","Retention labels & policies","File plan","Disposition review","Event-based retention"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/purview/records-management",pos:"Native records declaration and defensible disposition for Microsoft 365 content; requires E5 and specialists still lead for regulated records held outside the suite.",cov:"Native",alt:["OpenText","Iron Mountain"]},
 "09.6":{ms:"Microsoft Search",comp:["Microsoft Search","Microsoft Graph connectors","Copilot connectors","Semantic search","Search verticals"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/microsoftsearch/overview-microsoft-search",pos:"Strong within Microsoft 365 with connectors for external repositories; Glean is the common choice where search must span many non-Microsoft systems. Note Viva Topics was retired.",cov:"Partial",alt:["Glean","Elastic Enterprise Search"]},
 "09.7":{ms:"Microsoft 365 for frontline workers",comp:["Shifts","Walkie Talkie","Tasks","Approvals","Viva Connections"],lic:"Microsoft 365 F1/F3",docs:"https://learn.microsoft.com/en-us/microsoft-365/frontline/flw-licensing-options",pos:"Purpose-built deskless tooling at materially lower cost than knowledge-worker licences. Note F1 excludes a mailbox and Office apps, so most frontline users needing email require F3.",cov:"Native",alt:["Beekeeper","Blink","WorkJam"]},
-"09.8":{ms:"Microsoft Viva Insights",comp:["Viva Insights","Copilot Dashboard","Advanced insights","Viva Glint","Intune Endpoint Analytics"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/insights/introduction",pos:"Measures collaboration patterns and Copilot adoption; dedicated experience platforms still win on sentiment depth and endpoint friction. Licensing spans Viva Suite and Intune Suite add-ons.",cov:"Partial",alt:["Nexthink","Qualtrics","Medallia"]},
+"09.8":{ms:"Microsoft Viva Insights",comp:["Viva Insights","Copilot Dashboard","Advanced insights","Viva Glint","Intune Endpoint Analytics"],lic:"Licensing varies — confirm",docs:"https://learn.microsoft.com/en-us/viva/insights/introduction",pos:"Measures collaboration patterns and Copilot adoption; dedicated experience platforms still win on sentiment depth and endpoint friction. Licensing spans Viva Suite and Intune Suite add-ons.",cov:"Partial",alt:["Nexthink","Qualtrics","Medallia"]},
 "09.9":{ms:"Microsoft Teams Rooms",comp:["Teams Rooms Pro","Teams Rooms Basic","Teams Panels","Teams Rooms Pro Management","Certified room devices"],lic:"Teams Rooms Pro",docs:"https://learn.microsoft.com/en-us/microsoftteams/rooms/",pos:"A genuine first-party answer for the meeting room, with managed provisioning and health monitoring through Pro, and the default wherever Teams is the meeting platform. The room hardware itself comes from certified partners, and digital signage and wider site audio-visual stay with the AV integrator.",cov:"Partial",alt:["Zoom Rooms","Cisco Webex Rooms","Crestron"]},
 
 /* 10 AI & Agents */
@@ -1248,7 +1263,7 @@ const MAP={
 "10.4":{ms:"Microsoft Foundry Models",comp:["Foundry Models catalog","Model Router","Azure OpenAI in Foundry Models","Provisioned throughput","Data zone deployments"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview",pos:"Very broad model catalogue with a router that selects on cost and quality per prompt. Note Azure AI Foundry is now named Microsoft Foundry.",cov:"Native",alt:["Amazon Bedrock","Google Vertex AI"]},
 "10.5":{ms:"Azure Machine Learning",comp:["Azure Machine Learning","Pipelines","Model registry","Managed online endpoints","Responsible AI dashboard"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning",pos:"Full custom-model training and MLOps; Databricks and pure-play tooling still win for lakehouse-centric and experiment-heavy teams.",cov:"Native",alt:["Databricks MLflow","Weights & Biases"]},
 "10.6":{ms:"Microsoft Foundry observability",comp:["Foundry tracing","Azure AI Evaluation SDK","Agent & model dashboards","Application Insights integration","Continuous evaluation"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/observability",pos:"Built-in tracing and evaluation for agents in Foundry; independent observability tools still win for framework-agnostic, multi-vendor tracing.",cov:"Native",alt:["Arize","LangSmith"]},
-"10.7":{ms:"Microsoft Purview & Azure AI Content Safety",comp:["Purview DSPM for AI","Purview AI governance","Azure AI Content Safety","Prompt Shields","Groundedness detection (preview)"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/purview/ai-microsoft-purview",pos:"Purview governs data risk across Copilots and AI apps while Content Safety filters harmful content and jailbreaks; premium features require E5 or Copilot licensing.",cov:"Native",alt:["Credo AI","Holistic AI"]},
+"10.7":{ms:"Microsoft Purview & Azure AI Content Safety",comp:["Purview DSPM for AI","Purview AI governance","Azure AI Content Safety","Prompt Shields","Groundedness detection (preview)"],lic:"Licensing varies — confirm",docs:"https://learn.microsoft.com/en-us/purview/ai-microsoft-purview",pos:"Purview governs data risk across Copilots and AI apps while Content Safety filters harmful content and jailbreaks; premium features require E5 or Copilot licensing.",cov:"Native",alt:["Credo AI","Holistic AI"]},
 "10.8":{ms:"Azure AI Document Intelligence",comp:["Document Intelligence","Prebuilt & custom models","Layout and OCR","Content Understanding","Classification models"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/overview",pos:"Mature intelligent document processing extended by multimodal content understanding; specialists still win on very high-accuracy production pipelines.",cov:"Native",alt:["ABBYY","Instabase"]},
 "10.9":{ms:"Microsoft Agent 365",comp:["Agent registry & agent map","Agent lifecycle & ownership","Entra Agent ID access control","Defender for AI agents","Purview for agents"],lic:"Per user",docs:"https://learn.microsoft.com/en-us/microsoft-agent-365/overview",pos:"GA since May 2026 and purpose-built for agent sprawl — inventory, ownership and decommissioning regardless of build platform. A genuinely new product category, so third-party breadth is still maturing and multi-cloud registry sync was in preview at GA.",cov:"Native",alt:["ServiceNow AI Governance","Cisco AI Defense"]},
 
@@ -1257,14 +1272,14 @@ const MAP={
 "11.2":{ms:"Microsoft Defender for Endpoint",comp:["Defender for Endpoint P2","Automated investigation & response","Attack surface reduction","Live response","Defender for Servers"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",pos:"Best-in-class for Windows estates and included in E5, but CrowdStrike and SentinelOne still lead on cross-platform breadth and analyst-preferred workflows.",cov:"Native",alt:["CrowdStrike Falcon","SentinelOne"]},
 "11.3":{ms:"Microsoft Security Exposure Management",comp:["Security Exposure Management","Defender Vulnerability Management","Defender EASM","Attack path analysis","Critical asset management"],lic:"Microsoft Defender Suite",docs:"https://learn.microsoft.com/en-us/security-exposure-management/microsoft-security-exposure-management",pos:"Good unified exposure view for Microsoft-heavy estates, but Tenable and Qualys retain broader coverage of network devices, appliances and unmanaged assets.",cov:"Partial",alt:["Tenable","Qualys","Rapid7"]},
 "11.4":{ms:"Microsoft Purview Information Protection",comp:["Sensitivity labels","Data Loss Prevention","Insider Risk Management","Data Security Posture Management","Azure Rights Management"],lic:"Microsoft Purview Suite",docs:"https://learn.microsoft.com/en-us/purview/information-protection",pos:"Deep label-driven classification across Microsoft 365 and a prerequisite for safe Copilot deployment; network and CASB-centric egress control still favours Netskope or Zscaler.",cov:"Native",alt:["Netskope","Forcepoint"]},
-"11.5":{ms:"Microsoft Defender for Office 365",comp:["Defender for Office 365 P2","Safe Links & Safe Attachments","Anti-phishing policies","Automated investigation","Threat Explorer"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/defender-office-365/mdo-about",pos:"Strong native coverage across Exchange, Teams and SharePoint, but Abnormal and Proofpoint still lead on behavioural business email compromise detection.",cov:"Native",alt:["Proofpoint","Abnormal Security"]},
+"11.5":{ms:"Microsoft Defender for Office 365",comp:["Defender for Office 365 P2","Safe Links & Safe Attachments","Anti-phishing policies","Automated investigation","Threat Explorer"],lic:"Plan 1 in Microsoft 365 E3, Plan 2 in E5",docs:"https://learn.microsoft.com/en-us/defender-office-365/mdo-about",pos:"Strong native coverage across Exchange, Teams and SharePoint, but Abnormal and Proofpoint still lead on behavioural business email compromise detection.",cov:"Native",alt:["Proofpoint","Abnormal Security"]},
 "11.6":{ms:"Microsoft Defender for Cloud",comp:["Defender CSPM","Cloud workload protection","DevOps security","Container & Kubernetes security","Attack path analysis"],lic:"Azure consumption",docs:"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",pos:"A full multicloud CNAPP spanning posture, workload and container security; Wiz still wins on agentless depth and risk correlation, and entitlement analysis is less mature since Entra Permissions Management was retired.",cov:"Native",alt:["Wiz","Palo Alto Prisma Cloud"]},
-"11.7":{ms:"Microsoft Defender for IoT",comp:["OT network sensors, passive via SPAN or TAP","Deep packet inspection of OT protocols","Enterprise IoT via Defender for Endpoint","Sentinel and Defender XDR integration","Locally-managed sensor mode"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/overview",pos:"Mature passive monitoring for industrial networks feeding a Microsoft SOC, including a locally-managed mode for sites that cannot send data to the cloud. It monitors but does not enforce — segmentation and unidirectional transfer are bought elsewhere — and the unified Defender portal experience is still preview.",cov:"Partial",alt:["Claroty","Nozomi Networks","Dragos","Armis"]},
-"11.8":{kind:"practice",ms:"Microsoft Defender XDR & Microsoft Sentinel",comp:["Defender XDR incident investigation","Automatic attack disruption","Sentinel SOAR playbooks","Security Copilot investigation","Microsoft Incident Response (paid service, not a product)"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/defender-xdr/incidents-overview",pos:"Detection, investigation and automatic disruption are strong. Note that Microsoft Incident Response is a billable professional-services engagement rather than software; immutable cyber recovery is a genuine gap, and retainers are commonly held with a specialist independent of the platform vendor.",cov:"Partial",alt:["Mandiant (Google)","CrowdStrike Services","Rubrik (recovery)"]},
+"11.7":{ms:"Microsoft Defender for IoT",comp:["OT network sensors, passive via SPAN or TAP","Deep packet inspection of OT protocols","Enterprise IoT via Defender for Endpoint","Sentinel and Defender XDR integration","Locally-managed sensor mode"],lic:"Licensing varies — confirm",docs:"https://learn.microsoft.com/en-us/azure/defender-for-iot/organizations/overview",pos:"Mature passive monitoring for industrial networks feeding a Microsoft SOC, including a locally-managed mode for sites that cannot send data to the cloud. It monitors but does not enforce — segmentation and unidirectional transfer are bought elsewhere — and the unified Defender portal experience is still preview.",cov:"Partial",alt:["Claroty","Nozomi Networks","Dragos","Armis"]},
+"11.8":{kind:"practice",ms:"Microsoft Defender XDR & Microsoft Sentinel",comp:["Defender XDR incident investigation","Automatic attack disruption","Sentinel SOAR playbooks","Security Copilot investigation","Microsoft Incident Response (paid service, not a product)"],lic:"Licensing varies — confirm",docs:"https://learn.microsoft.com/en-us/defender-xdr/incidents-overview",pos:"Detection, investigation and automatic disruption are strong. Note that Microsoft Incident Response is a billable professional-services engagement rather than software; immutable cyber recovery is a genuine gap, and retainers are commonly held with a specialist independent of the platform vendor.",cov:"Partial",alt:["Mandiant (Google)","CrowdStrike Services","Rubrik (recovery)"]},
 "11.9":{ms:"—",comp:["GitHub Code Security & Secret Protection (software supply chain only)"],lic:"Not applicable",docs:"",pos:"Software supply chain is partly covered by GitHub Code Security and Secret Protection, but Microsoft has no third-party or vendor risk management capability — that is owned entirely by dedicated platforms.",cov:"Gap",alt:["ServiceNow VRM","OneTrust","SecurityScorecard","Bitsight"]},
 "11.10":{ms:"Attack Simulation Training",comp:["Attack simulation training","Phishing payload library","Training assignment","Repeat offender tracking","Vulnerable user insights"],lic:"Microsoft 365 E5",docs:"https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-get-started",pos:"Convenient native simulation included with E5, but KnowBe4 and Hoxhunt lead on content depth, behavioural risk scoring and adaptive programmes.",cov:"Partial",alt:["KnowBe4","Proofpoint Security Awareness","Hoxhunt"]},
 "11.11":{ms:"—",comp:["Security Exposure Management (attack paths, not exploitation)","AI Red Teaming Agent (generative AI scope only)"],lic:"Not applicable",docs:"",pos:"Microsoft sells no penetration testing or breach-and-attack-simulation product. Security Exposure Management analyses attack paths and Defender EASM maps external surface, but both are analytical posture rather than live exploitation, and attack simulation training is phishing awareness. Microsoft publishes rules of engagement permitting customers to test their own Azure workloads — permission, not a product.",cov:"Gap",alt:["Cobalt","NetSPI","AttackIQ"]},
-"11.12":{ms:"Microsoft Defender Experts",comp:["Defender Experts MDR","Defender Experts for Hunting","Proactive threat hunting","Managed and guided response","Ask Defender Experts"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/defender-xdr/defender-experts/defender-experts-mdr-overview",pos:"Microsoft will run detection and response over its own stack — a genuine first-party managed service rather than a partner arrangement, and the natural choice where the estate is already Defender and Sentinel. It covers the Microsoft estate, so a mixed or OT-heavy environment still needs a provider that watches everything else.",cov:"Partial",alt:["Arctic Wolf","Expel","Red Canary"]},
+"11.12":{ms:"Microsoft Defender Experts",comp:["Defender Experts MDR","Defender Experts for Hunting","Proactive threat hunting","Managed and guided response","Ask Defender Experts"],lic:"Licensing varies — confirm",docs:"https://learn.microsoft.com/en-us/defender-xdr/defender-experts/defender-experts-mdr-overview",pos:"Microsoft will run detection and response over its own stack — a genuine first-party managed service rather than a partner arrangement, and the natural choice where the estate is already Defender and Sentinel. It covers the Microsoft estate, so a mixed or OT-heavy environment still needs a provider that watches everything else.",cov:"Partial",alt:["Arctic Wolf","Expel","Red Canary"]},
 
 /* 12 Governance, Risk & Compliance */
 "12.1":{kind:"practice",ms:"Microsoft Purview Compliance Manager",comp:["Compliance Manager","Control assessments","Framework templates","Improvement actions","Azure Policy (technical controls)"],lic:"Microsoft Purview Suite",docs:"https://learn.microsoft.com/en-us/purview/compliance-manager",pos:"A usable control catalogue and framework mapping for the Microsoft estate, but not a policy lifecycle or exception engine — ServiceNow and Archer own enterprise control frameworks.",cov:"Partial",alt:["ServiceNow IRM","LogicGate","Archer"]},
@@ -1295,7 +1310,7 @@ const MAP={
 "14.4":{ms:"—",comp:[],lic:"Not applicable",docs:"",pos:"No technology vendor management tool — no vendor register, renewal calendar, performance scorecard or consolidation analysis. This capability covers technology suppliers as part of running the IT function; commercial contracts across the wider business are a separate decision.",cov:"Gap",alt:["ServiceNow VRM","SAP Ariba","Gartner / Forrester advisory"]},
 "14.5":{ms:"Dynamics 365 Supply Chain Management",comp:["Purchase agreements","Purchase requisitions & approvals","Vendor invoice matching","Procurement categories","Spend analysis in Power BI"],lic:"Dynamics 365 Supply Chain Management",docs:"https://learn.microsoft.com/en-us/dynamics365/supply-chain/",pos:"Can execute purchase agreements and requisitions for technology spend, but this is the business ERP doing duty rather than a technology sourcing tool — sourcing strategy, supplier discovery and negotiation belong to dedicated procurement suites.",cov:"Partial",alt:["SAP Ariba","Coupa","GEP SMART"]},
 "14.6":{kind:"practice",ms:"Microsoft Planner",comp:["Microsoft Planner","Planner Premium","Power Platform intake","Power BI"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/planner/",pos:"Adequate for delivery tracking, but thin for investment portfolio and demand management at portfolio scale. Note Project for the web has been folded into the unified Planner.",cov:"Partial",alt:["Planview","ServiceNow SPM","Broadcom Clarity"]},
-"14.7":{kind:"practice",ms:"Microsoft Viva",comp:["Viva Learning","Viva Glint","Viva Insights","Skills in Viva"],lic:"Verify",docs:"https://learn.microsoft.com/en-us/viva/",pos:"Supports skills development and workforce insight, but organisation design and sourcing mix are advisory and core human capital management belongs to Workday or SuccessFactors.",cov:"Partial",alt:["Degreed","Workday Skills Cloud"]},
+"14.7":{kind:"practice",ms:"Microsoft Viva",comp:["Viva Learning","Viva Glint","Viva Insights","Skills in Viva"],lic:"Licensing varies — confirm",docs:"https://learn.microsoft.com/en-us/viva/",pos:"Supports skills development and workforce insight, but organisation design and sourcing mix are advisory and core human capital management belongs to Workday or SuccessFactors.",cov:"Partial",alt:["Degreed","Workday Skills Cloud"]},
 "14.8":{kind:"practice",ms:"—",comp:["Entra cross-tenant synchronisation","Tenant-to-tenant migration","Microsoft Purview"],lic:"Not applicable",docs:"",pos:"Largely a gap — merger diligence, day-one readiness and carve-outs are services-led. Microsoft contributes tenant migration and cross-tenant sync tooling for execution only.",cov:"Gap",alt:["Quest / AvePoint / BitTitan (migration execution only)","Advisory-led for diligence, day-one and carve-out"]},
 "14.9":{kind:"practice",ms:"—",comp:["Azure Arc (workload portability only)","Open formats — Delta, Parquet, OpenAPI","Data export APIs"],lic:"Not applicable",docs:"",pos:"Genuine gap, and one Microsoft has little commercial incentive to close. Open formats and Arc help portability, but concentration analysis, substitutability testing and a rehearsed exit are a discipline the organisation owns. Distinct from backup, which assumes the provider is still available. Regulatory drivers such as DORA now require documented exit plans for providers supporting critical functions.",cov:"Gap",alt:["ServiceNow IRM / Archer (concentration tracking only)","Advisory-led for exit planning and testing"]},
 "14.10":{kind:"practice",ms:"Microsoft Viva",comp:["Viva Amplify","Viva Engage","Viva Learning","Viva Insights & Copilot Dashboard","Microsoft 365 Adoption Score"],lic:"Viva Suite or Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/viva/microsoft-viva-overview",pos:"Viva supplies the building blocks — campaign communications, learning in the flow of work, feedback and adoption analytics — and the Copilot Dashboard makes rollout measurable. There is no structured change-management method in the product, and Viva Learning aggregates content rather than being a full learning management system.",cov:"Partial",alt:["Prosci","WalkMe","Cornerstone"]}
@@ -3138,66 +3153,109 @@ const FIT_SIZE=[
 ];
 const TIER_LVL={Essential:1,Standard:2,Advanced:3};
 
-/* Cost and implementation complexity are separate axes, because they move
-   independently: a capability can be cheap to license and hard to land, or the
-   reverse. Cost comes from the licensing string, complexity from how much of the
-   capability Microsoft actually supplies.
+/* ---- Microsoft SMB editions ----
+   Several capabilities have a distinct Microsoft answer below 300 seats, and the
+   model previously carried only the enterprise one. That produced a Small tier
+   recommending Dynamics 365 Finance where Business Central is the product, and
+   Defender for Endpoint via E5 where Defender for Business is included in Business
+   Premium. Getting that wrong is not a first-party-versus-partner failure, it is
+   naming the wrong Microsoft product, which is worse.
 
-   Both are shown only where a trade-off genuinely exists — where Microsoft does not
-   fully cover the capability, or where covering it needs a paid suite step. Where
-   first-party covers it and the licence is already held there is nothing to weigh,
-   so the row stays clean rather than inviting a comparison that has no substance. */
+   Keyed by capability. Applied only at the Small band, which is bounded by
+   Microsoft's own published 300-seat cap on the Business family. */
+const SMB_ED={
+ "01.1":{ms:"Microsoft Entra ID",lic:"In Microsoft 365 Business Premium",
+   n:"Business Premium includes Entra ID P1, so this is carried by the base licence rather than bought separately."},
+ "01.2":{ms:"Microsoft Entra ID",lic:"In Microsoft 365 Business Premium",
+   n:"Conditional Access arrives with the P1 entitlement inside Business Premium."},
+ "01.3":{ms:"Microsoft Entra ID",lic:"Needs Entra ID P2 or ID Governance",
+   n:"Entitlement management is not in P1. Below 300 seats the Defender/Entra add-ons for Business Premium are the route to P2."},
+ "01.4":{ms:"Microsoft Entra ID Protection",lic:"Needs Entra ID P2",
+   n:"Privileged Identity Management requires P2, which Business Premium does not include on its own."},
+ "02.1":{ms:"Microsoft Intune Plan 1",lic:"In Microsoft 365 Business Premium",
+   n:"Business Premium carries Intune Plan 1, which covers enrolment and configuration."},
+ "02.2":{ms:"Microsoft Intune Plan 1",lic:"In Microsoft 365 Business Premium",
+   n:"Policy and configuration management is Plan 1 territory."},
+ "02.3":{ms:"Windows Autopatch",lic:"In Microsoft 365 Business Premium",
+   n:"Included with the Windows entitlement in Business Premium."},
+ "07.1":{ms:"Dynamics 365 Business Central",lic:"Business Central Essentials or Premium",
+   n:"Business Central is Microsoft's ERP for small and mid-sized organisations. Dynamics 365 Finance is the enterprise product and is oversized here."},
+ "07.3":{ms:"Dynamics 365 Business Central",lic:"Business Central Essentials or Premium",
+   n:"Basic employee records sit in Business Central at this size; Dynamics 365 Human Resources is the enterprise HCM product."},
+ "09.1":{ms:"Microsoft Exchange Online",lic:"In Microsoft 365 Business Premium"},
+ "09.2":{ms:"Microsoft Teams",lic:"In Microsoft 365 Business Premium"},
+ "09.3":{ms:"SharePoint & OneDrive",lic:"In Microsoft 365 Business Premium"},
+ "11.2":{ms:"Microsoft Defender for Business",lic:"In Microsoft 365 Business Premium",
+   n:"Defender for Business is designed for organisations up to 300 users and is included in Business Premium. Defender for Endpoint P2 is the enterprise tier and is not needed here."},
+ "11.5":{ms:"Microsoft Defender for Office 365 Plan 1",lic:"In Microsoft 365 Business Premium",
+   n:"Plan 1 is included in Business Premium. Plan 2 adds hunting, automated investigation and attack simulation, which need a staffed security function to be worth buying."},
+ "12.4":{ms:"Microsoft Priva",lic:"Add-on to Business Premium",
+   n:"Priva add-ons for Business Premium are capped at 300 seats, matching the base licence."}
+};
+/* Capabilities where Microsoft's own documentation describes substantial design and
+   build work rather than configuration. Hand-curated and deliberately short — an
+   earlier version derived this from coverage, which was wrong: a capability can be
+   fully covered first-party and still be a programme. Landing zones are a reference
+   architecture, Sentinel needs data onboarding and detection engineering, Fabric
+   needs capacity and data architecture decisions. */
+const HEAVY={
+ "04.1":"A reference architecture, not a product. Subscription topology, identity, networking and governance are decided before anything is deployed.",
+ "04.2":"Compute choices carry availability, scaling and cost design with them.",
+ "04.7":"Recovery objectives have to be agreed, then designed for, then actually tested.",
+ "05.1":"Data architecture, capacity sizing and a governance model, all before the first workload.",
+ "05.2":"Source-by-source ingestion design, each with its own latency and failure behaviour.",
+ "05.4":"Scanning, classification and a catalogue that stays accurate as sources change.",
+ "07.1":"An ERP implementation. Chart of accounts, statutory reporting and a close timetable that cannot slip.",
+ "07.2":"Process design across the supply chain, then data migration into it.",
+ "11.1":"Data onboarding, normalisation, detection engineering and an operating rota. The product is the start of the work.",
+ "11.4":"A classification taxonomy people will actually apply, then policy tuned against real traffic.",
+ "12.1":"A control framework mapped to the estate, with owners and evidence.",
+ "13.5":"A configuration model that stays true as the estate changes, which is where most attempts fail."
+};
+
+/* Cost is stated against a baseline rather than as a bare Low/Medium/High, because
+   a rating without a starting point is not decidable — "Included" is only cheap if
+   the subscription is already held, and Azure consumption spans Sentinel ingestion
+   and Azure DNS, which are orders of magnitude apart. The baseline is the suite the
+   band implies: Business Premium below 300 seats, Microsoft 365 E3 above it.
+
+   Implementation is deliberately NOT rated. An earlier version derived it from
+   coverage, which is a category error: Sentinel, Fabric and Azure landing zones are
+   all covered first-party and none of them is simple. Where Microsoft's own
+   documentation describes real design work, the row says so in words instead. */
 const COST_RUBRIC=[
- ["Low","Already inside a licence most estates hold. Adding the capability is an enablement exercise, not a purchase."],
- ["Medium","A distinct purchase — an add-on, its own SKU, or metered consumption that follows usage rather than headcount."],
- ["High","A suite step that lifts the whole tenant, or no first-party product at all, which means a new vendor and a new contract."]
-];
-const CX_RUBRIC=[
- ["Low","One first-party product covers it. The work is configuration."],
- ["Medium","Microsoft covers part of it, so something sits alongside and the two have to be joined up and kept that way."],
- ["High","Either no first-party product, so a vendor is selected, contracted and integrated from scratch — or a practice, where the work is organisational and no product discharges it."]
+ ["Carried","No incremental licence. The baseline suite already includes it, so the cost is enablement."],
+ ["Add-on","A named add-on on top of the baseline, bought for this capability."],
+ ["Separate","Its own product, sized and bought independently of the suite."],
+ ["Metered","Consumption-billed. Cost follows the workload, so it can be trivial or dominant and the figure has to be modelled."],
+ ["Not first-party","No Microsoft product, so the cost is a third-party contract this page cannot size."]
 ];
 function fitShape(lic){
   const l=lic||"";
   if(/Not applicable/.test(l))            return["none","No Microsoft product"];
   if(/^Included/.test(l))                 return["inc","Included"];
+  if(/Business Premium/.test(l)&&/^In /.test(l)) return["e3","In Business Premium"];
   if(/^Microsoft 365 E3/.test(l))         return["e3","In Microsoft 365 E3"];
   if(/E5|Defender Suite|Purview Suite/.test(l)) return["e5","Needs E5 or a suite add-on"];
-  if(/^Add-on/.test(l))                   return["addon","Add-on SKU"];
+  if(/^Add-on|^Needs /.test(l))           return["addon","Add-on SKU"];
   if(/consumption/.test(l))               return["cons","Azure consumption"];
-  if(/^Verify/.test(l))                   return["ver","Verify licensing"];
   return["sku","Separate SKU"];
 }
 const SHAPE_NOTE={
-  e3:"Already inside the base suite most estates hold, so the cost is adoption rather than purchase.",
-  e5:"A step up in suite tier or a named add-on. The jump usually carries several capabilities with it, so judge it as a bundle.",
-  addon:"Bought on top of a suite already held.",
-  sku:"Its own purchase, sized independently of the suite.",
-  cons:"Metered. Cost follows usage rather than headcount, so it scales with the workload and not the org chart.",
-  inc:"No separate charge.",
-  ver:"Licensing varies by edition or region — confirm before planning around it.",
-  none:"Microsoft sells nothing here, so whatever covers it is contracted separately."
+  e3:"Carried by the baseline suite for this size band.",
+  e5:"A step up in suite tier, or a named add-on. The jump usually carries several capabilities, so judge it as a bundle rather than against this one capability.",
+  addon:"Bought on top of the baseline.",
+  sku:"Its own purchase, sized independently.",
+  cons:"Metered against usage rather than headcount.",
+  inc:"No separate charge for the software. Design and operating effort is a different question.",
+  none:"Microsoft sells nothing here."
 };
-/* Is there anything to weigh up? Only if first-party does not fully cover the
-   capability, or if covering it means stepping the whole tenant up a tier. */
-function fitDecision(m){
-  const [sh]=fitShape(m.lic);
-  return m.cov!=="Native"||m.kind==="practice"||sh==="e5"||sh==="addon";
-}
+/* cost class, against the baseline the band implies */
 function fitCostTag(m,bite){
   const [sh]=fitShape(m.lic);
-  let lvl={e3:1,inc:1,e5:3,none:3}[sh]||2;
-  if(bite&&lvl<3)lvl++;          /* a documented limit forces a different purchase */
-  const L=["Low","Medium","High"][lvl-1];
-  return[L.toLowerCase(),L,COST_RUBRIC[lvl-1][1]];
-}
-function fitCxTag(m){
-  let n={Native:0,Partial:1,Gap:2}[m.cov];
-  if(n===undefined)n=1;
-  if(m.kind==="practice")n++;
-  const lvl=n<=0?1:n<=1?2:3;
-  const L=["Low","Medium","High"][lvl-1];
-  return[L.toLowerCase(),L,CX_RUBRIC[lvl-1][1]];
+  const i={e3:0,inc:0,addon:1,e5:1,sku:2,cons:3,none:4}[sh];
+  const n=(i===undefined?2:i);
+  return[["carried","addon","separate","metered","none"][n],COST_RUBRIC[n][0],COST_RUBRIC[n][1]];
 }
 function fitAnswer(m){
   if(m.kind==="practice"&&m.cov==="Gap")
@@ -3210,6 +3268,12 @@ function fitAnswer(m){
     return["part","Recommended, with a gap to fill","Microsoft covers part of this. The remainder is commonly met alongside it.",true];
   return["gap","No Microsoft product","Nothing first-party addresses this, so it is sourced elsewhere.",true];
 }
+/* apply the SMB edition where the band is Small and one exists */
+function fitEdition(capId,m,lvl){
+  if(lvl!==1||!SMB_ED[capId])return{m:m,sub:null};
+  const e=SMB_ED[capId];
+  return{m:Object.assign({},m,{ms:e.ms,lic:e.lic}),sub:e};
+}
 /* ---- fit: product view ----
    A capability list cannot answer the question that actually gets asked, because
    the decision is not taken per capability. Purview carries seven of them across
@@ -3220,9 +3284,21 @@ function fitAnswer(m){
 function fitProdIndex(lvl,bite){
   const idx={},orphans=[];
   allCaps().filter(c=>(TIER_LVL[TIER[c.id]]||9)<=lvl).forEach(c=>{
-    const m=MAP[c.id]||{};
+    const ed=fitEdition(c.id,MAP[c.id]||{},lvl);const m=ed.m;
     const prim=(CAP_PROD[c.id]||[]).filter(e=>e[1]==="p").map(e=>skuOf(e[0]));
     if(!prim.length){orphans.push({c:c,m:m});return;}
+    if(ed.sub){
+      /* at Small, a capability with a distinct SMB product becomes its own card
+         rather than being folded into the enterprise product's row */
+      const key="smb:"+ed.sub.ms;
+      const t=idx[key]=idx[key]||{id:key,n:ed.sub.ms,f:"Small-business edition",caps:[],
+        areas:new Set(),lic:new Set(),cov:{},alts:{},bite:bite.has(c.id),smb:true,sub:ed.sub};
+      t.caps.push({c:c,m:m,sub:ed.sub});t.areas.add(c.area.id);
+      if(m.lic)t.lic.add(m.lic);
+      t.cov[m.cov]=(t.cov[m.cov]||0)+1;
+      (m.alt||[]).forEach(a=>t.alts[a]=(t.alts[a]||0)+1);
+      return;
+    }
     prim.forEach(p=>{
       const t=idx[p]=idx[p]||{id:p,n:PRODUCTS[p].n,f:PRODUCTS[p].f,caps:[],areas:new Set(),
         lic:new Set(),cov:{},alts:{},bite:false};
@@ -3236,18 +3312,12 @@ function fitProdIndex(lvl,bite){
   return{idx:idx,orphans:orphans};
 }
 function fitProdTags(p){
-  /* cost takes the heaviest commercial step across the capabilities it carries;
-     complexity takes the worst coverage, since the weakest one sets the work */
-  let cMax=1,xMax=1;
-  p.caps.forEach(({m})=>{
-    const [ck]=fitCostTag(m,p.bite),[xk]=fitCxTag(m);
-    cMax=Math.max(cMax,{low:1,medium:2,high:3}[ck]);
-    xMax=Math.max(xMax,{low:1,medium:2,high:3}[xk]);
-  });
-  const dec=p.caps.some(({m})=>fitDecision(m))||p.bite;
-  return{dec:dec,
-    c:["low","medium","high"][cMax-1],cL:["Low","Medium","High"][cMax-1],cW:COST_RUBRIC[cMax-1][1],
-    x:["low","medium","high"][xMax-1],xL:["Low","Medium","High"][xMax-1],xW:CX_RUBRIC[xMax-1][1]};
+  /* the heaviest commercial step across everything the product carries */
+  const ord=["carried","addon","separate","metered","none"];
+  let i=0;
+  p.caps.forEach(({m})=>{const c=fitCostTag(m,p.bite)[0];i=Math.max(i,ord.indexOf(c));});
+  const heavy=p.caps.filter(({c})=>HEAVY[c.id]);
+  return{c:ord[i],cL:COST_RUBRIC[i][0],cW:COST_RUBRIC[i][1],heavy:heavy};
 }
 function fitProducts(lvl,bite){
   const {idx,orphans}=fitProdIndex(lvl,bite);
@@ -3264,18 +3334,20 @@ function fitProducts(lvl,bite){
        than one capability; below that it is just a vendor comparison */
     const lever=multi
       ? '<p class="pv-lev">Carries <b>'+p.caps.length+' capabilities</b> across '+p.areas.size+
-        ' functional area'+(p.areas.size===1?'':'s')+'. Moving away from it means replacing '+
-        (nAlt>2?'what the model names as roughly <b>'+nAlt+'</b> separate third-party products':
-          'each of those separately')+', so it is one decision with '+p.caps.length+' consequences.'
+        ' functional area'+(p.areas.size===1?'':'s')+', so it is configured, governed and '+
+        'administered once rather than '+p.caps.length+' times — one identity model, one policy '+
+        'surface, one set of people who know it.'
       : '';
-    return '<div class="pv'+(t.dec?'':' settled')+'">'+
+    const smbNote=p.smb&&p.sub&&p.sub.n?'<p class="pv-smb">'+esc(p.sub.n)+'</p>':'';
+    const heavyNote=t.heavy.length
+      ? '<p class="pv-heavy"><i>design work</i> '+t.heavy.map(({c})=>
+          '<b>'+esc(c.name)+'</b> — '+esc(HEAVY[c.id])).join(' ')+'</p>' : '';
+    return '<div class="pv'+(p.smb?' smb':'')+'">'+
       '<div class="pv-hd">'+
         '<span class="pv-n">'+esc(p.n)+'</span><span class="pv-f">'+esc(p.f)+'</span>'+
         '<span class="pv-sp"></span>'+
-        (t.dec
-          ? '<span class="cst '+t.c+'" title="Cost — '+esc(t.cW)+'">'+esc(t.cL)+'</span>'+
-            '<span class="cx '+t.x+'" title="Complexity — '+esc(t.xW)+'">'+esc(t.xL)+'</span>'
-          : '<span class="pv-ok">First-party, already licensed</span>')+
+        '<span class="cst '+t.c+'" title="Licence — '+esc(t.cW)+'">'+esc(t.cL)+'</span>'+
+        (t.heavy.length?'<span class="cx heavy" title="Microsoft documents substantial design and build work for '+t.heavy.length+' of these. Coverage says what a product does, not how long it takes to land.">Design work</span>':'')+
         (p.bite?'<span class="bite" title="A documented Microsoft limit applies to this product at the chosen size.">Limit at this size</span>':'')+
       '</div>'+
       '<div class="pv-cov">'+
@@ -3284,7 +3356,7 @@ function fitProducts(lvl,bite){
         (gap?'<span class="pvc g">'+gap+' not covered</span>':'')+
         licArr.map(l=>'<span class="pvc l">'+esc(l)+'</span>').join("")+
       '</div>'+
-      lever+
+      smbNote+lever+
       '<div class="pv-caps">'+p.caps.map(({c,m})=>
         '<button type="button" data-fitcap="'+esc(c.id)+'" class="pvcap '+
         (m.cov==="Native"?"n":m.cov==="Partial"?"p":"g")+'" title="'+esc(c.area.id+" "+c.area.name+" — "+m.cov)+'">'+
@@ -3293,6 +3365,7 @@ function fitProducts(lvl,bite){
         ? '<p class="pv-alt"><i>where it falls short, the model names</i> '+
           alts.slice(0,4).map(a=>esc(a[0])+(a[1]>1?' <b>×'+a[1]+'</b>':'')).join(" · ")+'</p>'
         : '')+
+      heavyNote+
       '</div>';
   };
   let h=list.map(card).join("");
@@ -3301,7 +3374,7 @@ function fitProducts(lvl,bite){
     h+='<div class="pv none"><div class="pv-hd"><span class="pv-n">No Microsoft product</span>'+
       '<span class="pv-f">'+orphans.length+' capabilities</span><span class="pv-sp"></span>'+
       '<span class="cst high" title="Cost — '+esc(COST_RUBRIC[2][1])+'">High</span>'+
-      '<span class="cx high" title="Complexity — '+esc(CX_RUBRIC[2][1])+'">High</span></div>'+
+      '<span class="cst none" title="'+esc(COST_RUBRIC[4][1])+'">Not first-party</span></div>'+
       '<p class="pv-lev">Microsoft sells nothing against these. Each is a separate vendor '+
       'selection, contract and integration, and the model names '+Object.keys(oAlts).length+
       ' distinct products across them — so they are the part of the estate least likely to '+
@@ -3324,22 +3397,23 @@ function fitFoundations(){
   const areas={};
   caps.forEach(c=>{
     const a=c.area;(areas[a.id]=areas[a.id]||{a:a,rows:[]});
-    const m=MAP[c.id]||{};
-    const prim=(CAP_PROD[c.id]||[]).filter(e=>e[1]==="p").map(e=>PRODUCTS[skuOf(e[0])].n);
+    const ed=fitEdition(c.id,MAP[c.id]||{},size.lvl);const m=ed.m;
+    const prim=ed.sub?[ed.sub.ms]
+      :(CAP_PROD[c.id]||[]).filter(e=>e[1]==="p").map(e=>PRODUCTS[skuOf(e[0])].n);
     const [sh,shLab]=fitShape(m.lic);
     const [ak,aLab,aWhy,showAlt]=fitAnswer(m);
-    const dec=fitDecision(m)||bite.has(c.id);
     const [ck,cLab,cWhy]=fitCostTag(m,bite.has(c.id));
-    const [xk,xLab,xWhy]=fitCxTag(m);
     areas[a.id].rows.push({id:c.id,n:c.name,prod:prim.length?prim.join(" + "):null,
-      alt:showAlt?(m.alt||[]).slice(0,3):[],sh:sh,shLab:shLab,dec:dec,
-      ak:ak,aLab:aLab,aWhy:aWhy,ck:ck,cLab:cLab,cWhy:cWhy,xk:xk,xLab:xLab,xWhy:xWhy,
-      bite:bite.has(c.id)});
+      alt:showAlt?(m.alt||[]).slice(0,3):[],sh:sh,shLab:shLab,
+      ak:ak,aLab:aLab,aWhy:aWhy,ck:ck,cLab:cLab,cWhy:cWhy,
+      heavy:HEAVY[c.id]||null,bite:bite.has(c.id)});
   });
   const list=Object.values(areas).sort((x,y)=>x.a.id.localeCompare(y.a.id));
   const prods=new Set(),noMs=caps.filter(c=>((MAP[c.id]||{}).ms||"—")==="—").length;
   caps.forEach(c=>(CAP_PROD[c.id]||[]).forEach(e=>{if(e[1]==="p")prods.add(skuOf(e[0]));}));
-  const nDec=caps.filter(c=>fitDecision(MAP[c.id]||{})||bite.has(c.id)).length;
+  const carried=caps.filter(c=>{const e=fitEdition(c.id,MAP[c.id]||{},size.lvl);
+    return fitCostTag(e.m,false)[0]==="carried";}).length;
+  const heavyN=caps.filter(c=>HEAVY[c.id]).length;
   const pvStats=fitProdIndex(size.lvl,bite);
   const pvList=Object.values(pvStats.idx);
   const pvMulti=pvList.filter(p=>p.caps.length>1).length;
@@ -3347,23 +3421,24 @@ function fitFoundations(){
   $("#fit-head").innerHTML='<div class="fsum">'+
     [[caps.length,"capabilities in scope"],[pvList.length,"Microsoft products",1],
      [pvMulti,"carry more than one capability"],
-     [caps.length-nDec,"settled — first-party, already licensed"],
-     [nDec,"with a trade-off to weigh"],[noMs,"no Microsoft product"]]
+     [carried,"carried by the baseline licence"],
+     [heavyN,"need real design work"],[noMs,"no Microsoft product"]]
     .map(c=>'<div class="fsum-c '+(c[2]?"hero":"")+'"><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></div>').join("")+
-    '</div><div class="frub"><b>Cost and complexity appear only where there is something to weigh</b>'+
-    ' — where Microsoft does not fully cover the capability, or where covering it needs a paid '+
-    'suite step. Where first-party covers it and the licence is already held, the row stays clean. '+
-    'Both are derived from what the model already records, so neither can drift from the rest of '+
-    'the page.'+
-    '<span class="frub-h">Cost <i>commercial exposure, from licensing</i></span>'+
-    COST_RUBRIC.map(r=>'<span class="frub-r"><span class="cst '+r[0].toLowerCase()+'">'+esc(r[0])+
-      '</span> '+esc(r[1])+'</span>').join("")+
-    '<span class="frub-h">Complexity <i>implementation burden, from coverage</i></span>'+
-    CX_RUBRIC.map(r=>'<span class="frub-r"><span class="cx '+r[0].toLowerCase()+'">'+esc(r[0])+
-      '</span> '+esc(r[1])+'</span>').join("")+
-    '<span class="frub-n">Alternatives appear on the same test. Where Microsoft covers a '+
-    'capability substantially and it is already licensed, none is listed — offering one would '+
-    'invent a comparison with no substance.</span></div>'+
+    '</div><div class="frub"><b>Licence</b> is stated against the suite this size band implies — '+
+    (size.lvl===1?'Microsoft 365 Business Premium, which is bounded by Microsoft\u2019s own published 300-seat cap'
+                 :'Microsoft 365 E3')+
+    '. A rating without a baseline is not decidable, because "included" is only cheap if the '+
+    'subscription is already held.'+
+    COST_RUBRIC.map((r,i)=>'<span class="frub-r"><span class="cst '+
+      ["carried","addon","separate","metered","none"][i]+'">'+esc(r[0])+'</span> '+esc(r[1])+'</span>').join("")+
+    '<span class="frub-n"><b>Implementation is not rated.</b> An earlier version derived it from '+
+    'coverage, which is wrong — Sentinel, Fabric and Azure landing zones are all covered '+
+    'first-party and none of them is simple. Where Microsoft\u2019s own documentation describes '+
+    'substantial design work, the row says so in words instead.<br><br>'+
+    'Alternatives are named where Microsoft covers a capability only partly or not at all, and '+
+    'where a practice is involved. Where first-party covers it, none is listed. That ordering is '+
+    'this page\u2019s own view, not Microsoft\u2019s published position — Microsoft frames partner '+
+    'products as extending and co-selling alongside its own rather than replacing them.</span></div>'+
     '<p class="fsum-note"><b>A starting shortlist, not a specification.</b> Sizes map to the '+
     'capability tier, which describes the capability rather than the company — a small business in '+
     'a regulated sector will need things this list puts under Large.</p>';
@@ -3386,11 +3461,9 @@ function fitFoundations(){
         (r.prod?esc(r.prod):'<i>no first-party product</i>')+
         (r.ak==="rec"?'':' <em>'+esc(r.aLab)+'</em>')+'</span></span>'+
       '<span class="fr-t">'+
-      (r.dec
-        ? '<span class="cst '+r.ck+'" title="Cost — '+esc(r.cWhy)+'">'+esc(r.cLab)+'</span>'+
-          '<span class="cx '+r.xk+'" title="Complexity — '+esc(r.xWhy)+'">'+esc(r.xLab)+'</span>'+
-          (r.bite?'<span class="bite" title="A documented Microsoft limit applies at this size, which forces a different purchase. See what breaks as you grow, below.">Limit at this size</span>':'')
-        : '<span class="sh '+r.sh+'" title="'+esc(SHAPE_NOTE[r.sh])+'">'+esc(r.shLab)+'</span>')+
+      '<span class="cst '+r.ck+'" title="Licence — '+esc(r.cWhy)+'">'+esc(r.cLab)+'</span>'+
+      (r.heavy?'<span class="cx heavy" title="'+esc(r.heavy)+'">Design work</span>':'')+
+      (r.bite?'<span class="bite" title="A documented Microsoft limit applies at this size, which forces a different purchase. See what breaks as you grow, below.">Limit at this size</span>':'')+
       '</span>'+
       '<span class="fr-a">'+(r.alt.length?'<i>consider</i> '+esc(r.alt.join(" · ")):"")+'</span>'+
       '</button>').join("")+'</div></div>').join("");
