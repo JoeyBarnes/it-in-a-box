@@ -68,7 +68,7 @@ tagged as an illustration, the page says how many remain, and editing a field pr
 real figure and drops the count. Only the 300-seat line is Microsoft's own; the bands above it
 are ours, because Microsoft publishes no segment definition above 300 seats.
 
-The view then shows **Options** for six decisions. A documented limit can rule an option
+The view then shows **Options** for seven decisions. A documented limit can rule an option
 **out**; it cannot pick between the options that survive. So each decision lists the shortlist
 with the exclusions traced to evidence, the considerations that distinguish what remains, and no
 verdict. Supplier, disposition and architecture are tracked separately, because they are
@@ -78,6 +78,11 @@ Where no documented limit applies, the page says so: Dynamics 365 Sales versus S
 with *"no documented limit decides this"* and names what the choice actually turns on. A
 validation requirement raises a note rather than an exclusion, because GxP mandates a validated
 system and a controlled process — not a particular vendor.
+
+Every option carries **where it loses**, including every Microsoft one — a comparison that only
+records where the incumbent falls short is a pitch, not an assessment. Each decision also states
+its **transition and exit** cost, and where it is not answerable from the figures collected here
+it says **not comparable without** and names what is missing.
 
 Each decision closes with **what would drive implementation effort** — named drivers rather than
 a score. A driver is in play, not indicated, or not assessed, on the same evidence rules as

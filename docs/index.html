@@ -501,6 +501,15 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 .ox-w{margin:0 0 5px;font-size:11.5px;color:var(--tx-2);line-height:1.5}
 .ox-c{margin:0;font-size:11.5px;color:var(--tx-3);line-height:1.5}
 .ox.out .ox-c{display:none}
+.ox-l{margin:7px 0 0;font-size:11.5px;color:var(--tx-2);line-height:1.5;
+  padding-top:7px;border-top:1px dotted var(--line-solid)}
+.ox-l span{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--warn);display:block;margin-bottom:2px}
+.oh-valid,.oh-exit{margin:0 0 11px;font-size:12px;color:var(--tx-2);line-height:1.55;max-width:92ch}
+.oh-valid span,.oh-exit span{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--tx-3);display:block;margin-bottom:2px}
+.oh-valid{padding:9px 11px;border-left:2px solid var(--warnbd);background:var(--warnbg);border-radius:0 6px 6px 0}
+.oh-exit{margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line)}
 /* exposure drivers */
 .edrv{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
 .edrv-hd{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
@@ -2850,6 +2859,7 @@ function buildFit(){
    are independent: an option can be Microsoft AND third party AND coexisting. */
 const FIT_OPT=[
  {cap:"11.2",q:"Which endpoint protection product?",needs:["seats"],
+  exit:"Endpoint agents are among the easier things to change — no data to migrate and no user-facing workflow. The cost is in the operating routine around the console, not in the swap.",
   exp:[
    {d:"Rollout",needs:["seats"],when:v=>v.seats>300,on:"any option that replaces the current agent",
     t:"Swapping an endpoint agent touches every device, and the old and new agents rarely coexist cleanly. Sequencing and a rollback path matter more than the licence change that triggered it."},
@@ -2859,16 +2869,21 @@ const FIT_OPT=[
    {n:"Defender for Business",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.seats>300,
     outWhy:"Not available above 300 users.",
-    con:"Arrives with Business Premium. Simplified configuration aimed at organisations without a security operations team."},
+    con:"Arrives with Business Premium. Simplified configuration aimed at organisations without a security operations team.",
+    lose:"Deliberately simplified — no advanced hunting, and a hard ceiling that arrives without warning as headcount grows."},
    {n:"Defender for Endpoint P1",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
-    con:"Included in Microsoft 365 E3. Protection without the hunting, automated investigation and response that P2 adds."},
+    con:"Included in Microsoft 365 E3. Protection without the hunting, automated investigation and response that P2 adds.",
+    lose:"Protection only. No automated investigation, so every incident lands on a human, and Microsoft has moved the detailed plan comparison off Learn onto its commercial pages."},
    {n:"Defender for Endpoint P2",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
-    con:"Included in E5 and the Defender Suite add-on. The tier that carries hunting and automated investigation, which only earns its cost where someone is there to act on it."},
+    con:"Included in E5 and the Defender Suite add-on. The tier that carries hunting and automated investigation, which only earns its cost where someone is there to act on it.",
+    lose:"Pays for capability that needs a staffed security function to realise. Bought without one, most of the delta goes unused."},
    {n:"A third-party EDR",sup:"Third party",dis:"Retain or replace",arc:"Coexist",
-    con:"CrowdStrike and SentinelOne lead on cross-platform breadth and analyst workflow. Worth holding where one is already deployed and the estate is not Windows-dominated."}],
+    con:"CrowdStrike and SentinelOne lead on cross-platform breadth and analyst workflow. Worth holding where one is already deployed and the estate is not Windows-dominated.",
+    lose:"A separate licence, console and integration path, and it forgoes the native signal sharing with the rest of the Microsoft security stack that Defender XDR coordinates."}],
   url:"https://learn.microsoft.com/en-us/defender-business/mdb-overview"},
 
  {cap:"05.6",q:"How should Power BI be licensed?",needs:["fabricItems","fabricSku"],
+  exit:"Licensing changes are reversible on paper, but workspaces and semantic models built against a capacity do not move back to per-user licensing without rework. The lock-in is in what gets built afterwards.",
   exp:[
    {d:"Environment strategy",needs:["fabricItems"],when:v=>v.fabricItems===true,
     on:"any move onto capacity",
@@ -2880,18 +2895,23 @@ const FIT_OPT=[
    {n:"Pro licences only",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.fabricItems===true,
     outWhy:"Non-Power BI Fabric items cannot run without an F capacity.",
-    con:"Every author and every viewer holds a licence. Predictable, and cheapest at small scale."},
+    con:"Every author and every viewer holds a licence. Predictable, and cheapest at small scale.",
+    lose:"Cost rises linearly with every reader, and none of the Premium features are available at any point."},
    {n:"Premium Per User",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.fabricItems===true,
     outWhy:"PPU does not provision a Fabric capacity, so lakehouses, warehouses and notebooks cannot run on it at any user count.",
-    con:"Premium features per user. Microsoft's published guidance puts it ahead of capacity below roughly 250 users needing those features, though the assumptions behind that figure are not published."},
+    con:"Premium features per user. Microsoft's published guidance puts it ahead of capacity below roughly 250 users needing those features, though the assumptions behind that figure are not published.",
+    lose:"A dead end the moment anything beyond Power BI is wanted, and it still charges per head rather than per workload."},
    {n:"Fabric capacity below F64",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
-    con:"Runs Fabric items, but every viewer still needs a Pro or PPU licence — so viewer count drives cost twice."},
+    con:"Runs Fabric items, but every viewer still needs a Pro or PPU licence — so viewer count drives cost twice.",
+    lose:"The worst of both models — capacity cost and per-viewer cost at the same time. Rarely the right resting place, though often the right step."},
    {n:"Fabric capacity at F64 or above",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
-    con:"The point where free users with a viewer role can read Power BI content. Microsoft publishes no table mapping capacity to organisation size and directs customers to measure with a trial capacity."}],
+    con:"The point where free users with a viewer role can read Power BI content. Microsoft publishes no table mapping capacity to organisation size and directs customers to measure with a trial capacity.",
+    lose:"A committed floor cost whether the capacity is used or not, and workloads now compete for the same compute, so one heavy job can slow everyone."}],
   url:"https://learn.microsoft.com/en-us/fabric/enterprise/licenses"},
 
  {cap:"09.3",q:"Which document platform?",needs:["listItems","validation"],
+  exit:"Content is portable; permissions, version history and retention labels are the part that does not travel. Assume any move out carries a metadata reconciliation exercise.",
   exp:[
    {d:"Data migration",needs:["listItems"],when:v=>v.listItems>100000,
     on:"any option that moves content off SharePoint",
@@ -2906,17 +2926,22 @@ const FIT_OPT=[
    {n:"SharePoint alone",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.listItems>100000,
     outWhy:"Above 100,000 items in a single list or library, permission inheritance can no longer be broken.",
-    con:"Sufficient for collaboration and versioning well beyond most estates, and already licensed."},
+    con:"Sufficient for collaboration and versioning well beyond most estates, and already licensed.",
+    lose:"Limits arrive as surprises during a project rather than as a planned upgrade, and there is no records lifecycle without adding Purview."},
    {n:"SharePoint with Purview records management",sup:"Microsoft",dis:"Extend",arc:"Single platform",
-    con:"Adds retention labels, regulatory records and disposition review. Note regulatory records cannot be auto-applied and cannot be applied to a checked-out document."},
+    con:"Adds retention labels, regulatory records and disposition review. Note regulatory records cannot be auto-applied and cannot be applied to a checked-out document.",
+    lose:"Needs E5 Compliance-tier licensing, and the regulatory record restrictions are absolute — nobody, including a global administrator, can remove the label."},
    {n:"SharePoint alongside a specialist repository",sup:"Microsoft and third party",dis:"Coexist",arc:"Coexist",
-    con:"Keeps collaboration where users already work and moves only the controlled corpus. Usually the cheaper answer when one workload breaches a limit but the rest does not."},
+    con:"Keeps collaboration where users already work and moves only the controlled corpus. Usually the cheaper answer when one workload breaches a limit but the rest does not.",
+    lose:"Two systems to govern, two permission models to keep aligned, and users have to learn which content lives where."},
    {n:"A specialist or validated system",sup:"Third party",dis:"Replace",arc:"Single platform",
-    con:"Pre-validated systems carry their qualification evidence. Microsoft states plainly that there is no GxP certification for cloud service providers and the validation burden sits with the customer — which is what separates the categories, not features."}],
+    con:"Pre-validated systems carry their qualification evidence. Microsoft states plainly that there is no GxP certification for cloud service providers and the validation burden sits with the customer — which is what separates the categories, not features.",
+    lose:"Expensive, and it pulls everyday collaboration into a system designed for control rather than for authoring. Adoption suffers when the controlled tool becomes the only tool."}],
   note:v=>v.validation===true?"A validation requirement does not by itself mandate a third-party product. It mandates a validated system and a controlled operating process, which can be built on Microsoft technology at the cost of carrying that validation effort yourself.":null,
   url:"https://learn.microsoft.com/en-us/compliance/regulatory/offering-gxp"},
 
  {cap:"08.5",q:"Which code analysis tooling?",needs:["abapApex"],
+  exit:"Among the cheapest things here to change. Findings history is lost on a move, but nothing in the codebase depends on the analyser.",
   exp:[
    {d:"Integration",needs:["abapApex"],when:v=>v.abapApex===true,
     on:"running both analysers",
@@ -2928,14 +2953,18 @@ const FIT_OPT=[
    {n:"GitHub Advanced Security alone",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.abapApex===true,
     outWhy:"CodeQL does not support ABAP or Apex, so SAP and Salesforce customisation would go unanalysed.",
-    con:"Code Security and Secret Protection, billed per unique active committer. Copilot Autofix needs no separate Copilot licence."},
+    con:"Code Security and Secret Protection, billed per unique active committer. Copilot Autofix needs no separate Copilot licence.",
+    lose:"Ten language families and explicitly not PHP or Scala. Billing follows committers, so cost tracks team size rather than repository count."},
    {n:"GitHub Advanced Security with Sonar",sup:"Microsoft and third party",dis:"Coexist",arc:"Coexist",
-    con:"Sonar publishes its findings into GitHub code scanning alerts via SARIF and can fail a pull request quality gate, so the two are complementary rather than duplicative."},
+    con:"Sonar publishes its findings into GitHub code scanning alerts via SARIF and can fail a pull request quality gate, so the two are complementary rather than duplicative.",
+    lose:"Two licences, two configurations and two sets of findings that need one triage routine. Overlapping coverage on mainstream languages means some duplicate noise."},
    {n:"Sonar alone",sup:"Third party",dis:"Retain or replace",arc:"Single platform",
-    con:"Broader language coverage including ABAP and Apex, but gives up secret scanning with push protection, dependency review and Copilot Autofix."}],
+    con:"Broader language coverage including ABAP and Apex, but gives up secret scanning with push protection, dependency review and Copilot Autofix.",
+    lose:"Loses push protection, which stops a secret before it lands rather than reporting it afterwards. Single sign-on and SCIM need Sonar's Enterprise plan."}],
   url:"https://docs.github.com/en/code-security/concepts/code-scanning/codeql/codeql-code-scanning"},
 
  {cap:"12.5",q:"Which audit retention tier?",needs:["auditYears"],
+  exit:"Downgrading a retention tier is irreversible in the only way that matters — records already aged out do not come back. Treat a reduction as a one-way door.",
   exp:[
    {d:"Procurement",needs:["auditYears"],when:v=>v.auditYears==="Up to 10 years",
     on:"ten-year retention",
@@ -2947,16 +2976,45 @@ const FIT_OPT=[
    {n:"Purview Audit (Standard)",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.auditYears&&v.auditYears!=="180 days or less",
     outWhy:"Standard retains audit records for 180 days.",
-    con:"Enabled by default. Search, Graph API and CSV export included."},
+    con:"Enabled by default. Search, Graph API and CSV export included.",
+    lose:"180 days is short of most regulatory expectations, and an investigation that starts late finds the records already gone."},
    {n:"Purview Audit (Premium)",sup:"Microsoft",dis:"Extend",arc:"Single platform",
     out:v=>v.auditYears==="Up to 10 years",
     outWhy:"Ten-year retention requires a further add-on licence on top of Premium.",
-    con:"Up to one year, retention policies and intelligent insights."},
+    con:"Up to one year, retention policies and intelligent insights.",
+    lose:"Needs the higher compliance licensing tier, and one year still falls short where a statutory hold runs longer."},
    {n:"Premium with the 10-year add-on",sup:"Microsoft",dis:"Extend",arc:"Single platform",
-    con:"Two purchases, not one. Note non-user records such as service principal activity are held for a fixed year regardless and are not covered by custom retention policies."}],
+    con:"Two purchases, not one. Note non-user records such as service principal activity are held for a fixed year regardless and are not covered by custom retention policies.",
+    lose:"The most expensive path, and the fixed one-year hold on non-user records is a gap the add-on does not close."}],
   url:"https://learn.microsoft.com/en-us/purview/audit-solutions-overview"},
 
+ {cap:"07.1",q:"Dynamics 365 Finance or SAP?",needs:[],undecided:true,
+  valid:"Not comparable without knowing what the incumbent actually runs — module scope, customisation depth, localisation footprint and which statutory reporting depends on it. Those determine the answer and none of them are asked for on this page.",
+  exit:"The ledger is the hardest system to leave. Historical transactions, statutory retention and audit trail continuity mean a finance migration usually carries the old system in read-only form for years, so the old licence rarely stops on go-live.",
+  opts:[
+   {n:"Dynamics 365 Finance",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    con:"Sits on the same Dataverse and Power Platform foundation as the rest of the estate, which is the consolidation argument.",
+    lose:"Microsoft publishes no guidance positioning it against S/4HANA by company size, industry or process type. Anyone producing a clean size rule for this is inventing it. Depth in process manufacturing and heavy industry is where SAP is usually judged stronger."},
+   {n:"Retain SAP and run it on Azure",sup:"Microsoft and third party",dis:"Retain",arc:"Coexist",
+    con:"Documented and mature: RISE with SAP on Azure integration, Azure Center for SAP Solutions, and SAP change data capture through the ODP framework into Fabric. Keeps the ledger still while the data and analytics estate moves.",
+    lose:"Fabric's SAP connectors are gateway-dependent, source-only and mostly Basic auth — a batch and CDC extraction story rather than native mirroring. The Cloud Adoption Framework's SAP landing zone accelerator is also deprecated and scheduled for removal on 30 October 2026, so cite the SAP on Azure product docs instead."},
+   {n:"Replace SAP with Dynamics 365 Finance",sup:"Microsoft",dis:"Replace",arc:"Single platform",
+    con:"Only worth modelling where the incumbent is genuinely oversized for the business or the contract is already ending.",
+    lose:"The most expensive option in every driver below, and the one where the evidence base for the decision is thinnest. A finance replacement is judged on statutory continuity and close timetable, not on platform preference."}],
+  exp:[
+   {d:"Customisation",on:"replacing the incumbent",
+    t:"Years of accumulated configuration, custom fields and bolt-on reports. The inventory is never complete at the point the decision is taken."},
+   {d:"Integration",on:"replacing the incumbent",
+    t:"An ERP sits at the centre of the estate. Every consuming system is its own piece of work, and interdependency across components is the named mechanism behind fat-tailed overruns."},
+   {d:"Data migration",on:"replacing the incumbent",
+    t:"Opening balances, open items, fixed asset registers and enough history to satisfy statutory retention. The mapping and the exceptions are the cost, not the volume."},
+   {d:"Validation and compliance",on:"every option",
+    t:"Statutory reporting and audit trail continuity have to hold across the change. This is the driver that sets the timetable, because a close cannot be missed."}],
+  url:"https://learn.microsoft.com/en-us/azure/sap/workloads/rise-integration"},
+
  {cap:"07.5",q:"Dynamics 365 Sales or Salesforce?",needs:[],undecided:true,
+  valid:"Not comparable without knowing how much has been built into the incumbent — custom objects, workflow, integrations and the reporting that depends on them. That is what decides this, and it is not asked for here.",
+  exit:"CRM data leaves more cleanly than a ledger, but the integrations around it do not. The realistic exit cost sits in the downstream consumers and the reporting built on the old schema, not in the records themselves.",
   exp:[
    {d:"Customisation",on:"replacing the incumbent",
     t:"Whatever has been built into the incumbent over the years has to be rebuilt, retired or consciously dropped. Nobody has a complete inventory of it at the point the decision is made, which is why this is discovered rather than estimated."},
@@ -2968,11 +3026,14 @@ const FIT_OPT=[
     t:"Sales teams adopt or quietly refuse. This is the driver most often left out of a business case and most often responsible for a system that technically works and is not used."}],
   opts:[
    {n:"Dynamics 365 Sales",sup:"Microsoft",dis:"Adopt or replace",arc:"Single platform",
-    con:"Runs on Dataverse alongside Power Apps and Power Automate, and carries the LinkedIn Sales Navigator tie-in. The consolidation argument is licensing and platform, not features."},
+    con:"Runs on Dataverse alongside Power Apps and Power Automate, and carries the LinkedIn Sales Navigator tie-in. The consolidation argument is licensing and platform, not features.",
+    lose:"A smaller partner and app ecosystem than Salesforce, and thinner vertical depth in industries where Salesforce has an established edition."},
    {n:"Keep Salesforce, govern it with Microsoft",sup:"Microsoft and third party",dis:"Retain",arc:"Coexist",
-    con:"Every layer is first-party documented: Entra single sign-on and SCIM provisioning, Dataverse virtual tables, Fabric and Data Factory connectors, and Copilot federated connectors that query without moving data. Sales agent works against Salesforce directly. Watch that the Salesforce connector is unavailable in GCC High and China 21Vianet."},
+    con:"Every layer is first-party documented: Entra single sign-on and SCIM provisioning, Dataverse virtual tables, Fabric and Data Factory connectors, and Copilot federated connectors that query without moving data. Sales agent works against Salesforce directly. Watch that the Salesforce connector is unavailable in GCC High and China 21Vianet.",
+    lose:"Two platforms to license and administer. The Salesforce connector is unavailable in GCC High and China 21Vianet, which breaks this pattern outright for sovereign tenants."},
    {n:"Replace Salesforce with Dynamics 365",sup:"Microsoft",dis:"Replace",arc:"Single platform",
-    con:"Only worth modelling against renewal timing, customisation depth, integration count and exit cost — none of which this page holds."}],
+    con:"Only worth modelling against renewal timing, customisation depth, integration count and exit cost — none of which this page holds.",
+    lose:"Carries every driver below at once, and sales teams are the population most able to quietly refuse a new system."}],
   url:"https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-virtual-tables-using-connectors"}
 ];
 
@@ -3022,7 +3083,9 @@ function fitOptCard(o){
     (r.out?'<span class="ox-x">Ruled out</span>':'')+'</div>'+
     '<div class="ox-t">'+tags(r.x)+'</div>'+
     (r.out?'<p class="ox-w">'+esc(r.x.outWhy)+'</p>':'')+
-    '<p class="ox-c">'+esc(r.x.con)+'</p></div>';
+    '<p class="ox-c">'+esc(r.x.con)+'</p>'+
+    (!r.out&&r.x.lose?'<p class="ox-l"><span>Where it loses</span> '+esc(r.x.lose)+'</p>':'')+
+    '</div>';
 
   let head,body;
   if(o.undecided){
@@ -3047,8 +3110,10 @@ function fitOptCard(o){
     '<button class="oc-cap" type="button" data-fitcap="'+esc(o.cap)+'">'+esc(o.cap+" "+cap.name)+'</button>'+
     '<h3>'+esc(o.q)+'</h3>'+head+'</div>'+
     '<div class="oc-body">'+body+
+    (o.valid?'<p class="oh-valid"><span>Not comparable without</span> '+esc(o.valid)+'</p>':'')+
     (note?'<p class="oh-note">'+esc(note)+'</p>':'')+
     '<div class="oxs">'+live.map(optRow).join("")+out.map(optRow).join("")+'</div>'+
+    (o.exit?'<p class="oh-exit"><span>Transition and exit</span> '+esc(o.exit)+'</p>':'')+
     fitExpBlock(o)+
     '<div class="fd-meta"><span class="fd-sp"></span>'+
     '<a href="'+esc(o.url)+'" target="_blank" rel="noopener">Source &#8599;</a></div>'+
