@@ -79,6 +79,16 @@ with *"no documented limit decides this"* and names what the choice actually tur
 validation requirement raises a note rather than an exclusion, because GxP mandates a validated
 system and a controlled process — not a particular vendor.
 
+Each decision closes with **what would drive implementation effort** — named drivers rather than
+a score. A driver is in play, not indicated, or not assessed, on the same evidence rules as
+everything else, so supplying a validation requirement lights up the validation workstream and
+supplying a small content estate turns the migration driver off. The three headline dimensions
+are Microsoft's own: its project profiling guidance defines complexity as the number of
+customisations, the level of integration with other systems and the level of data migration.
+
+No figure is attached to any of it. IT cost overruns follow a power-law distribution (Flyvbjerg
+et al., n=5,392), so a single number would imply an average the distribution does not have.
+
 **Reference Implementation** — one real initiative expressed against the model, with an
 interactive flow diagram, control planes, and a closing note on where the design depends
 on custom build rather than a first-party product.

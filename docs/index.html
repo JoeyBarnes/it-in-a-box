@@ -501,6 +501,24 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 .ox-w{margin:0 0 5px;font-size:11.5px;color:var(--tx-2);line-height:1.5}
 .ox-c{margin:0;font-size:11.5px;color:var(--tx-3);line-height:1.5}
 .ox.out .ox-c{display:none}
+/* exposure drivers */
+.edrv{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.edrv-hd{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--tx-3);margin-bottom:9px;display:flex;align-items:baseline;gap:9px}
+.edrv-hd span{margin-left:auto;text-transform:none;letter-spacing:0;font-size:10.5px}
+.edrvs{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:8px}
+.ed{border-left:2px solid var(--line-solid);padding:2px 0 2px 10px}
+.ed.on{border-left-color:var(--accent)}
+.ed.unk{border-left-style:dashed}
+.ed.off{opacity:.6}
+.ed-hd{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-bottom:2px}
+.ed-n{font-size:12px;font-weight:600}
+.ed.off .ed-n,.ed.unk .ed-n{color:var(--tx-3);font-weight:400}
+.ed-on{font-family:var(--mono);font-size:9.5px;color:var(--tx-3)}
+.ed p{margin:0;font-size:11.5px;color:var(--tx-2);line-height:1.5}
+.ed.off p,.ed.unk p{color:var(--tx-3)}
+.edrv-ft{margin:11px 0 0;font-size:11px;color:var(--tx-3);line-height:1.5;max-width:92ch}
+.edrv-ft a{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -2832,6 +2850,11 @@ function buildFit(){
    are independent: an option can be Microsoft AND third party AND coexisting. */
 const FIT_OPT=[
  {cap:"11.2",q:"Which endpoint protection product?",needs:["seats"],
+  exp:[
+   {d:"Rollout",needs:["seats"],when:v=>v.seats>300,on:"any option that replaces the current agent",
+    t:"Swapping an endpoint agent touches every device, and the old and new agents rarely coexist cleanly. Sequencing and a rollback path matter more than the licence change that triggered it."},
+   {d:"Transition to support",needs:["seats"],when:v=>v.seats>300,on:"any option that replaces the current agent",
+    t:"A different console, different alert shapes and different triage runbooks. The product changes in an afternoon; the operating routine around it does not."}],
   opts:[
    {n:"Defender for Business",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.seats>300,
@@ -2846,6 +2869,13 @@ const FIT_OPT=[
   url:"https://learn.microsoft.com/en-us/defender-business/mdb-overview"},
 
  {cap:"05.6",q:"How should Power BI be licensed?",needs:["fabricItems","fabricSku"],
+  exp:[
+   {d:"Environment strategy",needs:["fabricItems"],when:v=>v.fabricItems===true,
+    on:"any move onto capacity",
+    t:"Workspaces move onto a capacity, which changes where compute is billed and who can exhaust it. Noisy-neighbour behaviour between workspaces is a capacity planning problem that per-user licensing never had."},
+   {d:"Capacity sizing",needs:["fabricItems"],when:v=>v.fabricItems===true,
+    on:"any move onto capacity",
+    t:"Microsoft publishes no table mapping capacity to organisation size and directs customers to run a trial, read the metrics app and scale from what they see. This is a discovery task with a real elapsed time, not a calculation."}],
   opts:[
    {n:"Pro licences only",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.fabricItems===true,
@@ -2862,6 +2892,16 @@ const FIT_OPT=[
   url:"https://learn.microsoft.com/en-us/fabric/enterprise/licenses"},
 
  {cap:"09.3",q:"Which document platform?",needs:["listItems","validation"],
+  exp:[
+   {d:"Data migration",needs:["listItems"],when:v=>v.listItems>100000,
+    on:"any option that moves content off SharePoint",
+    t:"Moving a corpus this size carries its permissions, version history and metadata with it, and those are where migrations overrun. Microsoft names data migration as one of the three things that define implementation complexity."},
+   {d:"Validation and compliance",needs:["validation"],when:v=>v.validation===true,
+    on:"every option, including staying put",
+    t:"Validation is usually the dominant cost here and it does not disappear by choosing a pre-validated product — it changes from work you perform to evidence you review and maintain. Microsoft is explicit that there is no GxP certification for cloud service providers and the burden sits with the customer."},
+   {d:"Change and adoption",needs:["listItems"],when:v=>v.listItems>100000,
+    on:"any option that moves users to a second tool",
+    t:"A document system is a daily-use tool. Splitting the controlled corpus away from collaboration means people learn which content lives where, and that lands on every user rather than on a project team."}],
   opts:[
    {n:"SharePoint alone",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.listItems>100000,
@@ -2877,6 +2917,13 @@ const FIT_OPT=[
   url:"https://learn.microsoft.com/en-us/compliance/regulatory/offering-gxp"},
 
  {cap:"08.5",q:"Which code analysis tooling?",needs:["abapApex"],
+  exp:[
+   {d:"Integration",needs:["abapApex"],when:v=>v.abapApex===true,
+    on:"running both analysers",
+    t:"A second scanner means a second set of pipeline steps, quality gates and failure modes. Sonar can publish into GitHub's alert surface via SARIF, which keeps the developer experience single, but the build plumbing is still two things."},
+   {d:"Transition to support",needs:["abapApex"],when:v=>v.abapApex===true,
+    on:"running both analysers",
+    t:"Two finding sources need one triage routine, or the same issue gets worked twice. Deciding which tool owns which verdict is the part teams skip and then regret."}],
   opts:[
    {n:"GitHub Advanced Security alone",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.abapApex===true,
@@ -2889,6 +2936,13 @@ const FIT_OPT=[
   url:"https://docs.github.com/en/code-security/concepts/code-scanning/codeql/codeql-code-scanning"},
 
  {cap:"12.5",q:"Which audit retention tier?",needs:["auditYears"],
+  exp:[
+   {d:"Procurement",needs:["auditYears"],when:v=>v.auditYears==="Up to 10 years",
+    on:"ten-year retention",
+    t:"Ten years is two purchases rather than one — Premium plus a separate add-on. The implementation effort is small; the thing to get right is the order form."},
+   {d:"Retention design",needs:["auditYears"],when:v=>v.auditYears&&v.auditYears!=="180 days or less",
+    on:"anything beyond Standard",
+    t:"Retention policies have to be written against real record types, and non-user records such as service principal activity sit outside them on a fixed one-year hold. Discovering that after an investigation has started is the failure mode."}],
   opts:[
    {n:"Purview Audit (Standard)",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
     out:v=>v.auditYears&&v.auditYears!=="180 days or less",
@@ -2903,6 +2957,15 @@ const FIT_OPT=[
   url:"https://learn.microsoft.com/en-us/purview/audit-solutions-overview"},
 
  {cap:"07.5",q:"Dynamics 365 Sales or Salesforce?",needs:[],undecided:true,
+  exp:[
+   {d:"Customisation",on:"replacing the incumbent",
+    t:"Whatever has been built into the incumbent over the years has to be rebuilt, retired or consciously dropped. Nobody has a complete inventory of it at the point the decision is made, which is why this is discovered rather than estimated."},
+   {d:"Integration",on:"replacing the incumbent",
+    t:"A CRM is rarely a leaf system. Every downstream consumer is a separate piece of work, and interdependency across components is the named mechanism behind the fat-tailed overruns in the research below."},
+   {d:"Data migration",on:"replacing the incumbent",
+    t:"History, attachments, activity records and the relationships between them. The volume is rarely the problem; the mapping and the exceptions are."},
+   {d:"Change and adoption",on:"replacing the incumbent",
+    t:"Sales teams adopt or quietly refuse. This is the driver most often left out of a business case and most often responsible for a system that technically works and is not used."}],
   opts:[
    {n:"Dynamics 365 Sales",sup:"Microsoft",dis:"Adopt or replace",arc:"Single platform",
     con:"Runs on Dataverse alongside Power Apps and Power Automate, and carries the LinkedIn Sales Navigator tie-in. The consolidation argument is licensing and platform, not features."},
@@ -2914,6 +2977,34 @@ const FIT_OPT=[
 ];
 
 /* ---- fit: options. Eligibility comes from documented limits; selection does not. ---- */
+function fitExpBlock(o){
+  if(!o.exp||!o.exp.length)return"";
+  const rows=o.exp.map(e=>{
+    const needs=e.needs||[];
+    const missing=needs.filter(k=>!fitKnown(k));
+    let st,txt;
+    if(!e.when){st="on";txt=esc(e.t);}
+    else if(missing.length){st="unk";
+      txt='Not assessed — needs '+missing.map(k=>'<b>'+esc(FIT_IN[k].n.toLowerCase())+'</b>').join(" and ")+'.';}
+    else if(e.when(FITV)){st="on";txt=esc(e.t);}
+    else {st="off";txt="Not indicated at the figures supplied.";}
+    return '<div class="ed '+st+'"><div class="ed-hd"><span class="ed-n">'+esc(e.d)+'</span>'+
+      (st==="on"&&e.on?'<span class="ed-on">'+esc(e.on)+'</span>':'')+'</div>'+
+      '<p>'+txt+'</p></div>';
+  }).join("");
+  const live=o.exp.filter(e=>!e.when||((e.needs||[]).every(k=>fitKnown(k))&&e.when(FITV))).length;
+  return '<div class="edrv"><div class="edrv-hd">What would drive implementation effort'+
+    '<span>'+live+' of '+o.exp.length+' in play</span></div>'+
+    '<div class="edrvs">'+rows+'</div>'+
+    '<p class="edrv-ft">These are drivers, not estimates. The three headline dimensions are '+
+    'Microsoft\u2019s own — its project profiling guidance defines complexity as the number of '+
+    'customisations, the level of integration with other systems and the level of data migration. '+
+    'No figure is attached, because IT cost overruns follow a power-law distribution '+
+    '(<a href="https://arxiv.org/abs/2210.01573" target="_blank" rel="noopener">Flyvbjerg et al., '+
+    'n=5,392</a>) — a single number would imply an average that the distribution does not have. '+
+    '<a href="https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-portal/project-profiling" '+
+    'target="_blank" rel="noopener">Profiling guidance &#8599;</a></p></div>';
+}
 function fitOptCard(o){
   const cap=allCaps().find(c=>c.id===o.cap);if(!cap)return"";
   const missing=(o.needs||[]).filter(k=>!fitKnown(k));
@@ -2958,6 +3049,7 @@ function fitOptCard(o){
     '<div class="oc-body">'+body+
     (note?'<p class="oh-note">'+esc(note)+'</p>':'')+
     '<div class="oxs">'+live.map(optRow).join("")+out.map(optRow).join("")+'</div>'+
+    fitExpBlock(o)+
     '<div class="fd-meta"><span class="fd-sp"></span>'+
     '<a href="'+esc(o.url)+'" target="_blank" rel="noopener">Source &#8599;</a></div>'+
     '</div></div>';
