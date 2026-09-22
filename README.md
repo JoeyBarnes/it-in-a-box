@@ -78,8 +78,11 @@ Sentinel, Fabric and Azure landing zones are all covered first-party and none is
 capabilities where Microsoft's own documentation describes real design work say so in words
 instead.
 
-**Alternatives are named** where Microsoft covers a capability only partly or not at all, and
-where a practice is involved. Where first-party covers it, none is listed. That ordering is this
+**Partners are named** where Microsoft covers a capability only partly or not at all, and where a
+practice is involved. Every named partner has a documented Microsoft relationship — a first-party
+Learn integration page, an Azure Native Integration, a certified connector or a published
+partnership. Products with no Microsoft relationship that also substitute for a first-party
+product are not surfaced. Where first-party covers it, none is listed. That ordering is this
 page's own view, not Microsoft's published position — Microsoft frames partner products as
 extending and co-selling alongside its own rather than replacing them.
 
