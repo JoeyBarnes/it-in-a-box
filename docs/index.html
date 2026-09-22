@@ -465,6 +465,31 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 .nn{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 15px;margin-bottom:8px}
 .nn h3{margin:0 0 4px;font-size:12.5px;font-weight:600}
 .nn p{margin:0;font-size:12px;color:var(--tx-2);line-height:1.55}
+/* options */
+.ocard{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin-bottom:11px;overflow:hidden}
+.oc-hd{padding:12px 15px 11px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.oc-cap{font-family:var(--mono);font-size:10.5px;color:var(--tx-3);display:block;margin-bottom:4px}
+.oc-cap:hover{color:var(--accent)}
+.oc-hd h3{margin:0 0 5px;font-size:13.5px;font-weight:600}
+.oh-b{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx-3)}
+.oc-body{padding:12px 15px 13px}
+.oh-p{margin:0 0 11px;font-size:12px;color:var(--tx-3);line-height:1.55;max-width:88ch}
+.oh-note{margin:0 0 11px;padding:9px 11px;border-left:2px solid var(--accent);background:var(--accent-dim);
+  font-size:12px;color:var(--tx-2);line-height:1.55;border-radius:0 6px 6px 0}
+.oxs{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:9px}
+.ox{border:1px solid var(--line-solid);border-radius:7px;padding:10px 12px;background:var(--panel)}
+.ox.out{background:transparent;border-style:dashed;opacity:.72}
+.ox-hd{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
+.ox-n{font-size:12.5px;font-weight:600}
+.ox.out .ox-n{text-decoration:line-through;text-decoration-thickness:1px;color:var(--tx-3)}
+.ox-x{margin-left:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--tx-3);white-space:nowrap}
+.ox-t{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.ot{font-family:var(--mono);font-size:9.5px;padding:1px 6px;border-radius:4px;
+  background:var(--panel-2);border:1px solid var(--line);color:var(--tx-3)}
+.ox-w{margin:0 0 5px;font-size:11.5px;color:var(--tx-2);line-height:1.5}
+.ox-c{margin:0;font-size:11.5px;color:var(--tx-3);line-height:1.5}
+.ox.out .ox-c{display:none}
 </style>
 </head>
 <body>
@@ -575,6 +600,13 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
   <div class="fit-form" id="fit-form" hidden></div>
 
   <div id="fit-out"></div>
+
+  <h2 class="fit-h2">Options <span class="rescount" id="fit-optcount" role="status" aria-live="polite"></span></h2>
+  <p class="fit-sub">A documented limit can rule an option out. It cannot pick between the options
+  that survive — that needs commercial and organisational context this page does not hold. So each
+  decision below shows the shortlist with the ruling-out done by evidence, and the choice left
+  where it belongs. Where no limit applies at all, it says so.</p>
+  <div id="fit-opts"></div>
 
   <h2 class="fit-h2">Where Microsoft publishes no threshold</h2>
   <p class="fit-sub">Questions that sound as though they should have a number attached, and do not.
@@ -2507,6 +2539,10 @@ const FIT_IN={
   auditYears:{g:"Compliance",n:"Audit retention required",t:"sel",
     o:["unknown","180 days or less","Up to 1 year","Up to 10 years"],
     h:"Purview Audit Standard retains 180 days; beyond that needs Premium, and 10 years needs a further add-on."},
+  validation:{g:"Compliance",n:"Formal system validation required",t:"bool",
+    h:"GxP, 21 CFR Part 11 or equivalent. Changes what a document platform has to evidence, not which vendor supplies it."},
+  abapApex:{g:"Software engineering",n:"ABAP or Apex code in the estate",t:"bool",
+    h:"SAP or Salesforce customisation. CodeQL supports neither, so it decides whether one analyser is enough."},
   teamEntities:{g:"Business apps",n:"Entities in a Team Members app",u:"entities",
     h:"Dynamics 365 Team Members apps are capped at 15 entities."}
 };
@@ -2671,6 +2707,7 @@ function fitRender(){
   $("#fit-out").innerHTML=h;
   $("#fit-out").querySelectorAll("[data-fitcap]").forEach(b=>
     b.addEventListener("click",()=>openInModel(b.getAttribute("data-fitcap"))));
+  fitOptRender();
   const capsCovered=new Set();FIT_RULES.forEach(r=>(r.caps||[]).forEach(c=>capsCovered.add(c)));
   $("#fit-count").textContent=hit.length+" past · "+clr.length+" clear · "+unk.length+
     " not assessed · rules cover "+capsCovered.size+" of "+allCaps().length+" capabilities";
@@ -2722,6 +2759,156 @@ function buildFit(){
     fitRender();
   });
   fitRender();
+}
+
+/* ============ fit: options ============
+   Phase 2. Documented limits can rule an option OUT. They cannot pick between the
+   options that remain — that needs commercial and organisational context the model
+   does not hold. So this shows a shortlist with the ruling-out done by evidence, the
+   distinguishing considerations laid out, and the choice left where it belongs.
+
+   Where no documented limit applies at all, the page says so rather than manufacturing
+   a rule. Supplier, disposition and architecture are tracked separately because they
+   are independent: an option can be Microsoft AND third party AND coexisting. */
+const FIT_OPT=[
+ {cap:"11.2",q:"Which endpoint protection product?",needs:["seats"],
+  opts:[
+   {n:"Defender for Business",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    out:v=>v.seats>300,
+    outWhy:"Not available above 300 users.",
+    con:"Arrives with Business Premium. Simplified configuration aimed at organisations without a security operations team."},
+   {n:"Defender for Endpoint P1",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    con:"Included in Microsoft 365 E3. Protection without the hunting, automated investigation and response that P2 adds."},
+   {n:"Defender for Endpoint P2",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    con:"Included in E5 and the Defender Suite add-on. The tier that carries hunting and automated investigation, which only earns its cost where someone is there to act on it."},
+   {n:"A third-party EDR",sup:"Third party",dis:"Retain or replace",arc:"Coexist",
+    con:"CrowdStrike and SentinelOne lead on cross-platform breadth and analyst workflow. Worth holding where one is already deployed and the estate is not Windows-dominated."}],
+  url:"https://learn.microsoft.com/en-us/defender-business/mdb-overview"},
+
+ {cap:"05.6",q:"How should Power BI be licensed?",needs:["fabricItems","fabricSku"],
+  opts:[
+   {n:"Pro licences only",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    out:v=>v.fabricItems===true,
+    outWhy:"Non-Power BI Fabric items cannot run without an F capacity.",
+    con:"Every author and every viewer holds a licence. Predictable, and cheapest at small scale."},
+   {n:"Premium Per User",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    out:v=>v.fabricItems===true,
+    outWhy:"PPU does not provision a Fabric capacity, so lakehouses, warehouses and notebooks cannot run on it at any user count.",
+    con:"Premium features per user. Microsoft's published guidance puts it ahead of capacity below roughly 250 users needing those features, though the assumptions behind that figure are not published."},
+   {n:"Fabric capacity below F64",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    con:"Runs Fabric items, but every viewer still needs a Pro or PPU licence — so viewer count drives cost twice."},
+   {n:"Fabric capacity at F64 or above",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    con:"The point where free users with a viewer role can read Power BI content. Microsoft publishes no table mapping capacity to organisation size and directs customers to measure with a trial capacity."}],
+  url:"https://learn.microsoft.com/en-us/fabric/enterprise/licenses"},
+
+ {cap:"09.3",q:"Which document platform?",needs:["listItems","validation"],
+  opts:[
+   {n:"SharePoint alone",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    out:v=>v.listItems>100000,
+    outWhy:"Above 100,000 items in a single list or library, permission inheritance can no longer be broken.",
+    con:"Sufficient for collaboration and versioning well beyond most estates, and already licensed."},
+   {n:"SharePoint with Purview records management",sup:"Microsoft",dis:"Extend",arc:"Single platform",
+    con:"Adds retention labels, regulatory records and disposition review. Note regulatory records cannot be auto-applied and cannot be applied to a checked-out document."},
+   {n:"SharePoint alongside a specialist repository",sup:"Microsoft and third party",dis:"Coexist",arc:"Coexist",
+    con:"Keeps collaboration where users already work and moves only the controlled corpus. Usually the cheaper answer when one workload breaches a limit but the rest does not."},
+   {n:"A specialist or validated system",sup:"Third party",dis:"Replace",arc:"Single platform",
+    con:"Pre-validated systems carry their qualification evidence. Microsoft states plainly that there is no GxP certification for cloud service providers and the validation burden sits with the customer — which is what separates the categories, not features."}],
+  note:v=>v.validation===true?"A validation requirement does not by itself mandate a third-party product. It mandates a validated system and a controlled operating process, which can be built on Microsoft technology at the cost of carrying that validation effort yourself.":null,
+  url:"https://learn.microsoft.com/en-us/compliance/regulatory/offering-gxp"},
+
+ {cap:"08.5",q:"Which code analysis tooling?",needs:["abapApex"],
+  opts:[
+   {n:"GitHub Advanced Security alone",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    out:v=>v.abapApex===true,
+    outWhy:"CodeQL does not support ABAP or Apex, so SAP and Salesforce customisation would go unanalysed.",
+    con:"Code Security and Secret Protection, billed per unique active committer. Copilot Autofix needs no separate Copilot licence."},
+   {n:"GitHub Advanced Security with Sonar",sup:"Microsoft and third party",dis:"Coexist",arc:"Coexist",
+    con:"Sonar publishes its findings into GitHub code scanning alerts via SARIF and can fail a pull request quality gate, so the two are complementary rather than duplicative."},
+   {n:"Sonar alone",sup:"Third party",dis:"Retain or replace",arc:"Single platform",
+    con:"Broader language coverage including ABAP and Apex, but gives up secret scanning with push protection, dependency review and Copilot Autofix."}],
+  url:"https://docs.github.com/en/code-security/concepts/code-scanning/codeql/codeql-code-scanning"},
+
+ {cap:"12.5",q:"Which audit retention tier?",needs:["auditYears"],
+  opts:[
+   {n:"Purview Audit (Standard)",sup:"Microsoft",dis:"Adopt",arc:"Single platform",
+    out:v=>v.auditYears&&v.auditYears!=="180 days or less",
+    outWhy:"Standard retains audit records for 180 days.",
+    con:"Enabled by default. Search, Graph API and CSV export included."},
+   {n:"Purview Audit (Premium)",sup:"Microsoft",dis:"Extend",arc:"Single platform",
+    out:v=>v.auditYears==="Up to 10 years",
+    outWhy:"Ten-year retention requires a further add-on licence on top of Premium.",
+    con:"Up to one year, retention policies and intelligent insights."},
+   {n:"Premium with the 10-year add-on",sup:"Microsoft",dis:"Extend",arc:"Single platform",
+    con:"Two purchases, not one. Note non-user records such as service principal activity are held for a fixed year regardless and are not covered by custom retention policies."}],
+  url:"https://learn.microsoft.com/en-us/purview/audit-solutions-overview"},
+
+ {cap:"07.5",q:"Dynamics 365 Sales or Salesforce?",needs:[],undecided:true,
+  opts:[
+   {n:"Dynamics 365 Sales",sup:"Microsoft",dis:"Adopt or replace",arc:"Single platform",
+    con:"Runs on Dataverse alongside Power Apps and Power Automate, and carries the LinkedIn Sales Navigator tie-in. The consolidation argument is licensing and platform, not features."},
+   {n:"Keep Salesforce, govern it with Microsoft",sup:"Microsoft and third party",dis:"Retain",arc:"Coexist",
+    con:"Every layer is first-party documented: Entra single sign-on and SCIM provisioning, Dataverse virtual tables, Fabric and Data Factory connectors, and Copilot federated connectors that query without moving data. Sales agent works against Salesforce directly. Watch that the Salesforce connector is unavailable in GCC High and China 21Vianet."},
+   {n:"Replace Salesforce with Dynamics 365",sup:"Microsoft",dis:"Replace",arc:"Single platform",
+    con:"Only worth modelling against renewal timing, customisation depth, integration count and exit cost — none of which this page holds."}],
+  url:"https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-virtual-tables-using-connectors"}
+];
+
+/* ---- fit: options. Eligibility comes from documented limits; selection does not. ---- */
+function fitOptCard(o){
+  const cap=allCaps().find(c=>c.id===o.cap);if(!cap)return"";
+  const missing=(o.needs||[]).filter(k=>!fitKnown(k));
+  const known=!missing.length;
+  const rows=o.opts.map(x=>{
+    const isOut=known&&x.out&&x.out(FITV);
+    return{x:x,out:isOut};
+  });
+  const out=rows.filter(r=>r.out),live=rows.filter(r=>!r.out);
+
+  const tags=x=>'<span class="ot">'+esc(x.sup)+'</span><span class="ot">'+esc(x.dis)+'</span>'+
+    (x.arc==="Coexist"?'<span class="ot">Coexist</span>':'');
+  const optRow=(r)=>'<div class="ox'+(r.out?" out":"")+'">'+
+    '<div class="ox-hd"><span class="ox-n">'+esc(r.x.n)+'</span>'+
+    (r.out?'<span class="ox-x">Ruled out</span>':'')+'</div>'+
+    '<div class="ox-t">'+tags(r.x)+'</div>'+
+    (r.out?'<p class="ox-w">'+esc(r.x.outWhy)+'</p>':'')+
+    '<p class="ox-c">'+esc(r.x.con)+'</p></div>';
+
+  let head,body;
+  if(o.undecided){
+    head='<span class="oh-b">No documented limit decides this</span>';
+    body='<p class="oh-p">Microsoft publishes no guidance positioning these against each other by '+
+      'company size or segment. The choice turns on incumbency, renewal timing, customisation depth, '+
+      'integration count and exit cost — none of which this page holds. What follows is the shortlist '+
+      'and what distinguishes the options, not a recommendation.</p>';
+  }else if(!known){
+    head='<span class="oh-b">Not assessed</span>';
+    body='<p class="oh-p">Needs '+missing.map(k=>'<b>'+esc(FIT_IN[k].n.toLowerCase())+'</b>').join(" and ")+
+      ' before any option can be ruled out. All options are shown unfiltered.</p>';
+  }else{
+    head='<span class="oh-b">'+out.length+' ruled out · '+live.length+' remaining</span>';
+    body='<p class="oh-p">'+(out.length
+      ? 'The exclusions below follow from documented limits. Choosing between what remains does not — that is a commercial and architectural judgement this page does not make.'
+      : 'No documented limit rules any of these out at the figures supplied. The choice between them is a judgement this page does not make.')+'</p>';
+  }
+  const note=o.note&&known?o.note(FITV):null;
+
+  return '<div class="ocard"><div class="oc-hd">'+
+    '<button class="oc-cap" type="button" data-fitcap="'+esc(o.cap)+'">'+esc(o.cap+" "+cap.name)+'</button>'+
+    '<h3>'+esc(o.q)+'</h3>'+head+'</div>'+
+    '<div class="oc-body">'+body+
+    (note?'<p class="oh-note">'+esc(note)+'</p>':'')+
+    '<div class="oxs">'+live.map(optRow).join("")+out.map(optRow).join("")+'</div>'+
+    '<div class="fd-meta"><span class="fd-sp"></span>'+
+    '<a href="'+esc(o.url)+'" target="_blank" rel="noopener">Source &#8599;</a></div>'+
+    '</div></div>';
+}
+function fitOptRender(){
+  $("#fit-opts").innerHTML=FIT_OPT.map(fitOptCard).join("");
+  $("#fit-opts").querySelectorAll("[data-fitcap]").forEach(b=>
+    b.addEventListener("click",()=>openInModel(b.getAttribute("data-fitcap"))));
+  const assessed=FIT_OPT.filter(o=>!o.undecided&&!(o.needs||[]).some(k=>!fitKnown(k))).length;
+  $("#fit-optcount").textContent=assessed+" of "+FIT_OPT.length+" assessed · covering "+
+    FIT_OPT.length+" of "+allCaps().length+" capabilities";
 }
 
 const VIEWS=["overview","model","products","fit","ri"];

@@ -61,6 +61,18 @@ seats, Fabric capacity by organisation size, the Power Apps per-app break-even, 
 caps, a subscription count forcing a split, and landing-zone architecture by size. Stating these
 is the point: it is where a number would otherwise get invented.
 
+
+The view then shows **Options** for six decisions. A documented limit can rule an option
+**out**; it cannot pick between the options that survive. So each decision lists the shortlist
+with the exclusions traced to evidence, the considerations that distinguish what remains, and no
+verdict. Supplier, disposition and architecture are tracked separately, because they are
+independent — an option can be Microsoft *and* third party *and* coexisting.
+
+Where no documented limit applies, the page says so: Dynamics 365 Sales versus Salesforce opens
+with *"no documented limit decides this"* and names what the choice actually turns on. A
+validation requirement raises a note rather than an exclusion, because GxP mandates a validated
+system and a controlled process — not a particular vendor.
+
 **Reference Implementation** — one real initiative expressed against the model, with an
 interactive flow diagram, control planes, and a closing note on where the design depends
 on custom build rather than a first-party product.
