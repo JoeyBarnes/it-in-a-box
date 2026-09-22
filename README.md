@@ -62,8 +62,15 @@ docs/
   .nojekyll                   # serve files as-is, skip Jekyll processing
 tools/
   export-graphic.ps1          # drives the page's own generator to refresh the two snapshots
+presentation/
+  build-journey.html          # how the model was built and why — tracked, not published
 archive/                      # superseded iterations, not published (gitignored)
 ```
+
+The presentation is a companion piece rather than a superseded one, which is why
+it is tracked rather than left in `archive/`. It is deliberately **not** in `docs/`,
+so it is versioned with the model without being served from the public site. It is
+self-contained in the same way `index.html` is — open it directly in a browser.
 
 ## Updating
 
