@@ -421,6 +421,50 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 .ps-role.p{border-color:var(--accent);color:var(--accent)}
 .pm-note{font-size:11.5px;color:var(--tx-3);margin:12px 0 0;line-height:1.5}
 @media(max-width:760px){table.pm th.pm-name,table.pm tbody td.pm-name{min-width:180px}}
+
+/* ============ fit ============ */
+.fit-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 16px;
+  padding-bottom:13px;border-bottom:1px solid var(--line)}
+.fit-form{background:var(--panel);border:1px solid var(--line-solid);border-radius:8px;
+  padding:14px 16px 16px;margin-bottom:18px}
+.fit-grp{margin-top:15px}
+.fit-grp:first-child{margin-top:0}
+.fit-grp > h3{margin:0 0 9px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--tx-3);font-weight:600}
+.fit-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:13px}
+.fit-f label{display:block;font-size:12.5px;color:var(--tx);margin-bottom:3px}
+.fit-f .fh{display:block;font-size:11px;color:var(--tx-3);line-height:1.45;margin-bottom:5px}
+.fit-f input,.fit-f select{width:100%;background:var(--panel);border:1px solid var(--line-solid);
+  color:var(--tx);padding:7px 9px;border-radius:7px;font-size:13px;font-family:inherit}
+.fit-f input:focus,.fit-f select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring);outline:none}
+.fit-f input::placeholder{color:var(--tx-3);font-style:italic}
+.fit-h2{font-size:15px;margin:30px 0 3px}
+.fit-sub{margin:0 0 14px;font-size:12.5px;color:var(--tx-3);max-width:82ch}
+/* finding cards */
+.fd{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:13px 15px;margin-bottom:9px}
+.fd.hit{border-left:3px solid var(--accent)}
+.fd.unk{border-style:dashed;background:transparent}
+.fd-hd{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+.fd-hd h3{margin:0;font-size:13px;font-weight:600}
+.fd-sp{flex:1}
+.fd p{margin:0;font-size:12.5px;color:var(--tx-2);line-height:1.55}
+.fd .fd-meta{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+.fd .fd-meta a{color:var(--accent)}
+.fd-caps{display:flex;gap:4px;flex-wrap:wrap}
+.fd-caps button{font-family:var(--mono);font-size:10.5px;padding:1px 7px;border-radius:5px;
+  border:1px solid var(--line-solid);color:var(--tx-2);background:var(--panel-2)}
+.fd-caps button:hover{border-color:var(--accent);color:var(--accent)}
+.prov{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  padding:1px 7px;border-radius:99px;border:1px solid var(--line-solid);color:var(--tx-3);cursor:help}
+.prov.guidance{border-style:dashed}
+.fit-sec{margin:22px 0 10px;font-size:13px;font-weight:600}
+.fit-sec span{font-family:var(--mono);font-size:11px;color:var(--tx-3);font-weight:400;margin-left:7px}
+.fit-empty{border:1px dashed var(--line-solid);border-radius:8px;padding:20px;text-align:center;
+  color:var(--tx-3);font-size:12.5px}
+.nn{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 15px;margin-bottom:8px}
+.nn h3{margin:0 0 4px;font-size:12.5px;font-weight:600}
+.nn p{margin:0;font-size:12px;color:var(--tx-2);line-height:1.55}
 </style>
 </head>
 <body>
@@ -436,6 +480,7 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
       <button class="tab" id="tab-overview" role="tab" aria-selected="true" aria-controls="view-overview">Overview</button>
       <button class="tab" id="tab-model" role="tab" aria-selected="false" aria-controls="view-model">Capability Model</button>
       <button class="tab" id="tab-products" role="tab" aria-selected="false" aria-controls="view-products">Product Map</button>
+      <button class="tab" id="tab-fit" role="tab" aria-selected="false" aria-controls="view-fit">Fit</button>
       <button class="tab" id="tab-ri" role="tab" aria-selected="false" aria-controls="view-ri">Reference Implementation</button>
     </div>
   </div>
@@ -512,7 +557,33 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
   <p class="pm-note" id="pm-foot"></p>
 </section>
 
+<section id="view-fit" role="tabpanel" aria-labelledby="tab-fit" hidden>
+  <p class="pm-lead">Where a business sits against the documented limits in the Microsoft stack.
+  Every limit here is published by Microsoft and linked to its source.
+  <span class="pm-note" style="display:block;margin-top:7px">This page reports what a limit
+  <b>rules out</b>, and stops there. Crossing 300 seats removes Defender for Business; it does not
+  establish what should replace it. That second step needs commercial and architectural context
+  this page does not hold, so it is not attempted. Each check runs only when the specific figures
+  it needs are supplied — an unrelated field being filled in is not evidence.</span></p>
+
+  <div class="fit-tools">
+    <button class="tbtn" id="fit-edit" aria-expanded="false">Enter figures</button>
+    <button class="tbtn" id="fit-clear">Clear</button>
+    <span class="rescount" id="fit-count" role="status" aria-live="polite"></span>
+  </div>
+
+  <div class="fit-form" id="fit-form" hidden></div>
+
+  <div id="fit-out"></div>
+
+  <h2 class="fit-h2">Where Microsoft publishes no threshold</h2>
+  <p class="fit-sub">Questions that sound as though they should have a number attached, and do not.
+  Listing them is the point — it is where a figure would otherwise get invented.</p>
+  <div id="fit-none"></div>
+</section>
+
 <section id="view-ri" role="tabpanel" aria-labelledby="tab-ri" hidden></section>
+
 </main>
 
 <footer class="pagefoot">
@@ -2399,7 +2470,261 @@ function buildProductMap(){
   pmApply();
 }
 
-const VIEWS=["overview","model","products","ri"];
+/* ============ fit: documented limits ============
+   Phase 1 reports CONSTRAINT FINDINGS only — what a documented Microsoft limit rules
+   out — and deliberately stops short of recommending what to do instead. A limit
+   proves an exclusion, not a selection: passing 300 seats removes Defender for
+   Business, but it does not establish which endpoint product should replace it. That
+   second step needs commercial and architectural context this page does not hold.
+
+   Two rules follow from that:
+   - A rule fires only when the inputs IT needs are known. A profile is not evidence
+     merely because some other field in it was filled in.
+   - Every number carries where it came from. `limit` is a published hard boundary;
+     `guidance` is Microsoft's own advice whose assumptions are not published, which
+     is a weaker claim and is labelled as one. Nothing is inferred from a ratio. */
+const FIT_PROV={
+  limit:["Documented limit","A published Microsoft boundary. Crossing it changes what is available."],
+  guidance:["Vendor guidance","Microsoft's own published advice. The assumptions behind it are not published, so treat it as a starting point rather than a boundary."]
+};
+
+const FIT_IN={
+  seats:{g:"Organisation",n:"Licensed users",u:"users",
+    h:"Drives the Microsoft 365 Business cap, Defender for Business eligibility and the Lighthouse ceiling."},
+  dirObjects:{g:"Organisation",n:"Directory objects",u:"objects",
+    h:"Users, groups, devices and app registrations in the tenant. Not the same as seats — do not estimate it from headcount."},
+  verifiedDomain:{g:"Organisation",n:"Verified custom domain",t:"bool",
+    h:"Raises the Entra ID directory quota from 50,000 to 300,000."},
+  fabricItems:{g:"Analytics",n:"Lakehouse, warehouse or notebooks needed",t:"bool",
+    h:"Non-Power BI Fabric items cannot run on Premium Per User at any user count."},
+  fabricSku:{g:"Analytics",n:"Fabric capacity in place",t:"sel",
+    o:["none","F2","F4","F8","F16","F32","F64","F128","F256","F512+"],
+    h:"The F64 boundary decides whether viewers need their own licence."},
+  premiumUsers:{g:"Analytics",n:"Users needing Premium features",u:"users",
+    h:"Compared against Microsoft's published PPU break-even."},
+  listItems:{g:"Content",n:"Largest single list or library",u:"items",
+    h:"Items in one list or library — not the document estate as a whole. The SharePoint limits govern a single list, not a corpus."},
+  auditYears:{g:"Compliance",n:"Audit retention required",t:"sel",
+    o:["unknown","180 days or less","Up to 1 year","Up to 10 years"],
+    h:"Purview Audit Standard retains 180 days; beyond that needs Premium, and 10 years needs a further add-on."},
+  teamEntities:{g:"Business apps",n:"Entities in a Team Members app",u:"entities",
+    h:"Dynamics 365 Team Members apps are capped at 15 entities."}
+};
+
+const FIT_RULES=[
+ {id:"m365-business-300",needs:["seats"],caps:["02.1","02.2"],
+  metric:"Licensed users",at:300,test:v=>v.seats>300,prov:"limit",
+  title:"Microsoft 365 Business plans are unavailable",
+  find:"The Business family is capped at 300 seats. The cap is tenant-wide and pooled across Basic, Standard and Premium, so seats cannot be stacked across plans. Microsoft directs organisations above 300 users to the Enterprise plans.",
+  clear:"Within the 300-seat Business family cap.",
+  url:"https://learn.microsoft.com/en-us/microsoft-365/business-premium/microsoft-365-business-faqs"},
+
+ {id:"mdb-300",needs:["seats"],caps:["11.2"],
+  metric:"Licensed users",at:300,test:v=>v.seats>300,prov:"limit",
+  title:"Defender for Business is unavailable",
+  find:"Defender for Business is designed for organisations up to 300 users. Past this the security product itself changes, not only the suite it arrives in — which endpoint product replaces it is a separate decision this page does not make.",
+  clear:"Within the 300-user Defender for Business ceiling.",
+  url:"https://learn.microsoft.com/en-us/defender-business/mdb-overview"},
+
+ {id:"lighthouse-2500",needs:["seats"],caps:["13.5"],
+  metric:"Licensed users",at:2500,test:v=>v.seats>2500,prov:"limit",
+  title:"Microsoft 365 Lighthouse is functionally limited",
+  find:"Above 2,500 licensed users a tenant keeps only a limited set of Lighthouse experiences — delegated admin setup, user search and details, tenant tagging and service health. A multi-tenant managed-service model built on Lighthouse stops working at full fidelity here.",
+  clear:"Within the 2,500-user Lighthouse ceiling.",
+  url:"https://learn.microsoft.com/en-us/microsoft-365/lighthouse/m365-lighthouse-requirements"},
+
+ {id:"entra-objects",needs:["dirObjects","verifiedDomain"],caps:["01.1"],
+  metric:"Directory objects",atFn:v=>v.verifiedDomain?300000:50000,
+  test:v=>v.dirObjects>(v.verifiedDomain?300000:50000),prov:"limit",
+  title:"Entra ID directory quota exceeded",
+  find:"The tenant is past its Entra ID object quota and further objects need Microsoft Support to raise it. Note this is a directory size limit, not a licence gate — buying P1 or P2 does not raise it.",
+  clear:"Within the Entra ID directory quota.",
+  url:"https://learn.microsoft.com/en-us/entra/identity/users/directory-service-limits-restrictions"},
+
+ {id:"ppu-fabric",needs:["fabricItems"],caps:["05.1"],
+  metric:"Fabric items required",test:v=>v.fabricItems===true,prov:"limit",
+  title:"Premium Per User cannot carry this workload",
+  find:"Premium Per User does not provision a Fabric capacity. Creating or running lakehouses, warehouses or notebooks requires an F capacity regardless of how few users are involved — this is an architectural boundary, not a pricing comparison. Which capacity size is a separate question; Microsoft publishes no sizing table and directs customers to measure.",
+  clear:"No non-Power BI Fabric items required, so PPU remains viable on this test.",
+  url:"https://learn.microsoft.com/en-us/fabric/enterprise/licenses"},
+
+ {id:"f64-viewers",needs:["fabricSku"],caps:["05.6"],
+  metric:"Fabric capacity",test:v=>{
+    const r=["none","F2","F4","F8","F16","F32"];return r.indexOf(v.fabricSku)>=0;},
+  prov:"limit",
+  title:"Every Power BI viewer needs a paid licence",
+  find:"Below F64, each user viewing Power BI content must hold a Pro or Premium Per User licence. At F64 and above, users with a free licence and a viewer role can read content. This is a property of the capacity SKU, not of the user count.",
+  clear:"At F64 or larger, so free users with a viewer role can view Power BI content.",
+  url:"https://learn.microsoft.com/en-us/fabric/enterprise/licenses"},
+
+ {id:"ppu-breakeven",needs:["premiumUsers"],caps:["05.6"],
+  metric:"Users needing Premium features",at:250,test:v=>v.premiumUsers>=250,prov:"guidance",
+  title:"Past Microsoft's stated PPU break-even",
+  find:"Microsoft states PPU is more cost effective when Premium features are needed for fewer than 250 users. Above that its guidance points towards capacity. The workload and pricing assumptions behind this figure are not published, so treat it as a prompt to model your own numbers rather than a boundary.",
+  clear:"Below the 250-user figure at which Microsoft's guidance turns towards capacity.",
+  url:"https://learn.microsoft.com/en-us/fabric/enterprise/licenses"},
+
+ {id:"sp-lvt",needs:["listItems"],caps:["09.3"],
+  metric:"Items in the largest list or library",at:5000,test:v=>v.listItems>5000,prov:"limit",
+  title:"SharePoint list view threshold exceeded",
+  find:"Views returning more than 5,000 items from a single list or library fail unless columns are indexed and views filtered. Microsoft notes the effective number varies. This governs a single list, not the size of the document estate.",
+  clear:"Largest list or library is within the 5,000-item view threshold.",
+  url:"https://learn.microsoft.com/en-us/office365/servicedescriptions/sharepoint-online-service-description/sharepoint-online-limits"},
+
+ {id:"sp-perm",needs:["listItems"],caps:["09.3"],
+  metric:"Items in the largest list or library",at:100000,test:v=>v.listItems>100000,prov:"limit",
+  title:"Permission inheritance can no longer be broken",
+  find:"Above 100,000 items in a single list or library, breaking permission inheritance is blocked. Any design depending on per-item or per-folder permissions at this scale has to change. Whether that means a different product or a different information architecture is not settled by this limit alone.",
+  clear:"Below the 100,000-item permission-inheritance limit.",
+  url:"https://learn.microsoft.com/en-us/office365/servicedescriptions/sharepoint-online-service-description/sharepoint-online-limits"},
+
+ {id:"audit-retention",needs:["auditYears"],caps:["12.5","12.3"],
+  metric:"Audit retention required",test:v=>v.auditYears&&v.auditYears!=="180 days or less"&&v.auditYears!=="unknown",
+  prov:"limit",
+  title:"Purview Audit Standard is insufficient",
+  find:"Audit (Standard) retains audit records for 180 days. Longer retention requires Audit (Premium), and 10-year retention requires a further add-on licence on top of Premium. Note also that non-user records such as service principal activity are held for a fixed year and are not covered by custom retention policies.",
+  clear:"180 days or less is within Audit (Standard).",
+  url:"https://learn.microsoft.com/en-us/purview/audit-solutions-overview"},
+
+ {id:"d365-team-15",needs:["teamEntities"],caps:["07.5"],
+  metric:"Entities in a Team Members app",at:15,test:v=>v.teamEntities>15,prov:"limit",
+  title:"Dynamics 365 Team Members licence does not cover this app",
+  find:"A Team Members app is limited to 15 entities, and the licence gives no access to custom applications. Note Microsoft enforces this while using an app rather than while building one, so the licensed boundary is stricter than the technical one.",
+  clear:"Within the 15-entity Team Members limit.",
+  url:"https://learn.microsoft.com/en-us/dynamics365/get-started/team-members-license"}
+];
+
+/* Places people expect a threshold and Microsoft publishes none. Stating these is as
+   useful as stating the limits — it stops a number being invented to fill the gap. */
+const FIT_NONE=[
+ ["Company size bands above 300 seats",
+  "The 300-seat Business cap is product packaging, not a market segment. Microsoft publishes no seat or revenue definition of mid-market or enterprise, and states the Enterprise plans are available at any size. Any band above 300 is someone's construct."],
+ ["Fabric capacity by organisation size",
+  "There is no published table mapping an F SKU to a company size. The documented method is empirical — run a trial capacity, read the metrics app, then scale. The one exception is the P-to-F migration guide, which offers indicative language only."],
+ ["Power Apps per-app versus per-user break-even",
+  "No break-even is published. More materially, the per-app plan stopped being available to new customers through some channels from 2 January 2026, which collapses the choice for most new builds."],
+ ["Teams Phone seat caps",
+  "No seat cap is documented for Teams Phone or Calling Plans. Business Voice, which did carry a 300-seat limit, has been retired and no longer appears in current licensing documentation."],
+ ["A subscription count that forces a split",
+  "Subscriptions per tenant and per management group are both unlimited. The real trigger is functional separation — platform versus workload, and the named platform subscriptions. CAF also recommends a management group hierarchy of three to four levels against a permitted six."],
+ ["Landing zone architecture by company size",
+  "The Cloud Adoption Framework is deliberately size-agnostic: the same target architecture with different on-ramps depending on whether the estate is greenfield or already running. The accelerator differentiates on infrastructure-as-code skill, not scale."]
+];
+
+/* ---- fit: evaluate each rule only against the inputs it actually needs ---- */
+const FITV={};
+const fitKnown=k=>FITV[k]!==undefined&&FITV[k]!==""&&FITV[k]!=="unknown";
+function fitEval(r){
+  const missing=r.needs.filter(k=>!fitKnown(k));
+  if(missing.length)return{s:"unknown",missing:missing};
+  return{s:r.test(FITV)?"hit":"clear"};
+}
+function fitAt(r){
+  const a=r.atFn?r.atFn(FITV):r.at;
+  return a===undefined?null:a;
+}
+function fitCard(r,res){
+  const prov=FIT_PROV[r.prov];
+  const at=fitAt(r);
+  let body,cls,hd;
+  if(res.s==="unknown"){
+    cls="unk";hd=r.metric||r.title;
+    body='<p style="color:var(--tx-3)">Not assessed — needs '+
+      res.missing.map(k=>'<b>'+esc(FIT_IN[k].n.toLowerCase())+'</b>').join(" and ")+
+      '. The limit is documented'+(at!==null?' at '+at.toLocaleString():'')+
+      '; this estate\u2019s position against it is not known.</p>';
+  }else if(res.s==="hit"){
+    cls="hit";hd=r.title;
+    body='<p>'+esc(r.find)+'</p>';
+  }else{
+    cls="";hd=r.title;
+    body='<p style="color:var(--tx-3)">'+esc(r.clear)+'</p>';
+  }
+  const caps=(r.caps||[]).map(id=>{
+    const c=allCaps().find(x=>x.id===id);
+    return c?'<button type="button" data-fitcap="'+esc(id)+'">'+esc(id+" "+c.name)+'</button>':"";
+  }).join("");
+  return '<div class="fd '+cls+'">'+
+    '<div class="fd-hd"><h3>'+esc(hd)+'</h3><span class="fd-sp"></span>'+
+    '<span class="prov '+r.prov+'" title="'+esc(prov[1])+'">'+esc(prov[0])+'</span></div>'+
+    body+
+    '<div class="fd-meta">'+(caps?'<span class="fd-caps">'+caps+'</span>':'')+
+    '<span class="fd-sp"></span>'+
+    '<a href="'+esc(r.url)+'" target="_blank" rel="noopener">Source &#8599;</a></div></div>';
+}
+function fitRender(){
+  const ev=FIT_RULES.map(r=>({r:r,res:fitEval(r)}));
+  const hit=ev.filter(x=>x.res.s==="hit"),clr=ev.filter(x=>x.res.s==="clear"),
+        unk=ev.filter(x=>x.res.s==="unknown");
+  let h="";
+  if(hit.length){
+    h+='<div class="fit-sec">Limits this estate is past<span>'+hit.length+'</span></div>'+
+      hit.map(x=>fitCard(x.r,x.res)).join("");
+  }
+  if(clr.length){
+    h+='<div class="fit-sec">Checked and clear<span>'+clr.length+'</span></div>'+
+      clr.map(x=>fitCard(x.r,x.res)).join("");
+  }
+  h+='<div class="fit-sec">Not assessed<span>'+unk.length+'</span></div>';
+  h+=unk.length?unk.map(x=>fitCard(x.r,x.res)).join("")
+    :'<div class="fit-empty">Every documented check has the figures it needs.</div>';
+  $("#fit-out").innerHTML=h;
+  $("#fit-out").querySelectorAll("[data-fitcap]").forEach(b=>
+    b.addEventListener("click",()=>openInModel(b.getAttribute("data-fitcap"))));
+  const capsCovered=new Set();FIT_RULES.forEach(r=>(r.caps||[]).forEach(c=>capsCovered.add(c)));
+  $("#fit-count").textContent=hit.length+" past · "+clr.length+" clear · "+unk.length+
+    " not assessed · rules cover "+capsCovered.size+" of "+allCaps().length+" capabilities";
+}
+function fitBuildForm(){
+  const groups={};
+  Object.entries(FIT_IN).forEach(([k,f])=>(groups[f.g]=groups[f.g]||[]).push([k,f]));
+  $("#fit-form").innerHTML=Object.entries(groups).map(([g,fs])=>
+    '<div class="fit-grp"><h3>'+esc(g)+'</h3><div class="fit-fields">'+
+    fs.map(([k,f])=>{
+      let ctl;
+      if(f.t==="bool")ctl='<select data-fit="'+k+'"><option value="unknown">Not known</option>'+
+        '<option value="yes">Yes</option><option value="no">No</option></select>';
+      else if(f.t==="sel")ctl='<select data-fit="'+k+'">'+
+        f.o.map(o=>'<option value="'+esc(o)+'">'+esc(o==="unknown"?"Not known":o==="none"?"None":o)+'</option>').join("")+'</select>';
+      else ctl='<input type="number" min="0" data-fit="'+k+'" placeholder="not known">';
+      return '<div class="fit-f"><label for="">'+esc(f.n)+(f.u?' <span style="color:var(--tx-3)">('+esc(f.u)+')</span>':'')+
+        '</label><span class="fh">'+esc(f.h)+'</span>'+ctl+'</div>';
+    }).join("")+'</div></div>').join("");
+  $("#fit-form").querySelectorAll("[data-fit]").forEach(el=>{
+    const k=el.getAttribute("data-fit");
+    el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{
+      let v=el.value;
+      if(v===""||v==="unknown")delete FITV[k];
+      else if(el.tagName==="SELECT"&&FIT_IN[k].t==="bool")FITV[k]=(v==="yes");
+      else if(el.type==="number")FITV[k]=+v;
+      else FITV[k]=v;
+      fitRender();
+    });
+  });
+}
+let fitWired=false;
+function buildFit(){
+  if(fitWired){fitRender();return;}
+  fitWired=true;
+  fitBuildForm();
+  $("#fit-none").innerHTML=FIT_NONE.map(n=>
+    '<div class="nn"><h3>'+esc(n[0])+'</h3><p>'+esc(n[1])+'</p></div>').join("");
+  $("#fit-edit").addEventListener("click",()=>{
+    const f=$("#fit-form"),open=f.hidden;
+    f.hidden=!open;$("#fit-edit").setAttribute("aria-expanded",String(open));
+    $("#fit-edit").textContent=open?"Hide figures":"Enter figures";
+  });
+  $("#fit-clear").addEventListener("click",()=>{
+    Object.keys(FITV).forEach(k=>delete FITV[k]);
+    $("#fit-form").querySelectorAll("[data-fit]").forEach(el=>{
+      if(el.tagName==="SELECT")el.selectedIndex=0;else el.value="";
+    });
+    fitRender();
+  });
+  fitRender();
+}
+
+const VIEWS=["overview","model","products","fit","ri"];
 /* The overview is the front door — every visit starts there rather than
    resuming whichever tab was open last. */
 function showView(v){
@@ -2594,6 +2919,7 @@ function buildDiagram(){
 
 buildRI();
 buildProductMap();
+buildFit();
 showView("overview");
 try{localStorage.removeItem("ptom-view");}catch(e){}</script>
 </body>

@@ -35,6 +35,32 @@ capability is sized as a single product decision and carries:
 Capabilities that are a management discipline rather than a product purchase are marked
 `Practice`, so a `Gap` rating is not misread as a missing product.
 
+**Fit** — where a business sits against the documented limits in the Microsoft stack. Eleven
+published limits, each linked to its source on Microsoft Learn.
+
+The page reports what a limit **rules out** and stops there. Crossing 300 seats removes Defender
+for Business; it does not establish what should replace it. That second step needs commercial and
+architectural context the model does not hold, so it is not attempted — a limit proves an
+exclusion, not a selection.
+
+Two rules follow from that:
+
+- **A check runs only when the figures it needs are supplied.** The Entra quota check needs both
+  the object count and whether a custom domain is verified; supplying one leaves it unassessed.
+  An unrelated field being filled in is not evidence.
+- **Every number states where it came from.** `Documented limit` is a published boundary;
+  `Vendor guidance` is Microsoft's own advice whose assumptions are not published — a weaker
+  claim, labelled as one. Nothing is derived from a ratio, and no figure is estimated from
+  headcount.
+
+Rules currently cover 11 of 141 capabilities and the page says so. Capabilities without a rule
+show nothing rather than a generic answer.
+
+The view also lists **where Microsoft publishes no threshold** — company size bands above 300
+seats, Fabric capacity by organisation size, the Power Apps per-app break-even, Teams Phone seat
+caps, a subscription count forcing a split, and landing-zone architecture by size. Stating these
+is the point: it is where a number would otherwise get invented.
+
 **Reference Implementation** — one real initiative expressed against the model, with an
 interactive flow diagram, control planes, and a closing note on where the design depends
 on custom build rather than a first-party product.
