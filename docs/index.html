@@ -463,8 +463,8 @@ html[data-theme="dark"] .sh.cons{color:var(--accent)}
 .cst.high,.cx.high{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
 .cx{opacity:.92}
 .fr-t{position:relative}
-.fr-t .cst::before{content:"Cost ";opacity:.6;font-weight:400}
-.fr-t .cx::before{content:"Build ";opacity:.6;font-weight:400}
+.fr-t .cst::before,.pv-hd .cst::before{content:"Cost ";opacity:.6;font-weight:400}
+.fr-t .cx::before,.pv-hd .cx::before{content:"Build ";opacity:.6;font-weight:400}
 .fr.settled .fr-n{color:var(--tx-2)}
 .bite{font-family:var(--mono);font-size:9.5px;padding:2px 7px;border-radius:5px;white-space:nowrap;
   cursor:help;border:1px dashed var(--accent);color:var(--accent-2);background:var(--accent-dim)}
@@ -495,6 +495,35 @@ html[data-theme="dark"] .bite{color:var(--accent)}
 .fit-more > summary:hover{color:var(--tx)}
 .fit-more > summary b{font-weight:600;color:var(--tx)}
 .fit-more-in{padding-top:12px}
+/* product view */
+.pv{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 15px;margin-bottom:9px}
+.pv.settled{border-style:dashed;background:transparent}
+.pv.none{border-left:3px solid var(--stopbd)}
+.pv-hd{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+.pv-n{font-size:13.5px;font-weight:600}
+.pv-f{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+.pv-sp{flex:1}
+.pv-ok{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;color:var(--ok);
+  border:1px solid var(--okbd);background:var(--okbg);padding:2px 8px;border-radius:99px}
+.pv-cov{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.pvc{font-family:var(--mono);font-size:9.5px;padding:2px 7px;border-radius:4px;
+  border:1px solid var(--line);color:var(--tx-3);background:var(--panel-2)}
+.pvc.n{color:var(--ok);border-color:var(--okbd)}
+.pvc.p{color:var(--warn);border-color:var(--warnbd)}
+.pvc.g{color:var(--stop);border-color:var(--stopbd)}
+.pv-lev{margin:0 0 9px;font-size:12.5px;color:var(--tx-2);line-height:1.55;max-width:94ch}
+.pv-lev b{color:var(--tx)}
+.pv-caps{display:flex;gap:4px;flex-wrap:wrap}
+.pvcap{font-family:var(--mono);font-size:10.5px;padding:2px 8px;border-radius:5px;
+  border:1px solid var(--line-solid);color:var(--tx-2);background:var(--panel-2);text-align:left}
+.pvcap:hover{border-color:var(--accent);color:var(--accent)}
+.pvcap.n{border-left:2px solid var(--okbd)}
+.pvcap.p{border-left:2px solid var(--warnbd)}
+.pvcap.g{border-left:2px solid var(--stopbd)}
+.pv-alt{margin:9px 0 0;padding-top:8px;border-top:1px dotted var(--line-solid);
+  font-size:11.5px;color:var(--tx-3);line-height:1.5}
+.pv-alt i{font-style:normal;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;margin-right:4px}
+.pv-alt b{color:var(--tx-2)}
 @media(max-width:820px){
   .fr{grid-template-columns:40px 1fr;gap:5px}
   .fr-t{justify-content:flex-start;grid-column:2}
@@ -754,6 +783,13 @@ html[data-theme="dark"] .fit-pre.req button[aria-pressed="true"]{color:var(--acc
     <div class="fit-row">
       <span class="fit-rl">Company size</span>
       <div class="fit-pre" id="fit-size" role="group" aria-label="Company size"></div>
+    </div>
+    <div class="fit-row">
+      <span class="fit-rl">Grouped by</span>
+      <div class="fit-pre" id="fit-view" role="group" aria-label="Grouping">
+        <button type="button" data-v="prod" aria-pressed="true" title="One row per Microsoft product, showing everything it carries. This is where a 1P-versus-3P decision actually sits.">Product</button>
+        <button type="button" data-v="cap" aria-pressed="false" title="One row per capability, in functional-area order.">Capability</button>
+      </div>
     </div>
   </div>
 
@@ -3174,6 +3210,109 @@ function fitAnswer(m){
     return["part","Recommended, with a gap to fill","Microsoft covers part of this. The remainder is commonly met alongside it.",true];
   return["gap","No Microsoft product","Nothing first-party addresses this, so it is sourced elsewhere.",true];
 }
+/* ---- fit: product view ----
+   A capability list cannot answer the question that actually gets asked, because
+   the decision is not taken per capability. Purview carries seven of them across
+   five functional areas; choosing against it is one decision with seven
+   consequences, and replacing it takes roughly fifteen separate third-party
+   products. That spread is the whole 1P-versus-3P argument and a per-capability
+   view structurally cannot show it. */
+function fitProdIndex(lvl,bite){
+  const idx={},orphans=[];
+  allCaps().filter(c=>(TIER_LVL[TIER[c.id]]||9)<=lvl).forEach(c=>{
+    const m=MAP[c.id]||{};
+    const prim=(CAP_PROD[c.id]||[]).filter(e=>e[1]==="p").map(e=>skuOf(e[0]));
+    if(!prim.length){orphans.push({c:c,m:m});return;}
+    prim.forEach(p=>{
+      const t=idx[p]=idx[p]||{id:p,n:PRODUCTS[p].n,f:PRODUCTS[p].f,caps:[],areas:new Set(),
+        lic:new Set(),cov:{},alts:{},bite:false};
+      t.caps.push({c:c,m:m});t.areas.add(c.area.id);
+      if(m.lic)t.lic.add(m.lic);
+      t.cov[m.cov]=(t.cov[m.cov]||0)+1;
+      (m.alt||[]).forEach(a=>t.alts[a]=(t.alts[a]||0)+1);
+      if(bite.has(c.id))t.bite=true;
+    });
+  });
+  return{idx:idx,orphans:orphans};
+}
+function fitProdTags(p){
+  /* cost takes the heaviest commercial step across the capabilities it carries;
+     complexity takes the worst coverage, since the weakest one sets the work */
+  let cMax=1,xMax=1;
+  p.caps.forEach(({m})=>{
+    const [ck]=fitCostTag(m,p.bite),[xk]=fitCxTag(m);
+    cMax=Math.max(cMax,{low:1,medium:2,high:3}[ck]);
+    xMax=Math.max(xMax,{low:1,medium:2,high:3}[xk]);
+  });
+  const dec=p.caps.some(({m})=>fitDecision(m))||p.bite;
+  return{dec:dec,
+    c:["low","medium","high"][cMax-1],cL:["Low","Medium","High"][cMax-1],cW:COST_RUBRIC[cMax-1][1],
+    x:["low","medium","high"][xMax-1],xL:["Low","Medium","High"][xMax-1],xW:CX_RUBRIC[xMax-1][1]};
+}
+function fitProducts(lvl,bite){
+  const {idx,orphans}=fitProdIndex(lvl,bite);
+  const list=Object.values(idx).sort((a,b)=>
+    b.caps.length-a.caps.length||b.areas.size-a.areas.size||a.n.localeCompare(b.n));
+  const card=p=>{
+    const t=fitProdTags(p);
+    const alts=Object.entries(p.alts).sort((a,b)=>b[1]-a[1]);
+    const nAlt=alts.length;
+    const partial=p.cov.Partial||0,gap=p.cov.Gap||0,native=p.cov.Native||0;
+    const licArr=[...p.lic];
+    const multi=p.caps.length>1;
+    /* the consolidation line only means something where the product spans more
+       than one capability; below that it is just a vendor comparison */
+    const lever=multi
+      ? '<p class="pv-lev">Carries <b>'+p.caps.length+' capabilities</b> across '+p.areas.size+
+        ' functional area'+(p.areas.size===1?'':'s')+'. Moving away from it means replacing '+
+        (nAlt>2?'what the model names as roughly <b>'+nAlt+'</b> separate third-party products':
+          'each of those separately')+', so it is one decision with '+p.caps.length+' consequences.'
+      : '';
+    return '<div class="pv'+(t.dec?'':' settled')+'">'+
+      '<div class="pv-hd">'+
+        '<span class="pv-n">'+esc(p.n)+'</span><span class="pv-f">'+esc(p.f)+'</span>'+
+        '<span class="pv-sp"></span>'+
+        (t.dec
+          ? '<span class="cst '+t.c+'" title="Cost — '+esc(t.cW)+'">'+esc(t.cL)+'</span>'+
+            '<span class="cx '+t.x+'" title="Complexity — '+esc(t.xW)+'">'+esc(t.xL)+'</span>'
+          : '<span class="pv-ok">First-party, already licensed</span>')+
+        (p.bite?'<span class="bite" title="A documented Microsoft limit applies to this product at the chosen size.">Limit at this size</span>':'')+
+      '</div>'+
+      '<div class="pv-cov">'+
+        (native?'<span class="pvc n">'+native+' fully covered</span>':'')+
+        (partial?'<span class="pvc p">'+partial+' partly covered</span>':'')+
+        (gap?'<span class="pvc g">'+gap+' not covered</span>':'')+
+        licArr.map(l=>'<span class="pvc l">'+esc(l)+'</span>').join("")+
+      '</div>'+
+      lever+
+      '<div class="pv-caps">'+p.caps.map(({c,m})=>
+        '<button type="button" data-fitcap="'+esc(c.id)+'" class="pvcap '+
+        (m.cov==="Native"?"n":m.cov==="Partial"?"p":"g")+'" title="'+esc(c.area.id+" "+c.area.name+" — "+m.cov)+'">'+
+        esc(c.id)+' '+esc(c.name)+'</button>').join("")+'</div>'+
+      ((partial||gap)&&alts.length
+        ? '<p class="pv-alt"><i>where it falls short, the model names</i> '+
+          alts.slice(0,4).map(a=>esc(a[0])+(a[1]>1?' <b>×'+a[1]+'</b>':'')).join(" · ")+'</p>'
+        : '')+
+      '</div>';
+  };
+  let h=list.map(card).join("");
+  if(orphans.length){
+    const oAlts={};orphans.forEach(({m})=>(m.alt||[]).forEach(a=>oAlts[a]=(oAlts[a]||0)+1));
+    h+='<div class="pv none"><div class="pv-hd"><span class="pv-n">No Microsoft product</span>'+
+      '<span class="pv-f">'+orphans.length+' capabilities</span><span class="pv-sp"></span>'+
+      '<span class="cst high" title="Cost — '+esc(COST_RUBRIC[2][1])+'">High</span>'+
+      '<span class="cx high" title="Complexity — '+esc(CX_RUBRIC[2][1])+'">High</span></div>'+
+      '<p class="pv-lev">Microsoft sells nothing against these. Each is a separate vendor '+
+      'selection, contract and integration, and the model names '+Object.keys(oAlts).length+
+      ' distinct products across them — so they are the part of the estate least likely to '+
+      'consolidate.</p>'+
+      '<div class="pv-caps">'+orphans.map(({c})=>
+        '<button type="button" data-fitcap="'+esc(c.id)+'" class="pvcap g">'+
+        esc(c.id)+' '+esc(c.name)+'</button>').join("")+'</div></div>';
+  }
+  return{html:h,products:list.length,multi:list.filter(p=>p.caps.length>1).length,orphans:orphans.length};
+}
+
 function fitFoundations(){
   const size=FIT_SIZE.find(x=>x.id===FITSIZE)||FIT_SIZE[0];
   const caps=allCaps().filter(c=>(TIER_LVL[TIER[c.id]]||9)<=size.lvl);
@@ -3201,9 +3340,13 @@ function fitFoundations(){
   const prods=new Set(),noMs=caps.filter(c=>((MAP[c.id]||{}).ms||"—")==="—").length;
   caps.forEach(c=>(CAP_PROD[c.id]||[]).forEach(e=>{if(e[1]==="p")prods.add(skuOf(e[0]));}));
   const nDec=caps.filter(c=>fitDecision(MAP[c.id]||{})||bite.has(c.id)).length;
+  const pvStats=fitProdIndex(size.lvl,bite);
+  const pvList=Object.values(pvStats.idx);
+  const pvMulti=pvList.filter(p=>p.caps.length>1).length;
 
   $("#fit-head").innerHTML='<div class="fsum">'+
-    [[caps.length,"capabilities in scope"],[prods.size,"Microsoft products",1],
+    [[caps.length,"capabilities in scope"],[pvList.length,"Microsoft products",1],
+     [pvMulti,"carry more than one capability"],
      [caps.length-nDec,"settled — first-party, already licensed"],
      [nDec,"with a trade-off to weigh"],[noMs,"no Microsoft product"]]
     .map(c=>'<div class="fsum-c '+(c[2]?"hero":"")+'"><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></div>').join("")+
@@ -3225,6 +3368,13 @@ function fitFoundations(){
     'capability tier, which describes the capability rather than the company — a small business in '+
     'a regulated sector will need things this list puts under Large.</p>';
 
+  if(FITVIEW==="prod"){
+    const pv=fitProducts(size.lvl,bite);
+    $("#fit-found").innerHTML=pv.html;
+    $("#fit-found").querySelectorAll("[data-fitcap]").forEach(b=>
+      b.addEventListener("click",()=>openInModel(b.getAttribute("data-fitcap"))));
+    return;
+  }
   $("#fit-found").innerHTML=list.map(g=>
     '<div class="fa"><div class="fa-hd"><span class="fa-sw" style="background:'+g.a.color+'"></span>'+
     '<h3>'+esc(g.a.id+" "+g.a.name)+'</h3><span class="fa-n">'+g.rows.length+'</span></div>'+
@@ -3247,7 +3397,7 @@ function fitFoundations(){
   $("#fit-found").querySelectorAll("[data-fitcap]").forEach(b=>
     b.addEventListener("click",()=>openInModel(b.getAttribute("data-fitcap"))));
 }
-let FITSIZE="s";
+let FITSIZE="s",FITVIEW="prod";
 function fitBuildForm(){
   const groups={};
   Object.entries(FIT_IN).forEach(([k,f])=>(groups[f.g]=groups[f.g]||[]).push([k,f]));
@@ -3288,6 +3438,11 @@ function buildFit(){
     FITSIZE=b.getAttribute("data-s");
     $("#fit-size").querySelectorAll("button").forEach(x=>
       x.setAttribute("aria-pressed",String(x===b)));
+    fitFoundations();
+  }));
+  $("#fit-view").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    FITVIEW=b.getAttribute("data-v");
+    $("#fit-view").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
     fitFoundations();
   }));
   fitFoundations();

@@ -38,9 +38,23 @@ Capabilities that are a management discipline rather than a product purchase are
 **Fit** — what a business of roughly a given size needs, what carries it, what it costs in
 shape rather than price, and where building beats buying.
 
-Pick a size and the capabilities in scope are grouped by functional area, each showing the
-Microsoft product, the commercial shape, a build-versus-buy posture and the named third-party
-alternatives. Small is 35 capabilities and 24 products; Large is 141 and 77.
+Pick a size, and the default grouping is **by product** — because that is where a
+first-party-versus-third-party decision actually sits. Purview carries seven capabilities across
+five functional areas at mid size; choosing against it is one decision with seven consequences,
+and replacing it takes roughly fifteen separate third-party products. A capability list splits
+that into seven unrelated rows and the reach disappears.
+
+Each product card states what it carries, how much is fully against partly covered, the spread of
+licences involved, and what moving away would mean counted in replacement products. The
+consolidation line appears only where a product spans more than one capability — below that it is
+just a vendor comparison. Sixteen of seventy-seven products carry more than one capability at
+Large; two of twenty-four at Small.
+
+Capabilities with no first-party product are collected into a single card rather than scattered —
+twenty-five at Large, drawing on dozens of distinct vendors, which is the part of the estate least
+likely to consolidate.
+
+A **Capability** toggle switches to functional-area order for reading the estate that way instead.
 
 Sizes map to the capability tier, which was written for this kind of scoping — Essential is
 "non-negotiable wherever it applies", Standard "the default where there is a real technology
