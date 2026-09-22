@@ -62,6 +62,12 @@ caps, a subscription count forcing a split, and landing-zone architecture by siz
 is the point: it is where a number would otherwise get invented.
 
 
+Four **illustrative scenarios** give a one-click starting point — under 300 seats, mid-market,
+large, and regulated. They are explicitly not assessments: every figure a scenario supplies is
+tagged as an illustration, the page says how many remain, and editing a field promotes it to a
+real figure and drops the count. Only the 300-seat line is Microsoft's own; the bands above it
+are ours, because Microsoft publishes no segment definition above 300 seats.
+
 The view then shows **Options** for six decisions. A documented limit can rule an option
 **out**; it cannot pick between the options that survive. So each decision lists the shortlist
 with the exclusions traced to evidence, the considerations that distinguish what remains, and no

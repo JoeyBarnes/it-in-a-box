@@ -425,6 +425,17 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 /* ============ fit ============ */
 .fit-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 16px;
   padding-bottom:13px;border-bottom:1px solid var(--line)}
+.fit-pre-lab{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-3)}
+.fit-pre{display:flex;gap:4px;flex-wrap:wrap}
+.fit-pre button{background:var(--panel);border:1px solid var(--line-solid);border-radius:7px;
+  padding:6px 11px;font-size:12.5px;color:var(--tx-2)}
+.fit-pre button:hover{background:var(--panel-2);color:var(--tx)}
+.fit-pre button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.fit-illus{border:1px solid var(--line-solid);border-left:3px solid var(--tx-3);border-radius:0 8px 8px 0;
+  background:var(--panel-2);padding:11px 14px;margin-bottom:16px;font-size:12.5px;
+  color:var(--tx-2);line-height:1.55;max-width:96ch}
+.fit-illus b{color:var(--tx)}
+.fit-f input.illus,.fit-f select.illus{border-style:dashed;color:var(--tx-2);background:var(--panel-2)}
 .fit-form{background:var(--panel);border:1px solid var(--line-solid);border-radius:8px;
   padding:14px 16px 16px;margin-bottom:18px}
 .fit-grp{margin-top:15px}
@@ -592,10 +603,14 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
   it needs are supplied — an unrelated field being filled in is not evidence.</span></p>
 
   <div class="fit-tools">
+    <span class="fit-pre-lab">Start from</span>
+    <div class="fit-pre" id="fit-pre" role="group" aria-label="Illustrative scenarios"></div>
     <button class="tbtn" id="fit-edit" aria-expanded="false">Enter figures</button>
     <button class="tbtn" id="fit-clear">Clear</button>
     <span class="rescount" id="fit-count" role="status" aria-live="polite"></span>
   </div>
+
+  <div class="fit-illus" id="fit-illus" hidden></div>
 
   <div class="fit-form" id="fit-form" hidden></div>
 
@@ -2647,6 +2662,38 @@ const FIT_NONE=[
   "The Cloud Adoption Framework is deliberately size-agnostic: the same target architecture with different on-ramps depending on whether the estate is greenfield or already running. The accelerator differentiates on infrastructure-as-code skill, not scale."]
 ];
 
+function fitIllusCount(){return Object.keys(FITV).filter(k=>FITSRC[k]==="illus").length;}
+function fitSyncForm(){
+  $("#fit-form").querySelectorAll("[data-fit]").forEach(el=>{
+    const k=el.getAttribute("data-fit"),v=FITV[k];
+    if(v===undefined){el.value=el.tagName==="SELECT"?(FIT_IN[k].t==="bool"?"unknown":el.options[0].value):"";}
+    else if(FIT_IN[k].t==="bool")el.value=v?"yes":"no";
+    else el.value=v;
+    el.classList.toggle("illus",FITSRC[k]==="illus");
+  });
+}
+function fitBanner(){
+  const n=fitIllusCount(),b=$("#fit-illus");
+  if(!n){b.hidden=true;return;}
+  b.hidden=false;
+  b.innerHTML='<b>'+n+' figure'+(n===1?"":"s")+' below '+(n===1?"is":"are")+
+    ' from an illustration, not from this business.</b> A scenario is a quick way to see '+
+    'what moves at roughly a given scale. Replace these with real numbers before relying on '+
+    'anything here — every field you edit stops counting as illustrative.';
+}
+function fitApplyPreset(p){
+  Object.keys(FITV).forEach(k=>delete FITV[k]);
+  Object.keys(FITSRC).forEach(k=>delete FITSRC[k]);
+  Object.entries(p.v).forEach(([k,v])=>{
+    if(v==="none"||v==="unknown")return;
+    FITV[k]=v;FITSRC[k]="illus";
+  });
+  if(p.v.fabricSku)FITV.fabricSku=p.v.fabricSku,FITSRC.fabricSku="illus";
+  $("#fit-pre").querySelectorAll("button").forEach(b=>
+    b.setAttribute("aria-pressed",String(b.getAttribute("data-pre")===p.id)));
+  fitSyncForm();fitRender();
+}
+
 /* ---- fit: evaluate each rule only against the inputs it actually needs ---- */
 const FITV={};
 const fitKnown=k=>FITV[k]!==undefined&&FITV[k]!==""&&FITV[k]!=="unknown";
@@ -2711,6 +2758,7 @@ function fitRender(){
   const capsCovered=new Set();FIT_RULES.forEach(r=>(r.caps||[]).forEach(c=>capsCovered.add(c)));
   $("#fit-count").textContent=hit.length+" past · "+clr.length+" clear · "+unk.length+
     " not assessed · rules cover "+capsCovered.size+" of "+allCaps().length+" capabilities";
+  fitBanner();
 }
 function fitBuildForm(){
   const groups={};
@@ -2735,6 +2783,8 @@ function fitBuildForm(){
       else if(el.tagName==="SELECT"&&FIT_IN[k].t==="bool")FITV[k]=(v==="yes");
       else if(el.type==="number")FITV[k]=+v;
       else FITV[k]=v;
+      /* touching a field promotes it from illustration to a real figure */
+      FITSRC[k]="entered";el.classList.remove("illus");
       fitRender();
     });
   });
@@ -2744,6 +2794,17 @@ function buildFit(){
   if(fitWired){fitRender();return;}
   fitWired=true;
   fitBuildForm();
+  $("#fit-pre").innerHTML=FIT_PRESET.map(p=>
+    '<button type="button" data-pre="'+esc(p.id)+'" aria-pressed="false" title="'+esc(p.d)+'">'+
+    esc(p.n)+'</button>').join("");
+  $("#fit-pre").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    const p=FIT_PRESET.find(x=>x.id===b.getAttribute("data-pre"));
+    if(b.getAttribute("aria-pressed")==="true"){
+      Object.keys(FITV).forEach(k=>delete FITV[k]);
+      Object.keys(FITSRC).forEach(k=>delete FITSRC[k]);
+      b.setAttribute("aria-pressed","false");fitSyncForm();fitRender();
+    }else fitApplyPreset(p);
+  }));
   $("#fit-none").innerHTML=FIT_NONE.map(n=>
     '<div class="nn"><h3>'+esc(n[0])+'</h3><p>'+esc(n[1])+'</p></div>').join("");
   $("#fit-edit").addEventListener("click",()=>{
@@ -2753,10 +2814,9 @@ function buildFit(){
   });
   $("#fit-clear").addEventListener("click",()=>{
     Object.keys(FITV).forEach(k=>delete FITV[k]);
-    $("#fit-form").querySelectorAll("[data-fit]").forEach(el=>{
-      if(el.tagName==="SELECT")el.selectedIndex=0;else el.value="";
-    });
-    fitRender();
+    Object.keys(FITSRC).forEach(k=>delete FITSRC[k]);
+    $("#fit-pre").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed","false"));
+    fitSyncForm();fitRender();
   });
   fitRender();
 }
@@ -2910,6 +2970,36 @@ function fitOptRender(){
   $("#fit-optcount").textContent=assessed+" of "+FIT_OPT.length+" assessed · covering "+
     FIT_OPT.length+" of "+allCaps().length+" capabilities";
 }
+
+/* ---- fit: illustrative scenarios ----
+   A quick way to see what moves at roughly a given scale. These are NOT assessments:
+   every figure a scenario supplies is tagged as an illustration and the page keeps
+   saying so until it is overwritten with a real number. Only the 300-seat line is
+   Microsoft's own — it is the Business family cap. The bands above it are ours,
+   because Microsoft publishes no segment definition above 300 seats. */
+const FIT_PRESET=[
+ {id:"sm",n:"Under 300 seats",
+  d:"Inside the Microsoft 365 Business family cap. The one band boundary Microsoft actually publishes.",
+  v:{seats:180,dirObjects:760,verifiedDomain:true,fabricItems:false,fabricSku:"none",
+     premiumUsers:12,listItems:9000,auditYears:"180 days or less",validation:false,
+     abapApex:false,teamEntities:6}},
+ {id:"md",n:"Mid-market",
+  d:"Past the Business cap, still inside the Lighthouse ceiling. Our band, not Microsoft's.",
+  v:{seats:900,dirObjects:4800,verifiedDomain:true,fabricItems:true,fabricSku:"F32",
+     premiumUsers:120,listItems:65000,auditYears:"Up to 1 year",validation:false,
+     abapApex:false,teamEntities:12}},
+ {id:"lg",n:"Large",
+  d:"Past the Lighthouse ceiling, with analytics and content at scale. Our band, not Microsoft's.",
+  v:{seats:6000,dirObjects:41000,verifiedDomain:true,fabricItems:true,fabricSku:"F64",
+     premiumUsers:700,listItems:280000,auditYears:"Up to 1 year",validation:false,
+     abapApex:true,teamEntities:20}},
+ {id:"reg",n:"Regulated",
+  d:"Mid-market shape with validation and long audit retention, to show what regulation changes.",
+  v:{seats:900,dirObjects:4800,verifiedDomain:true,fabricItems:false,fabricSku:"none",
+     premiumUsers:90,listItems:140000,auditYears:"Up to 10 years",validation:true,
+     abapApex:true,teamEntities:12}}
+];
+const FITSRC={};   /* per-field: "illus" until a real figure replaces it */
 
 const VIEWS=["overview","model","products","fit","ri"];
 /* The overview is the front door — every visit starts there rather than
