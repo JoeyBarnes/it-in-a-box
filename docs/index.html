@@ -326,6 +326,107 @@ dialog#capdlg .mrow:first-child{border-top:0}
 dialog#capdlg .mk{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--tx-3);padding-top:2px}
 dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
 @media(max-width:620px){dialog#capdlg .mrow{grid-template-columns:1fr;gap:3px}}
+
+/* ============ product map ============ */
+.pm-lead{font-size:13px;color:var(--tx-2);margin:0 0 14px;max-width:80ch}
+.pm-stats{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.pm-stat{background:var(--panel);border:1px solid var(--line-solid);border-radius:8px;padding:8px 13px;min-width:112px}
+.pm-stat b{display:block;font-size:19px;line-height:1.2;font-variant-numeric:tabular-nums}
+.pm-stat span{font-size:11px;color:var(--tx-3);letter-spacing:.02em}
+.pm-stat.hero b{color:var(--accent)}
+.pm-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;
+  padding-bottom:13px;border-bottom:1px solid var(--line)}
+.pm-seg{display:flex;gap:0;border:1px solid var(--line-solid);border-radius:7px;overflow:hidden}
+.pm-seg button{padding:6px 11px;font-size:12.5px;color:var(--tx-2);background:var(--panel);border-right:1px solid var(--line-solid)}
+.pm-seg button:last-child{border-right:0}
+.pm-seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.pm-seg button:not([aria-pressed="true"]):hover{background:var(--panel-2);color:var(--tx)}
+.pm-sel{background:var(--panel);border:1px solid var(--line-solid);border-radius:7px;color:var(--tx-2);
+  padding:6px 9px;font-size:12.5px;font-family:inherit}
+.pm-sel:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring);outline:none}
+.pm-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+table.pm{border-collapse:separate;border-spacing:0;font-size:12px;width:100%}
+table.pm th,table.pm td{padding:0;margin:0}
+table.pm thead th{position:sticky;top:0;z-index:3;background:var(--panel-2);
+  border-bottom:1px solid var(--line-solid);font-weight:600}
+table.pm th.pm-gh{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--tx-3);text-align:center;padding:5px 4px;border-left:1px solid var(--line);
+  line-height:1.3;font-weight:600}
+table.pm th.pm-ah{width:42px;min-width:42px;text-align:center;padding:6px 2px;
+  font-family:var(--mono);font-size:10.5px;color:var(--tx-2);border-left:1px solid var(--line)}
+table.pm th.pm-name{position:sticky;left:0;z-index:4;text-align:left;padding:6px 12px;min-width:250px;
+  font-size:11px;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--tx-3)}
+/* the reach numbers are the headline, so pin them in view rather than let a wide
+   table push them off the right edge */
+table.pm th.pm-mh,table.pm td.pm-m{position:sticky;z-index:3;width:38px;min-width:38px}
+table.pm th.pm-mh{background:var(--panel-2)}
+table.pm td.pm-m{background:var(--panel)}
+table.pm th.pm-mh.m3,table.pm td.pm-m.m3{right:0}
+table.pm th.pm-mh.m2,table.pm td.pm-m.m2{right:38px}
+table.pm th.pm-mh.m1,table.pm td.pm-m.m1{right:76px;border-left:1px solid var(--line-solid)}
+table.pm th.pm-mh{text-align:center;padding:6px 2px;font-family:var(--mono);
+  font-size:9.5px;color:var(--tx-3);border-left:1px solid var(--line)}
+table.pm tbody td.pm-name{position:sticky;left:0;z-index:2;background:var(--panel);
+  border-right:1px solid var(--line-solid);padding:0}
+table.pm tbody tr:hover td.pm-name,table.pm tbody tr:hover td{background:var(--hover)}
+table.pm tbody tr.pm-famrow td{background:var(--panel-2);border-top:1px solid var(--line-solid)}
+table.pm tbody tr.pm-famrow td.pm-fam{position:sticky;left:0;z-index:2;background:var(--panel-2);
+  padding:5px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3)}
+.pm-pname{display:flex;align-items:baseline;gap:7px;padding:5px 12px;width:100%;font-size:12.5px;color:var(--tx)}
+.pm-pname:hover{color:var(--accent)}
+.pm-pname .pm-pf{font-size:10.5px;color:var(--tx-3);font-family:var(--mono);margin-left:auto;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44%}
+table.pm td.pm-c{text-align:center;border-left:1px solid var(--line);vertical-align:middle;height:26px}
+.pm-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:19px;
+  border-radius:4px;font-size:10.5px;font-family:var(--mono);font-weight:700;color:#fff}
+.pm-dot.sup{background:transparent!important;color:var(--tx-3);border:1px dashed var(--line-solid);font-weight:400}
+table.pm td.pm-m{text-align:center;border-left:1px solid var(--line);font-family:var(--mono);
+  font-size:11px;color:var(--tx-2);font-variant-numeric:tabular-nums}
+table.pm td.pm-m.hero{color:var(--accent);font-weight:700}
+table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
+.pm-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px}
+.pm-card{background:var(--panel);border:1px solid var(--line-solid);border-radius:8px;padding:11px 13px;width:100%}
+.pm-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.pm-card.multi{border-left:3px solid var(--accent)}
+.pm-card h3{margin:0 0 2px;font-size:13px;font-weight:600}
+.pm-card .pm-pf{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+.pm-card .pm-cm{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px;font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+.pm-card .pm-cm b{color:var(--accent);font-weight:700}
+.pm-areadots{display:flex;gap:3px;flex-wrap:wrap;margin-top:8px}
+.pm-areadot{font-family:var(--mono);font-size:9.5px;padding:1px 5px;border-radius:4px;color:#fff;letter-spacing:.03em}
+.pm-cav{margin-top:8px;font-size:11px;color:var(--tx-3);line-height:1.45}
+.pm-cav b{color:var(--tx-2);font-weight:600}
+/* product sheet */
+.ps-grp{margin:0 0 3px;font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-3)}
+.ps-area{display:flex;align-items:center;gap:7px;margin:13px 0 5px;padding-top:11px;border-top:1px solid var(--line)}
+.ps-area:first-child{margin-top:0;padding-top:0;border-top:0}
+.ps-swatch{width:9px;height:9px;border-radius:2px;flex:none}
+.ps-area h3{margin:0;font-size:12.5px;font-weight:600}
+.ps-row{display:flex;align-items:baseline;gap:9px;width:100%;padding:5px 7px;border-radius:5px;font-size:12.5px}
+.ps-row:hover{background:var(--panel-2)}
+.ps-row .cc{font-family:var(--mono);font-size:11px;color:var(--tx-3);flex:none}
+.ps-row .ps-n{color:var(--tx);flex:1}
+.ps-row:hover .ps-n{color:var(--accent)}
+.ps-role{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  padding:1px 6px;border-radius:99px;border:1px solid var(--line-solid);color:var(--tx-3);flex:none}
+.ps-role.p{border-color:var(--accent);color:var(--accent)}
+.pm-note{font-size:11.5px;color:var(--tx-3);margin:12px 0 0;line-height:1.5}
+/* area comparison */
+.pm-cmp{background:var(--panel);border:1px solid var(--line-solid);border-radius:8px;padding:13px 15px;margin-bottom:16px}
+.pm-cmp h2{margin:0 0 3px;font-size:13px}
+.pm-cmp p{margin:0 0 10px;font-size:12px;color:var(--tx-3)}
+.pm-apick{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:11px}
+.pm-apick button{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:5px;
+  border:1px solid var(--line-solid);background:var(--panel);color:var(--tx-2)}
+.pm-apick button[aria-pressed="true"]{color:#fff;border-color:transparent}
+.pm-cmp-out{font-size:12.5px}
+.pm-cmp-out .pm-sec{margin-top:9px}
+.pm-cmp-out .pm-sec b{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--tx-3);font-weight:600}
+.pm-hit{display:flex;align-items:baseline;gap:8px;width:100%;padding:4px 7px;border-radius:5px;font-size:12.5px}
+.pm-hit:hover{background:var(--panel-2);color:var(--accent)}
+.pm-hit .pm-hn{flex:1}
+.pm-hit .pm-hm{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+@media(max-width:760px){table.pm th.pm-name,table.pm tbody td.pm-name{min-width:180px}}
 </style>
 </head>
 <body>
@@ -340,6 +441,7 @@ dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
     <div class="tabs" role="tablist" aria-label="View">
       <button class="tab" id="tab-overview" role="tab" aria-selected="true" aria-controls="view-overview">Overview</button>
       <button class="tab" id="tab-model" role="tab" aria-selected="false" aria-controls="view-model">Capability Model</button>
+      <button class="tab" id="tab-products" role="tab" aria-selected="false" aria-controls="view-products">Product Map</button>
       <button class="tab" id="tab-ri" role="tab" aria-selected="false" aria-controls="view-ri">Reference Implementation</button>
     </div>
   </div>
@@ -383,6 +485,51 @@ dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
 
   <div id="host" tabindex="-1"></div>
   <div class="empty" id="empty" style="display:none" role="status">No matches.</div>
+</section>
+
+<section id="view-products" role="tabpanel" aria-labelledby="tab-products" hidden>
+  <p class="pm-lead">The capability model read backwards: every Microsoft product it names, and the
+  capabilities each one answers. Sorted by how many <b>functional areas</b> a product reaches, because
+  that — not how many capabilities it touches — is what tells you a product is doing work for more than
+  one part of the business. Microsoft Intune answers seven capabilities but six of them sit inside device
+  management; that is depth, not reach.
+  <span class="pm-note" style="display:block;margin-top:7px">This shows <b>cross-functional reuse
+  potential</b>, not duplication. A reference model cannot tell you whether two teams are running
+  separate deployments, holding separate contracts, or paying twice — only that one product is capable
+  of serving both. Check the caveats on each product before treating reach as a consolidation case.</span></p>
+
+  <div class="pm-stats" id="pm-stats"></div>
+
+  <div class="pm-cmp">
+    <h2>Compare functional areas</h2>
+    <p>Pick two or more areas to see which products already serve all of them.</p>
+    <div class="pm-apick" id="pm-apick" role="group" aria-label="Select functional areas to compare"></div>
+    <div class="pm-cmp-out" id="pm-cmp-out" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="pm-tools">
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="pm-q" type="search" aria-label="Search products and families" placeholder="Search products…" autocomplete="off">
+    </div>
+    <div class="pm-seg" role="group" aria-label="Layout">
+      <button id="pm-v-matrix" type="button" aria-pressed="true">Matrix</button>
+      <button id="pm-v-cards" type="button" aria-pressed="false">Cards</button>
+    </div>
+    <div class="pm-seg" role="group" aria-label="Grouping">
+      <button id="pm-g-prod" type="button" aria-pressed="true">Products</button>
+      <button id="pm-g-fam" type="button" aria-pressed="false">Roll up to families</button>
+    </div>
+    <button class="tbtn" id="pm-multi" type="button" aria-pressed="false">Multi-area only</button>
+    <button class="tbtn" id="pm-sup" type="button" aria-pressed="false">Show supporting</button>
+    <label class="rescount" for="pm-fam">Family
+      <select class="pm-sel" id="pm-fam" aria-label="Filter by family"></select>
+    </label>
+    <span class="rescount" id="pm-count" role="status" aria-live="polite"></span>
+  </div>
+
+  <div id="pm-host"></div>
+  <p class="pm-note" id="pm-foot"></p>
 </section>
 
 <section id="view-ri" role="tabpanel" aria-labelledby="tab-ri" hidden></section>
@@ -836,6 +983,300 @@ const MAP={
 "14.10":{kind:"practice",ms:"Microsoft Viva",comp:["Viva Amplify","Viva Engage","Viva Learning","Viva Insights & Copilot Dashboard","Microsoft 365 Adoption Score"],lic:"Viva Suite or Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/viva/microsoft-viva-overview",pos:"Viva supplies the building blocks — campaign communications, learning in the flow of work, feedback and adoption analytics — and the Copilot Dashboard makes rollout measurable. There is no structured change-management method in the product, and Viva Learning aggregates content rather than being a full learning management system.",cov:"Partial",alt:["Prosci","WalkMe","Cornerstone"]}
 };
 
+/* ============ product registry ============
+   Canonical Microsoft products referenced by the model. `ms` in MAP is a display
+   label, not an identity — it compounds two products in 19 places and fragments
+   families such as Purview across six different labels. These edges are curated
+   per capability so the relationship carries a role rather than being inferred
+   from string shape. Validated at load; see checkProducts(). */
+const PRODUCTS={
+  "entra-id":{n:"Microsoft Entra ID",f:"Microsoft Entra"},
+  "entra-id-governance":{n:"Microsoft Entra ID Governance",f:"Microsoft Entra"},
+  "entra-id-protection":{n:"Microsoft Entra ID Protection",f:"Microsoft Entra"},
+  "entra-pim":{n:"Microsoft Entra Privileged Identity Management",f:"Microsoft Entra"},
+  "entra-external-id":{n:"Microsoft Entra External ID",f:"Microsoft Entra"},
+  "entra-workload-id":{n:"Microsoft Entra Workload ID",f:"Microsoft Entra"},
+  "entra-agent-id":{n:"Microsoft Entra Agent ID",f:"Microsoft Entra"},
+  "entra-internet-access":{n:"Microsoft Entra Internet Access",f:"Microsoft Entra"},
+  "entra-private-access":{n:"Microsoft Entra Private Access",f:"Microsoft Entra"},
+  "entra-verified-id":{n:"Microsoft Entra Verified ID",f:"Microsoft Entra"},
+  "intune":{n:"Microsoft Intune",f:"Microsoft Intune"},
+  "intune-endpoint-analytics":{n:"Microsoft Intune Endpoint Analytics",f:"Microsoft Intune"},
+  "windows-365":{n:"Windows 365",f:"Windows"},
+  "windows-autopatch":{n:"Windows Autopatch",f:"Windows"},
+  "defender-xdr":{n:"Microsoft Defender XDR",f:"Microsoft Defender"},
+  "defender-endpoint":{n:"Microsoft Defender for Endpoint",f:"Microsoft Defender"},
+  "defender-cloud":{n:"Microsoft Defender for Cloud",f:"Microsoft Defender"},
+  "defender-iot":{n:"Microsoft Defender for IoT",f:"Microsoft Defender"},
+  "defender-o365":{n:"Microsoft Defender for Office 365",f:"Microsoft Defender"},
+  "defender-experts":{n:"Microsoft Defender Experts",f:"Microsoft Defender"},
+  "security-exposure-mgmt":{n:"Microsoft Security Exposure Management",f:"Microsoft Defender"},
+  "attack-sim-training":{n:"Attack Simulation Training",f:"Microsoft Defender"},
+  "security-copilot":{n:"Microsoft Security Copilot",f:"Microsoft Defender"},
+  "sentinel":{n:"Microsoft Sentinel",f:"Microsoft Sentinel"},
+  "purview":{n:"Microsoft Purview",f:"Microsoft Purview"},
+  "purview-information-protection":{n:"Microsoft Purview Information Protection",f:"Microsoft Purview"},
+  "purview-compliance-manager":{n:"Microsoft Purview Compliance Manager",f:"Microsoft Purview"},
+  "purview-audit":{n:"Microsoft Purview Audit",f:"Microsoft Purview"},
+  "purview-records-management":{n:"Microsoft Purview Records Management",f:"Microsoft Purview"},
+  "priva":{n:"Microsoft Priva",f:"Microsoft Priva"},
+  "viva":{n:"Microsoft Viva",f:"Microsoft Viva"},
+  "viva-connections":{n:"Viva Connections",f:"Microsoft Viva"},
+  "viva-engage":{n:"Viva Engage",f:"Microsoft Viva"},
+  "viva-insights":{n:"Viva Insights",f:"Microsoft Viva"},
+  "viva-amplify":{n:"Viva Amplify",f:"Microsoft Viva"},
+  "viva-learning":{n:"Viva Learning",f:"Microsoft Viva"},
+  "viva-glint":{n:"Viva Glint",f:"Microsoft Viva"},
+  "exchange-online":{n:"Microsoft Exchange Online",f:"Microsoft 365"},
+  "teams":{n:"Microsoft Teams",f:"Microsoft 365"},
+  "teams-rooms":{n:"Microsoft Teams Rooms",f:"Microsoft 365"},
+  "sharepoint":{n:"SharePoint",f:"Microsoft 365"},
+  "onedrive":{n:"OneDrive",f:"Microsoft 365"},
+  "microsoft-search":{n:"Microsoft Search",f:"Microsoft 365"},
+  "planner":{n:"Microsoft Planner",f:"Microsoft 365"},
+  "m365-copilot":{n:"Microsoft 365 Copilot",f:"Microsoft 365"},
+  "m365-doc-processing":{n:"Document processing for Microsoft 365",f:"Microsoft 365"},
+  "m365-frontline":{n:"Microsoft 365 for frontline workers",f:"Microsoft 365"},
+  "agent-365":{n:"Microsoft Agent 365",f:"Microsoft 365"},
+  "loop":{n:"Microsoft Loop",f:"Microsoft 365"},
+  "d365-finance":{n:"Dynamics 365 Finance",f:"Dynamics 365"},
+  "d365-scm":{n:"Dynamics 365 Supply Chain Management",f:"Dynamics 365"},
+  "d365-sales":{n:"Dynamics 365 Sales",f:"Dynamics 365"},
+  "d365-hr":{n:"Dynamics 365 Human Resources",f:"Dynamics 365"},
+  "d365-field-service":{n:"Dynamics 365 Field Service",f:"Dynamics 365"},
+  "d365-customer-insights":{n:"Dynamics 365 Customer Insights",f:"Dynamics 365"},
+  "d365-contact-center":{n:"Dynamics 365 Contact Center",f:"Dynamics 365"},
+  "power-apps":{n:"Microsoft Power Apps",f:"Power Platform"},
+  "power-automate":{n:"Power Automate",f:"Power Platform"},
+  "power-automate-desktop":{n:"Power Automate desktop flows",f:"Power Platform"},
+  "power-pages":{n:"Power Pages",f:"Power Platform"},
+  "dataverse":{n:"Microsoft Dataverse",f:"Power Platform"},
+  "copilot-studio":{n:"Microsoft Copilot Studio",f:"Power Platform"},
+  "fabric":{n:"Microsoft Fabric",f:"Microsoft Fabric"},
+  "fabric-data-factory":{n:"Microsoft Fabric Data Factory",f:"Microsoft Fabric"},
+  "fabric-rti":{n:"Microsoft Fabric Real-Time Intelligence",f:"Microsoft Fabric"},
+  "fabric-dtb":{n:"Fabric digital twin builder",f:"Microsoft Fabric"},
+  "fabric-monitoring-hub":{n:"Fabric Monitoring hub",f:"Microsoft Fabric"},
+  "power-bi":{n:"Power BI",f:"Microsoft Fabric"},
+  "foundry-models":{n:"Microsoft Foundry Models",f:"Microsoft Foundry"},
+  "foundry-observability":{n:"Microsoft Foundry observability",f:"Microsoft Foundry"},
+  "foundry-agent-service":{n:"Foundry Agent Service",f:"Microsoft Foundry"},
+  "azure-ml":{n:"Azure Machine Learning",f:"Azure AI"},
+  "ai-search":{n:"Azure AI Search",f:"Azure AI"},
+  "ai-doc-intelligence":{n:"Azure AI Document Intelligence",f:"Azure AI"},
+  "ai-content-safety":{n:"Azure AI Content Safety",f:"Azure AI"},
+  "github":{n:"GitHub",f:"GitHub"},
+  "github-actions":{n:"GitHub Actions",f:"GitHub"},
+  "github-advanced-security":{n:"GitHub Advanced Security",f:"GitHub"},
+  "github-codespaces":{n:"GitHub Codespaces",f:"GitHub"},
+  "azure-test-plans":{n:"Azure Test Plans",f:"Azure DevOps"},
+  "playwright":{n:"Playwright",f:"Developer tools"},
+  "azure-landing-zones":{n:"Azure landing zones",f:"Azure"},
+  "azure-compute":{n:"Azure compute",f:"Azure"},
+  "azure-storage":{n:"Azure Storage",f:"Azure"},
+  "azure-databases":{n:"Azure databases",f:"Azure"},
+  "azure-messaging":{n:"Azure messaging services",f:"Azure"},
+  "bicep":{n:"Bicep",f:"Azure"},
+  "avm":{n:"Azure Verified Modules",f:"Azure"},
+  "azure-policy":{n:"Azure Policy",f:"Azure"},
+  "azure-backup":{n:"Azure Backup",f:"Azure"},
+  "azure-site-recovery":{n:"Azure Site Recovery",f:"Azure"},
+  "azure-monitor":{n:"Azure Monitor",f:"Azure"},
+  "azure-advisor":{n:"Azure Advisor",f:"Azure"},
+  "app-insights":{n:"Application Insights",f:"Azure"},
+  "azure-local":{n:"Azure Local",f:"Azure"},
+  "sovereign-cloud":{n:"Microsoft Sovereign Cloud",f:"Azure"},
+  "azure-batch":{n:"Azure Batch",f:"Azure"},
+  "azure-cyclecloud":{n:"Azure CycleCloud",f:"Azure"},
+  "azure-arc":{n:"Azure Arc",f:"Azure"},
+  "azure-automation":{n:"Azure Automation",f:"Azure"},
+  "azure-resource-graph":{n:"Azure Resource Graph",f:"Azure"},
+  "azure-key-vault":{n:"Azure Key Vault",f:"Azure"},
+  "azure-functions":{n:"Azure Functions",f:"Azure"},
+  "aks":{n:"Azure Kubernetes Service",f:"Azure"},
+  "app-service":{n:"Azure App Service",f:"Azure"},
+  "azure-load-testing":{n:"Azure Load Testing",f:"Azure"},
+  "apim":{n:"Azure API Management",f:"Azure"},
+  "azure-integration-services":{n:"Azure Integration Services",f:"Azure"},
+  "logic-apps-eip":{n:"Azure Logic Apps Enterprise Integration Pack",f:"Azure"},
+  "azure-iot-operations":{n:"Azure IoT Operations",f:"Azure"},
+  "azure-digital-twins":{n:"Azure Digital Twins",f:"Azure"},
+  "azure-maps":{n:"Azure Maps",f:"Azure"},
+  "planetary-computer-pro":{n:"Planetary Computer Pro",f:"Azure"},
+  "virtual-wan":{n:"Azure Virtual WAN",f:"Azure"},
+  "azure-front-door":{n:"Azure Front Door",f:"Azure"},
+  "azure-firewall":{n:"Azure Firewall",f:"Azure"},
+  "azure-dns":{n:"Azure DNS",f:"Azure"},
+  "expressroute":{n:"Azure ExpressRoute",f:"Azure"},
+  "network-watcher":{n:"Azure Network Watcher",f:"Azure"},
+  "avd":{n:"Azure Virtual Desktop",f:"Azure"},
+  "cost-management":{n:"Microsoft Cost Management",f:"Azure"},
+  "finops-toolkit":{n:"FinOps toolkit",f:"Azure"},
+  "sustainability-manager":{n:"Microsoft Sustainability Manager",f:"Microsoft Cloud for Sustainability"}
+};
+
+/* Anchor edges: the product is the answer for this capability.
+   Role p=primary (exactly one), r=required-with, a=alternative. */
+const CAP_PROD={
+  "01.1":[["entra-id","p"]],
+  "01.2":[["entra-id","p"]],
+  "01.3":[["entra-id","p"]],
+  "01.4":[["entra-pim","p"]],
+  "01.5":[["entra-id-governance","p"]],
+  "01.6":[["entra-external-id","p"]],
+  "01.7":[["entra-external-id","p"]],
+  "01.8":[["entra-workload-id","p"],["entra-agent-id","r"]],
+  "01.9":[["entra-id-protection","p"]],
+  "02.1":[["intune","p"]],
+  "02.2":[["intune","p"]],
+  "02.3":[["windows-autopatch","p"]],
+  "02.4":[["intune","p"]],
+  "02.5":[["intune","p"]],
+  "02.6":[["intune","p"]],
+  "02.7":[["avd","p"],["windows-365","a"]],
+  "02.8":[["intune-endpoint-analytics","p"]],
+  "02.9":[["intune","p"]],
+  "03.1":[["virtual-wan","p"]],
+  "03.2":[["azure-front-door","p"]],
+  "03.3":[["entra-private-access","p"]],
+  "03.4":[["entra-internet-access","p"]],
+  "03.5":[["azure-firewall","p"]],
+  "03.6":[["azure-dns","p"]],
+  "03.7":[["expressroute","p"]],
+  "03.8":[["network-watcher","p"]],
+  "04.1":[["azure-landing-zones","p"]],
+  "04.2":[["azure-compute","p"]],
+  "04.3":[["azure-storage","p"]],
+  "04.4":[["azure-databases","p"]],
+  "04.5":[["bicep","p"],["avm","r"]],
+  "04.6":[["azure-policy","p"]],
+  "04.7":[["azure-backup","p"],["azure-site-recovery","r"]],
+  "04.8":[["azure-monitor","p"]],
+  "04.9":[["azure-local","p"]],
+  "04.10":[["sovereign-cloud","p"]],
+  "04.11":[["azure-batch","p"],["azure-cyclecloud","r"]],
+  "05.1":[["fabric","p"]],
+  "05.2":[["fabric-data-factory","p"]],
+  "05.4":[["purview","p"]],
+  "05.5":[["purview","p"]],
+  "05.6":[["power-bi","p"]],
+  "05.7":[["azure-ml","p"]],
+  "05.9":[["fabric-rti","p"]],
+  "05.10":[["azure-digital-twins","p"],["fabric-dtb","a"]],
+  "06.1":[["apim","p"]],
+  "06.2":[["azure-integration-services","p"]],
+  "06.3":[["azure-messaging","p"]],
+  "06.4":[["power-automate","p"]],
+  "06.5":[["power-automate-desktop","p"]],
+  "06.6":[["power-apps","p"]],
+  "06.7":[["logic-apps-eip","p"]],
+  "06.8":[["azure-monitor","p"],["fabric-monitoring-hub","r"]],
+  "06.9":[["azure-iot-operations","p"]],
+  "07.1":[["d365-finance","p"]],
+  "07.2":[["d365-scm","p"]],
+  "07.3":[["d365-hr","p"]],
+  "07.4":[["d365-scm","p"]],
+  "07.5":[["d365-sales","p"]],
+  "07.6":[["d365-field-service","p"]],
+  "07.7":[["d365-customer-insights","p"]],
+  "07.8":[["d365-contact-center","p"]],
+  "07.10":[["d365-finance","p"]],
+  "07.12":[["m365-doc-processing","p"]],
+  "07.14":[["power-pages","p"]],
+  "08.1":[["github","p"]],
+  "08.2":[["github-actions","p"]],
+  "08.3":[["github-codespaces","p"],["windows-365","a"]],
+  "08.4":[["azure-test-plans","p"],["playwright","r"]],
+  "08.5":[["github-advanced-security","p"]],
+  "08.6":[["app-insights","p"]],
+  "09.1":[["exchange-online","p"]],
+  "09.2":[["teams","p"]],
+  "09.3":[["sharepoint","p"],["onedrive","r"]],
+  "09.4":[["viva-connections","p"],["viva-engage","r"]],
+  "09.5":[["purview-records-management","p"]],
+  "09.6":[["microsoft-search","p"]],
+  "09.7":[["m365-frontline","p"]],
+  "09.8":[["viva-insights","p"]],
+  "09.9":[["teams-rooms","p"]],
+  "10.1":[["m365-copilot","p"]],
+  "10.2":[["copilot-studio","p"],["foundry-agent-service","a"]],
+  "10.3":[["ai-search","p"]],
+  "10.4":[["foundry-models","p"]],
+  "10.5":[["azure-ml","p"]],
+  "10.6":[["foundry-observability","p"]],
+  "10.7":[["purview","p"],["ai-content-safety","r"]],
+  "10.8":[["ai-doc-intelligence","p"]],
+  "10.9":[["agent-365","p"]],
+  "11.1":[["sentinel","p"]],
+  "11.2":[["defender-endpoint","p"]],
+  "11.3":[["security-exposure-mgmt","p"]],
+  "11.4":[["purview-information-protection","p"]],
+  "11.5":[["defender-o365","p"]],
+  "11.6":[["defender-cloud","p"]],
+  "11.7":[["defender-iot","p"]],
+  "11.8":[["defender-xdr","p"],["sentinel","r"]],
+  "11.10":[["attack-sim-training","p"]],
+  "11.12":[["defender-experts","p"]],
+  "12.1":[["purview-compliance-manager","p"]],
+  "12.3":[["purview-compliance-manager","p"]],
+  "12.4":[["priva","p"]],
+  "12.5":[["purview-audit","p"]],
+  "12.8":[["sustainability-manager","p"]],
+  "13.5":[["intune","p"],["azure-resource-graph","r"]],
+  "13.6":[["azure-monitor","p"]],
+  "13.8":[["sharepoint","p"],["azure-automation","r"]],
+  "13.9":[["azure-monitor","p"],["azure-advisor","r"]],
+  "14.1":[["cost-management","p"]],
+  "14.2":[["cost-management","p"],["finops-toolkit","r"]],
+  "14.5":[["d365-scm","p"]],
+  "14.6":[["planner","p"]],
+  "14.7":[["viva","p"]],
+  "14.10":[["viva","p"]],
+  "15.2":[["azure-maps","p"],["planetary-computer-pro","r"]],
+  "15.3":[["sharepoint","p"],["m365-doc-processing","r"]]
+};
+
+/* Supporting edges: the product contributes but is not the headline. Curated and
+   deliberately not exhaustive, so these are excluded from breadth metrics and sorting. */
+const CAP_PROD_SUP={
+  "01.1":["entra-id-governance"],
+  "01.2":["entra-verified-id"],
+  "01.6":["entra-verified-id"],
+  "01.8":["azure-key-vault"],
+  "03.1":["expressroute"],
+  "03.3":["entra-id"],
+  "04.1":["azure-policy"],
+  "04.2":["aks","app-service","azure-functions"],
+  "04.8":["app-insights"],
+  "04.9":["azure-arc"],
+  "05.4":["purview-information-protection"],
+  "06.2":["azure-functions"],
+  "06.8":["app-insights"],
+  "06.9":["azure-arc"],
+  "07.5":["dataverse"],
+  "07.7":["power-pages"],
+  "07.14":["dataverse","azure-front-door"],
+  "08.4":["azure-load-testing"],
+  "08.7":["aks","app-service","azure-front-door","azure-monitor"],
+  "09.4":["viva-amplify","sharepoint"],
+  "09.7":["viva-connections"],
+  "09.8":["viva-glint"],
+  "11.1":["defender-experts","security-copilot"],
+  "11.8":["security-copilot"],
+  "11.9":["github-advanced-security"],
+  "11.11":["security-exposure-mgmt"],
+  "12.5":["purview"],
+  "13.2":["azure-monitor","sentinel"],
+  "13.5":["defender-endpoint"],
+  "13.8":["loop","azure-arc"],
+  "13.9":["azure-load-testing"],
+  "14.2":["azure-advisor"],
+  "14.7":["viva-insights","viva-glint","viva-learning"],
+  "14.8":["purview"],
+  "14.9":["azure-arc"],
+  "14.10":["viva-engage","viva-amplify","viva-learning"]
+};
+
 const COV_PAL={Native:["#5ec75e","#0b6a08"],Partial:["#e6ad3c","#835b00"],
   Gap:["#f1707b","#c50f1f"],"N/A":["#a0a0a0","#616161"]};
 
@@ -1110,6 +1551,7 @@ function toggleTheme(){
   build();buildCovBar();
   if(typeof buildOverview==="function")buildOverview();
   if(typeof buildRI==="function")buildRI();
+  if(typeof buildProductMap==="function")buildProductMap();
   openAreas.forEach(id=>{const n=document.querySelector('.area[data-area="'+id+'"]');
     if(n){n.classList.add("open");n.querySelector(".area-btn").setAttribute("aria-expanded","true");}});
   openCaps.forEach(id=>{const n=document.querySelector('.cap[data-cap="'+id+'"]');
@@ -1654,7 +2096,346 @@ function openAreaInModel(id){
   ae.querySelector(".area-btn").focus({preventScroll:true});
 }
 
-const VIEWS=["overview","model","ri"];
+/* ============ product map ============
+   The capability model inverted: product -> capabilities. Two things make this
+   non-trivial and are handled explicitly rather than inferred.
+
+   1. MAP.ms is a display label, not an identity. It compounds two products in
+      19 places ("Azure Backup & Azure Site Recovery") and fragments families
+      across separate labels (Purview appears under six). So the edges live in
+      CAP_PROD, curated per capability, and each carries a role — a library that
+      extends a product is not a co-equal answer to the capability.
+   2. "Business function" here means functional AREA. Ranking by capability count
+      would put Intune on top with seven, six of which sit inside area 02. Area
+      spread is the headline; capability count only breaks ties. */
+function checkProducts(){
+  const err=[],ids=new Set(allCaps().map(c=>c.id));
+  Object.entries(CAP_PROD).forEach(([k,v])=>{
+    if(!ids.has(k))err.push("edge for unknown capability "+k);
+    if(v.filter(e=>e[1]==="p").length!==1)err.push(k+" must have exactly one primary product");
+    v.forEach(e=>{if(!PRODUCTS[e[0]])err.push(k+" -> unknown product '"+e[0]+"'");});
+  });
+  Object.entries(CAP_PROD_SUP).forEach(([k,v])=>{
+    if(!ids.has(k))err.push("supporting edge for unknown capability "+k);
+    const a=new Set((CAP_PROD[k]||[]).map(e=>e[0]));
+    v.forEach(id=>{
+      if(!PRODUCTS[id])err.push(k+" support -> unknown product '"+id+"'");
+      if(a.has(id))err.push(k+" lists '"+id+"' as both anchor and supporting");
+    });
+  });
+  allCaps().forEach(c=>{
+    const m=MAP[c.id]||{};
+    if((m.ms||"—")!=="—"&&!CAP_PROD[c.id])err.push(c.id+" names a product but has no edge");
+    if((m.ms||"—")==="—"&&CAP_PROD[c.id])err.push(c.id+" has an edge but names no product");
+  });
+  const used=new Set();
+  Object.values(CAP_PROD).forEach(v=>v.forEach(e=>used.add(e[0])));
+  Object.values(CAP_PROD_SUP).forEach(v=>v.forEach(id=>used.add(id)));
+  Object.keys(PRODUCTS).forEach(id=>{if(!used.has(id))err.push("product '"+id+"' is registered but never referenced");});
+  if(err.length)console.error("Product map data is inconsistent:\n  "+err.join("\n  "));
+  return err.length===0;
+}
+
+const areaById=id=>AREAS.find(a=>a.id===id);
+let PIDX={};
+function buildProductIndex(){
+  PIDX={};
+  const touch=id=>PIDX[id]=PIDX[id]||{id:id,n:PRODUCTS[id].n,f:PRODUCTS[id].f,
+    areas:new Set(),groups:new Set(),caps:[],sup:[],roles:{},byArea:{}};
+  const put=(id,capId,role)=>{
+    const t=touch(id),a=capArea(capId);if(!a)return;
+    const s=t.byArea[a.id]=t.byArea[a.id]||{anchor:[],sup:[]};
+    if(role==="s"){t.sup.push(capId);s.sup.push(capId);return;}
+    t.areas.add(a.id);t.groups.add(a.g);t.caps.push(capId);
+    t.roles[role]=(t.roles[role]||0)+1;s.anchor.push([capId,role]);
+  };
+  Object.entries(CAP_PROD).forEach(([k,v])=>v.forEach(e=>put(e[0],k,e[1])));
+  Object.entries(CAP_PROD_SUP).forEach(([k,v])=>v.forEach(id=>put(id,k,"s")));
+}
+
+/* Licensing is a property of the capability mapping, not of the product, so a
+   single chip on a product would often be a lie. Report the spread instead. */
+function prodLic(p){
+  const s=[...new Set(p.caps.map(c=>(MAP[c]||{}).lic).filter(Boolean))];
+  return s.length===0?["—",[]]:s.length===1?[s[0],s]:["Varies ("+s.length+")",s];
+}
+function prodCovMix(p){
+  const m={};p.caps.forEach(c=>{const v=(MAP[c]||{}).cov;if(v)m[v]=(m[v]||0)+1;});return m;
+}
+function prodCaveats(p,isFam){
+  const out=[];
+  if(isFam)out.push(["Family roll-up","these are separate products under one brand, not one deployment"]);
+  const [lab,all]=prodLic(p);
+  if(all.length>1)out.push(["Licensing differs by capability",all.join(" · ")]);
+  const mix=prodCovMix(p),tot=p.caps.length;
+  if(tot&&!mix.Native)out.push(["Never rated Native","Microsoft covers part of every capability it is mapped to here"]);
+  if(p.roles.a)out.push(["Listed as an alternative","in "+p.roles.a+" capabilit"+(p.roles.a===1?"y":"ies")+", so it may not be additive"]);
+  if(p.roles.r)out.push(["Needs a partner product","in "+p.roles.r+" capabilit"+(p.roles.r===1?"y":"ies")+" it is only half the answer"]);
+  return out;
+}
+
+/* roll products up to their commercial family */
+function familyEntities(list){
+  const f={};
+  list.forEach(p=>{
+    const t=f[p.f]=f[p.f]||{id:"fam:"+p.f,n:p.f,f:"",members:[],areas:new Set(),
+      groups:new Set(),caps:[],sup:[],roles:{},byArea:{},isFam:true};
+    t.members.push(p);
+    p.areas.forEach(x=>t.areas.add(x));p.groups.forEach(x=>t.groups.add(x));
+    p.caps.forEach(x=>{if(t.caps.indexOf(x)<0)t.caps.push(x);});
+    p.sup.forEach(x=>{if(t.sup.indexOf(x)<0)t.sup.push(x);});
+    Object.keys(p.roles).forEach(k=>t.roles[k]=(t.roles[k]||0)+p.roles[k]);
+    Object.entries(p.byArea).forEach(([a,v])=>{
+      const s=t.byArea[a]=t.byArea[a]||{anchor:[],sup:[]};
+      v.anchor.forEach(x=>{if(!s.anchor.some(y=>y[0]===x[0]))s.anchor.push(x);});
+      v.sup.forEach(x=>{if(s.sup.indexOf(x)<0)s.sup.push(x);});
+    });
+  });
+  return Object.values(f);
+}
+
+let pmView="matrix",pmGroup="prod",pmMulti=false,pmSup=false,pmFam="all",pmQ="",pmCmp=[];
+const pmSort=(a,b)=>b.areas.size-a.areas.size||b.groups.size-a.groups.size||
+  b.caps.length-a.caps.length||a.n.localeCompare(b.n);
+
+function pmEntities(){
+  let list=Object.values(PIDX);
+  if(pmGroup==="fam")list=familyEntities(list);
+  if(pmFam!=="all")list=list.filter(p=>pmGroup==="fam"?p.n===pmFam:p.f===pmFam);
+  if(pmMulti)list=list.filter(p=>p.areas.size>1);
+  if(pmQ){
+    const q=pmQ.toLowerCase();
+    list=list.filter(p=>(p.n+" "+p.f+" "+p.caps.join(" ")).toLowerCase().indexOf(q)>=0);
+  }
+  return list.sort(pmSort);
+}
+
+function pmStats(){
+  const all=Object.values(PIDX);
+  const multi=all.filter(p=>p.areas.size>1).length;
+  const fams=familyEntities(all).filter(p=>p.areas.size>1).length;
+  const gaps=allCaps().filter(c=>((MAP[c.id]||{}).ms||"—")==="—").length;
+  const cells=[[all.length,"products named"],[multi,"reach 2+ areas",1],
+    [fams,"families reach 2+ areas"],[Object.keys(CAP_PROD).length,"capabilities mapped"],
+    [gaps,"with no first-party product"]];
+  $("#pm-stats").innerHTML=cells.map(c=>
+    '<div class="pm-stat'+(c[2]?" hero":"")+'"><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></div>').join("");
+}
+
+function pmAreaDot(aid,txt,cls){
+  const a=areaById(aid);
+  return '<span class="pm-areadot'+(cls||"")+'" style="background:'+a.color+'" title="'+
+    esc(a.id+" "+a.name)+'">'+esc(txt||aid)+'</span>';
+}
+
+function pmMatrix(list){
+  const gs=GROUPS.map(g=>({g:g,areas:AREAS.filter(a=>a.g===g.id)})).filter(x=>x.areas.length);
+  let h='<div class="pm-scroll"><table class="pm"><thead><tr>'+
+    '<th class="pm-name" rowspan="2" scope="col">'+(pmGroup==="fam"?"Family":"Product")+'</th>';
+  gs.forEach(x=>h+='<th class="pm-gh" colspan="'+x.areas.length+'" scope="colgroup">'+esc(x.g.name)+'</th>');
+  h+='<th class="pm-mh m1" rowspan="2" scope="col" title="Functional areas reached">Ar</th>'+
+     '<th class="pm-mh m2" rowspan="2" scope="col" title="Groups reached">Gp</th>'+
+     '<th class="pm-mh m3" rowspan="2" scope="col" title="Capabilities anchored">Cp</th></tr><tr>';
+  gs.forEach(x=>x.areas.forEach(a=>
+    h+='<th class="pm-ah" scope="col" title="'+esc(a.id+" "+a.name)+'">'+esc(a.id)+'</th>'));
+  h+='</tr></thead><tbody>';
+  let lastFam=null;
+  list.forEach(p=>{
+    /* no family banding here — the sort is global by reach, so a band would
+       fire on nearly every row. Family rides along on the name instead. */
+    h+='<tr'+(p.areas.size>1?' class="multi"':'')+'><td class="pm-name">'+
+      '<button class="pm-pname" type="button" data-p="'+esc(p.id)+'">'+esc(p.n)+
+      '<span class="pm-pf">'+esc(p.isFam?p.members.length+" products":p.f)+'</span></button></td>';
+    gs.forEach(x=>x.areas.forEach(a=>{
+      const c=p.byArea[a.id],n=c?c.anchor.length:0,s=c?c.sup.length:0;
+      let inner="";
+      if(n)inner='<span class="pm-dot" style="background:'+areaById(a.id).color+'">'+n+'</span>';
+      else if(s&&pmSup)inner='<span class="pm-dot sup">'+s+'</span>';
+      h+='<td class="pm-c"'+(inner?' title="'+esc(p.n+" — "+a.id+" "+a.name)+'"':'')+'>'+inner+'</td>';
+    }));
+    h+='<td class="pm-m m1'+(p.areas.size>1?" hero":"")+'">'+p.areas.size+'</td>'+
+       '<td class="pm-m m2">'+p.groups.size+'</td><td class="pm-m m3">'+p.caps.length+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+
+function pmCards(list){
+  return '<div class="pm-cards">'+list.map(p=>{
+    const [lic]=prodLic(p),cav=prodCaveats(p,!!p.isFam);
+    return '<button class="pm-card'+(p.areas.size>1?" multi":"")+'" type="button" data-p="'+esc(p.id)+'">'+
+      '<h3>'+esc(p.n)+'</h3>'+
+      '<div class="pm-pf">'+esc(p.isFam?p.members.length+" products":p.f)+'</div>'+
+      '<div class="pm-areadots">'+[...p.areas].sort().map(a=>pmAreaDot(a)).join("")+'</div>'+
+      '<div class="pm-cm"><span><b>'+p.areas.size+'</b> area'+(p.areas.size===1?"":"s")+'</span>'+
+      '<span>'+p.groups.size+' group'+(p.groups.size===1?"":"s")+'</span>'+
+      '<span>'+p.caps.length+' capabilit'+(p.caps.length===1?"y":"ies")+'</span>'+
+      (p.sup.length?'<span>+'+p.sup.length+' supporting</span>':'')+'</div>'+
+      '<div class="pm-cm"><span>'+esc(lic)+'</span></div>'+
+      (cav.length?'<div class="pm-cav"><b>'+esc(cav[0][0])+'</b> — '+esc(cav[0][1])+'</div>':'')+
+      '</button>';
+  }).join("")+'</div>';
+}
+
+function pmApply(){
+  const list=pmEntities();
+  $("#pm-host").innerHTML=list.length?
+    (pmView==="matrix"?pmMatrix(list):pmCards(list)):
+    '<div class="empty">No products match.</div>';
+  $("#pm-host").querySelectorAll("[data-p]").forEach(b=>
+    b.addEventListener("click",()=>openProductSheet(b.getAttribute("data-p"),b)));
+  const multi=list.filter(p=>p.areas.size>1).length;
+  $("#pm-count").textContent=list.length+(pmGroup==="fam"?" families":" products")+
+    " · "+multi+" reaching 2+ areas";
+  const gaps=allCaps().filter(c=>((MAP[c.id]||{}).ms||"—")==="—");
+  $("#pm-foot").innerHTML='Cells show how many capabilities in that area the product answers; '+
+    'the accent bar marks products reaching more than one area. <b>Ar</b> areas, <b>Gp</b> groups, '+
+    '<b>Cp</b> capabilities. Supporting mentions are curated rather than exhaustive, so they are '+
+    'excluded from the counts and from sorting. '+gaps.length+' capabilities name no first-party '+
+    'product at all and therefore appear nowhere on this page — they are '+
+    gaps.map(c=>esc(c.id)).join(", ")+'.';
+}
+
+/* ---- product sheet: reuses the capability dialog in a second mode ---- */
+function openProductSheet(pid,invoker){
+  const p=pid.indexOf("fam:")===0?
+    familyEntities(Object.values(PIDX)).find(x=>x.id===pid):PIDX[pid];
+  if(!p)return;
+  dlgId=null;dlgReturn=invoker||document.activeElement;
+  $("#dlg-goto").hidden=true;
+  $("#dlg-crumb").textContent=p.isFam?"Family roll-up":esc(p.f);
+  $("#dlg-title").textContent=p.n;
+  /* areas reached only by a supporting mention are listed below but deliberately
+     excluded from the reach count, so say so rather than look inconsistent */
+  const supOnly=Object.keys(p.byArea).filter(a=>!p.byArea[a].anchor.length).length;
+  $("#dlg-def").textContent=(p.areas.size>1
+    ? "Answers "+p.caps.length+" capabilities across "+p.areas.size+" functional areas and "+
+      p.groups.size+" groups."
+    : "Answers "+p.caps.length+" capabilit"+(p.caps.length===1?"y":"ies")+
+      ", all within one functional area.")
+    +(supOnly?" Contributes to "+supOnly+" further area"+(supOnly===1?"":"s")+
+      " in a supporting role, which does not count towards reach.":"");
+
+  const [lic,licAll]=prodLic(p);
+  let h="";
+  if(p.isFam)h+=dRow("Products",'<div class="chips">'+p.members.sort((a,b)=>a.n.localeCompare(b.n))
+    .map(m=>'<span class="cc">'+esc(m.n)+'</span>').join("")+'</div>');
+  h+=dRow("Licensing",licAll.length>1
+    ?'<div class="chips">'+licAll.map(x=>'<span class="cc">'+esc(x)+'</span>').join("")+'</div>'
+    :esc(lic));
+  const mix=prodCovMix(p);
+  h+=dRow("Coverage",Object.keys(mix).length
+    ?Object.keys(mix).map(k=>covPill(k)+' <span class="pm-hm">'+mix[k]+'</span>').join(" ")
+    :'<span class="mv none">—</span>');
+  const cav=prodCaveats(p,!!p.isFam);
+  if(cav.length)h+=dRow("Caveats",'<div>'+cav.map(c=>
+    '<div class="pm-cav"><b>'+esc(c[0])+'</b> — '+esc(c[1])+'</div>').join("")+'</div>');
+
+  let rows="";
+  [...new Set([...p.areas,...Object.keys(p.byArea)])].sort().forEach(aid=>{
+    const a=areaById(aid),blk=p.byArea[aid];if(!a||!blk)return;
+    if(!blk.anchor.length&&!blk.sup.length)return;
+    const g=GROUPS.find(x=>x.id===a.g)||{name:""};
+    rows+='<div class="ps-area"><span class="ps-swatch" style="background:'+a.color+'"></span>'+
+      '<h3>'+esc(a.id+" "+a.name)+'</h3>'+
+      (blk.anchor.length?"":'<span class="ps-role">Supporting only</span>')+'</div>'+
+      '<p class="ps-grp">'+esc(g.name)+'</p>';
+    const line=(cid,role)=>{
+      const c=allCaps().find(x=>x.id===cid);if(!c)return"";
+      const lab=role==="p"?"Primary":role==="r"?"Needs pair":role==="a"?"Alternative":"Supporting";
+      return '<button class="ps-row" type="button" data-cap="'+esc(cid)+'">'+
+        '<span class="cc">'+esc(cid)+'</span><span class="ps-n">'+esc(c.name)+'</span>'+
+        '<span class="ps-role'+(role==="p"?" p":"")+'">'+lab+'</span>'+
+        covPill((MAP[cid]||{}).cov||"Gap")+'</button>';
+    };
+    blk.anchor.forEach(x=>rows+=line(x[0],x[1]));
+    blk.sup.forEach(cid=>rows+=line(cid,"s"));
+  });
+  h+='<div class="mrow"><div class="mk">Capabilities</div><div class="mv">'+rows+'</div></div>';
+  $("#dlg-body").innerHTML=h;
+  $("#dlg-body").scrollTop=0;
+  $("#dlg-body").querySelectorAll("[data-cap]").forEach(b=>
+    b.addEventListener("click",()=>{
+      const id=b.getAttribute("data-cap");
+      dlgSuppressReturn=true;   /* hand focus to the model, do not bounce back here */
+      closeDlg();openInModel(id);
+    }));
+  if(typeof DLG.showModal==="function")DLG.showModal();else DLG.setAttribute("open","");
+}
+
+/* ---- compare areas ---- */
+function pmBuildPicker(){
+  $("#pm-apick").innerHTML=AREAS.map(a=>
+    '<button type="button" data-a="'+esc(a.id)+'" aria-pressed="false" title="'+esc(a.name)+'">'+
+    esc(a.id+" "+a.name)+'</button>').join("");
+  $("#pm-apick").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.getAttribute("data-a"),i=pmCmp.indexOf(id);
+    if(i<0)pmCmp.push(id);else pmCmp.splice(i,1);
+    pmSyncPicker();pmCompare();
+  }));
+  pmSyncPicker();pmCompare();
+}
+function pmSyncPicker(){
+  $("#pm-apick").querySelectorAll("button").forEach(b=>{
+    const on=pmCmp.indexOf(b.getAttribute("data-a"))>=0;
+    b.setAttribute("aria-pressed",String(on));
+    b.style.background=on?areaById(b.getAttribute("data-a")).color:"";
+  });
+}
+function pmCompare(){
+  const out=$("#pm-cmp-out");
+  if(pmCmp.length<2){
+    out.innerHTML='<span class="pm-hm">Select at least two areas.'+
+      (pmCmp.length?" One selected.":"")+'</span>';return;
+  }
+  const rows=Object.values(PIDX).map(p=>{
+    const hit=pmCmp.filter(a=>p.byArea[a]&&p.byArea[a].anchor.length);
+    return {p:p,hit:hit};
+  }).filter(x=>x.hit.length>1).sort((a,b)=>b.hit.length-a.hit.length||pmSort(a.p,b.p));
+  const all=rows.filter(x=>x.hit.length===pmCmp.length),some=rows.filter(x=>x.hit.length<pmCmp.length);
+  const sec=(t,arr)=>!arr.length?"":'<div class="pm-sec"><b>'+t+'</b>'+arr.map(x=>{
+    const [lic]=prodLic(x.p);
+    return '<button class="pm-hit" type="button" data-p="'+esc(x.p.id)+'">'+
+      '<span class="pm-hn">'+esc(x.p.n)+'</span>'+
+      '<span class="pm-hm">'+x.hit.map(a=>esc(a)).join(" · ")+'</span>'+
+      '<span class="pm-hm">'+esc(lic)+'</span></button>';
+  }).join("")+'</div>';
+  out.innerHTML=rows.length
+    ? sec("Serves every selected area",all)+sec("Serves some of them",some)
+    : '<span class="pm-hm">No single product anchors capabilities in more than one of those areas.</span>';
+  out.querySelectorAll("[data-p]").forEach(b=>
+    b.addEventListener("click",()=>openProductSheet(b.getAttribute("data-p"),b)));
+}
+
+function pmSeg(aId,bId,set){
+  const A=$(aId),B=$(bId);
+  const go=(el,other,v)=>{el.setAttribute("aria-pressed","true");other.setAttribute("aria-pressed","false");set(v);pmApply();};
+  A.addEventListener("click",()=>go(A,B,A.getAttribute("data-v")));
+  B.addEventListener("click",()=>go(B,A,B.getAttribute("data-v")));
+}
+let pmWired=false;
+function buildProductMap(){
+  buildProductIndex();checkProducts();pmStats();
+  /* a theme switch re-runs the builders; only the render is repeatable */
+  if(pmWired){pmSyncPicker();pmCompare();pmApply();return;}
+  pmWired=true;
+  pmBuildPicker();
+  const fams=[...new Set(Object.values(PRODUCTS).map(p=>p.f))].sort();
+  $("#pm-fam").innerHTML='<option value="all">All</option>'+
+    fams.map(f=>'<option value="'+esc(f)+'">'+esc(f)+'</option>').join("");
+  $("#pm-v-matrix").setAttribute("data-v","matrix");$("#pm-v-cards").setAttribute("data-v","cards");
+  $("#pm-g-prod").setAttribute("data-v","prod");$("#pm-g-fam").setAttribute("data-v","fam");
+  pmSeg("#pm-v-matrix","#pm-v-cards",v=>pmView=v);
+  pmSeg("#pm-g-prod","#pm-g-fam",v=>{pmGroup=v;pmFam="all";$("#pm-fam").value="all";});
+  const tog=(id,fn)=>$(id).addEventListener("click",()=>{
+    const on=$(id).getAttribute("aria-pressed")!=="true";
+    $(id).setAttribute("aria-pressed",String(on));fn(on);pmApply();});
+  tog("#pm-multi",v=>pmMulti=v);tog("#pm-sup",v=>pmSup=v);
+  $("#pm-fam").addEventListener("change",e=>{pmFam=e.target.value;pmApply();});
+  $("#pm-q").addEventListener("input",e=>{pmQ=e.target.value.trim();pmApply();});
+  pmApply();
+}
+
+const VIEWS=["overview","model","products","ri"];
 /* The overview is the front door — every visit starts there rather than
    resuming whichever tab was open last. */
 function showView(v){
@@ -1676,7 +2457,7 @@ document.querySelector(".tabs").addEventListener("keydown",e=>{
 });
 
 /* ============ capability dialog ============ */
-const DLG=$("#capdlg");let dlgReturn=null,dlgId=null;
+const DLG=$("#capdlg");let dlgReturn=null,dlgId=null,dlgSuppressReturn=false;
 function dRow(k,v){return '<div class="mrow"><div class="mk">'+esc(k)+'</div><div class="mv">'+v+'</div></div>';}
 function openCapDialog(id,invoker){
   const a=capArea(id);if(!a)return;
@@ -1684,6 +2465,8 @@ function openCapDialog(id,invoker){
   const cap=a.caps.find(c=>c.id===id)||{};
   const m=MAP[id]||{},cov=m.cov||"Gap",tier=TIER[id]||"";
   dlgId=id;dlgReturn=invoker||document.activeElement;
+  $("#dlg-goto").hidden=false;   /* the sheet mode hides this; restore it */
+  $("#dlg-body").scrollTop=0;
 
   $("#dlg-crumb").textContent=g.name+" › "+a.id+" "+a.name;
   $("#dlg-title").textContent=id+"  "+cap.name;
@@ -1713,6 +2496,9 @@ let lastPointer=false;
 addEventListener("pointerdown",()=>{lastPointer=true;},true);
 addEventListener("keydown",()=>{lastPointer=false;},true);
 DLG.addEventListener("close",()=>{
+  /* jumping into the model owns focus from here — do not drag it back to a
+     trigger that is now inside a hidden tab panel */
+  if(dlgSuppressReturn){dlgSuppressReturn=false;return;}
   const t=dlgReturn;
   if(!t||!document.contains(t))return;
   if(lastPointer){
@@ -1843,6 +2629,7 @@ function buildDiagram(){
 }
 
 buildRI();
+buildProductMap();
 showView("overview");
 try{localStorage.removeItem("ptom-view");}catch(e){}</script>
 </body>

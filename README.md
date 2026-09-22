@@ -39,6 +39,27 @@ Capabilities that are a management discipline rather than a product purchase are
 interactive flow diagram, control planes, and a closing note on where the design depends
 on custom build rather than a first-party product.
 
+**Product Map** — the model read backwards: every Microsoft product it names, and the
+capabilities each one answers. An area × product matrix, a family roll-up, and an
+area-comparison tool for asking "what already serves both of these?".
+
+Ranking is by **functional areas reached**, not capability count, because those give
+different answers and only the first one addresses cross-functional reuse — Intune answers
+seven capabilities but six sit inside area 02, which is depth rather than reach. Two
+properties of the underlying data are handled explicitly rather than inferred:
+
+- `ms` in `MAP` is a display label, not a product identity. It compounds two products in 19
+  places and fragments families across separate labels — Purview appears under six. So the
+  edges live in `CAP_PROD`, curated per capability.
+- Each edge carries a role — `primary`, `required-with` or `alternative` — because a module
+  library that extends a product is not a co-equal answer to the capability.
+
+Products and families are never ranked against each other; they are separate lenses, since
+a family spanning five areas is portfolio coverage rather than one deployable product. The
+view reports **cross-functional reuse potential** and states plainly that a reference model
+cannot tell you whether two teams run separate deployments or pay twice. `checkProducts()`
+validates the edges at load and logs loudly if they drift from `MAP`.
+
 **Overview graphic** — the Overview tab has **Download SVG** and **Download PNG** buttons. The
 graphic is generated in the browser from the model itself at click time, in whichever theme is
 active, so a download always matches what is on screen and can never drift from the data. Text
