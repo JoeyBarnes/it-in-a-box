@@ -36,63 +36,41 @@ Capabilities that are a management discipline rather than a product purchase are
 `Practice`, so a `Gap` rating is not misread as a missing product.
 
 **Fit** — where a business sits against the documented limits in the Microsoft stack. Eleven
-published limits, each linked to its source on Microsoft Learn.
+published limits, each linked to its source, running high-level to detail: scale and requirements,
+then a coverage summary, then product constraints, then the findings in full, then the open
+decisions.
 
 The page reports what a limit **rules out** and stops there. Crossing 300 seats removes Defender
-for Business; it does not establish what should replace it. That second step needs commercial and
-architectural context the model does not hold, so it is not attempted — a limit proves an
-exclusion, not a selection.
+for Business; it does not establish what should replace it.
 
-Two rules follow from that:
+Evidence is separated by strength rather than lumped together. A **hard boundary** removes an
+option outright. A **design constraint** is real and documented but has known mitigations — the
+SharePoint 5,000-item figure governs a view, not a corpus, and a list can hold 30 million items,
+so it shapes how views are built rather than ruling SharePoint out. **Vendor guidance** is
+Microsoft's own advice whose assumptions are unpublished, so the PPU break-even prompts you to
+model your own numbers rather than deciding anything.
 
-- **A check runs only when the figures it needs are supplied.** The Entra quota check needs both
-  the object count and whether a custom domain is verified; supplying one leaves it unassessed.
-  An unrelated field being filled in is not evidence.
-- **Every number states where it came from.** `Documented limit` is a published boundary;
-  `Vendor guidance` is Microsoft's own advice whose assumptions are not published — a weaker
-  claim, labelled as one. Nothing is derived from a ratio, and no figure is estimated from
-  headcount.
+A check runs only when the figures it needs are supplied, and separately only when the rule is
+known to **apply**. A list past 100,000 items says nothing until you know whether the design
+breaks permission inheritance — without that the answer is "applicability not established",
+which is neither crossed nor clear.
 
-Rules currently cover 11 of 141 capabilities and the page says so. Capabilities without a rule
-show nothing rather than a generic answer.
+**Product constraints** answers the original brief's question about products by scale, as far as
+evidence honestly reaches: what the entered figures rule out, product by product. A product is
+never marked *eligible* — eleven checks passing establishes only that these boundaries were not
+crossed. Nothing is ranked.
 
-The view also lists **where Microsoft publishes no threshold** — company size bands above 300
-seats, Fabric capacity by organisation size, the Power Apps per-app break-even, Teams Phone seat
-caps, a subscription count forcing a split, and landing-zone architecture by size. Stating these
-is the point: it is where a number would otherwise get invented.
+**Scale bands** are Microsoft's own two published seat thresholds — 300 (the Business family cap)
+and 2,500 (the Lighthouse ceiling) — so even the band edges are not invented. A band sets a seat
+count and nothing else, because seats is the only figure company size actually determines.
+Directory objects, list sizes and capacity SKUs are architecture and workload choices that do not
+follow from headcount. **Requirements** are separate toggles on a separate axis, each setting
+exactly the one field it names, because regulation is not a size.
 
-
-Four **illustrative scenarios** give a one-click starting point — under 300 seats, mid-market,
-large, and regulated. They are explicitly not assessments: every figure a scenario supplies is
-tagged as an illustration, the page says how many remain, and editing a field promotes it to a
-real figure and drops the count. Only the 300-seat line is Microsoft's own; the bands above it
-are ours, because Microsoft publishes no segment definition above 300 seats.
-
-The view then shows **Options** for seven decisions. A documented limit can rule an option
-**out**; it cannot pick between the options that survive. So each decision lists the shortlist
-with the exclusions traced to evidence, the considerations that distinguish what remains, and no
-verdict. Supplier, disposition and architecture are tracked separately, because they are
-independent — an option can be Microsoft *and* third party *and* coexisting.
-
-Where no documented limit applies, the page says so: Dynamics 365 Sales versus Salesforce opens
-with *"no documented limit decides this"* and names what the choice actually turns on. A
-validation requirement raises a note rather than an exclusion, because GxP mandates a validated
-system and a controlled process — not a particular vendor.
-
-Every option carries **where it loses**, including every Microsoft one — a comparison that only
-records where the incumbent falls short is a pitch, not an assessment. Each decision also states
-its **transition and exit** cost, and where it is not answerable from the figures collected here
-it says **not comparable without** and names what is missing.
-
-Each decision closes with **what would drive implementation effort** — named drivers rather than
-a score. A driver is in play, not indicated, or not assessed, on the same evidence rules as
-everything else, so supplying a validation requirement lights up the validation workstream and
-supplying a small content estate turns the migration driver off. The three headline dimensions
-are Microsoft's own: its project profiling guidance defines complexity as the number of
-customisations, the level of integration with other systems and the level of data migration.
-
-No figure is attached to any of it. IT cost overruns follow a power-law distribution (Flyvbjerg
-et al., n=5,392), so a single number would imply an average the distribution does not have.
+The view also lists **where Microsoft publishes no threshold** — size bands above 300 seats,
+Fabric capacity by organisation size, the Power Apps per-app break-even, Teams Phone seat caps, a
+subscription count forcing a split, and landing zones by size. Stating these is the point: it is
+where a number would otherwise get invented.
 
 **Reference Implementation** — one real initiative expressed against the model, with an
 interactive flow diagram, control planes, and a closing note on where the design depends
