@@ -39,26 +39,25 @@ Capabilities that are a management discipline rather than a product purchase are
 interactive flow diagram, control planes, and a closing note on where the design depends
 on custom build rather than a first-party product.
 
-**Product Map** — the model read backwards: every Microsoft product it names, and the
-capabilities each one answers. An area × product matrix, a family roll-up, and an
-area-comparison tool for asking "what already serves both of these?".
+**Product Map** — the model read backwards: every Microsoft product it names, drawn as a
+bubble sized by how many capabilities it answers, with a grid view for reading names and
+areas. Clicking a product lists its capabilities and jumps into the model.
 
-Ranking is by **functional areas reached**, not capability count, because those give
-different answers and only the first one addresses cross-functional reuse — Intune answers
-seven capabilities but six sit inside area 02, which is depth rather than reach. Two
-properties of the underlying data are handled explicitly rather than inferred:
+Components that arrive inside a bigger product's licence are rolled up into the parent, so
+Purview counts once rather than five times and Power BI sits inside Fabric. Anything
+separately licensable stays separate — Entra ID Governance, GitHub Advanced Security and
+each Defender are their own purchase. The roll-up takes 123 named products down to 96.
 
-- `ms` in `MAP` is a display label, not a product identity. It compounds two products in 19
-  places and fragments families across separate labels — Purview appears under six. So the
-  edges live in `CAP_PROD`, curated per capability.
-- Each edge carries a role — `primary`, `required-with` or `alternative` — because a module
-  library that extends a product is not a co-equal answer to the capability.
+The picture that falls out is the point: **18 products cover more than one capability, 69
+cover exactly one**, and 9 only ever contribute to a capability someone else answers. The
+big circles are where one licence is already earning its keep across the estate.
 
-Products and families are never ranked against each other; they are separate lenses, since
-a family spanning five areas is portfolio coverage rather than one deployable product. The
-view reports **cross-functional reuse potential** and states plainly that a reference model
-cannot tell you whether two teams run separate deployments or pay twice. `checkProducts()`
-validates the edges at load and logs loudly if they drift from `MAP`.
+Two properties of the underlying data are handled explicitly rather than inferred. `ms` in
+`MAP` is a display label, not a product identity — it compounds two products in 19 places
+and fragments families across separate labels. So the edges live in `CAP_PROD`, curated per
+capability, and each carries a role, because a module library that extends a product is not
+a co-equal answer to the capability. `checkProducts()` validates the edges and the SKU
+roll-up against `MAP` at load and logs loudly if they drift.
 
 **Overview graphic** — the Overview tab has **Download SVG** and **Download PNG** buttons. The
 graphic is generated in the browser from the model itself at click time, in whichever theme is

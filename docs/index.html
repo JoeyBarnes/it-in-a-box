@@ -341,9 +341,6 @@ dialog#capdlg .mv{font-size:12.5px;color:var(--tx-2)}
 .pm-seg button:last-child{border-right:0}
 .pm-seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
 .pm-seg button:not([aria-pressed="true"]):hover{background:var(--panel-2);color:var(--tx)}
-.pm-sel{background:var(--panel);border:1px solid var(--line-solid);border-radius:7px;color:var(--tx-2);
-  padding:6px 9px;font-size:12.5px;font-family:inherit}
-.pm-sel:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring);outline:none}
 .pm-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
 table.pm{border-collapse:separate;border-spacing:0;font-size:12px;width:100%}
 table.pm th,table.pm td{padding:0;margin:0}
@@ -369,9 +366,6 @@ table.pm th.pm-mh{text-align:center;padding:6px 2px;font-family:var(--mono);
 table.pm tbody td.pm-name{position:sticky;left:0;z-index:2;background:var(--panel);
   border-right:1px solid var(--line-solid);padding:0}
 table.pm tbody tr:hover td.pm-name,table.pm tbody tr:hover td{background:var(--hover)}
-table.pm tbody tr.pm-famrow td{background:var(--panel-2);border-top:1px solid var(--line-solid)}
-table.pm tbody tr.pm-famrow td.pm-fam{position:sticky;left:0;z-index:2;background:var(--panel-2);
-  padding:5px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3)}
 .pm-pname{display:flex;align-items:baseline;gap:7px;padding:5px 12px;width:100%;font-size:12.5px;color:var(--tx)}
 .pm-pname:hover{color:var(--accent)}
 .pm-pname .pm-pf{font-size:10.5px;color:var(--tx-3);font-family:var(--mono);margin-left:auto;
@@ -384,18 +378,18 @@ table.pm td.pm-m{text-align:center;border-left:1px solid var(--line);font-family
   font-size:11px;color:var(--tx-2);font-variant-numeric:tabular-nums}
 table.pm td.pm-m.hero{color:var(--accent);font-weight:700}
 table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
-.pm-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px}
-.pm-card{background:var(--panel);border:1px solid var(--line-solid);border-radius:8px;padding:11px 13px;width:100%}
-.pm-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
-.pm-card.multi{border-left:3px solid var(--accent)}
-.pm-card h3{margin:0 0 2px;font-size:13px;font-weight:600}
-.pm-card .pm-pf{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
-.pm-card .pm-cm{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px;font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
-.pm-card .pm-cm b{color:var(--accent);font-weight:700}
-.pm-areadots{display:flex;gap:3px;flex-wrap:wrap;margin-top:8px}
-.pm-areadot{font-family:var(--mono);font-size:9.5px;padding:1px 5px;border-radius:4px;color:#fff;letter-spacing:.03em}
-.pm-cav{margin-top:8px;font-size:11px;color:var(--tx-3);line-height:1.45}
-.pm-cav b{color:var(--tx-2);font-weight:600}
+/* bubble field */
+.pm-svg{width:100%;height:auto;display:block;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;padding:6px 0}
+.pm-b{cursor:pointer}
+.pm-b circle{stroke-width:1.5;transition:opacity .12s}
+.pm-b:hover circle,.pm-b:focus-visible circle{stroke:var(--tx);stroke-width:2.5}
+.pm-b:focus-visible{outline:none}
+.pm-b.multi circle{stroke:var(--accent);stroke-width:2.5}
+.pm-bn{font-family:var(--mono);font-size:11px;font-weight:700;pointer-events:none}
+.pm-bl{font-family:var(--sans);font-size:9.5px;fill:var(--tx-3);pointer-events:none}
+.pm-b:hover .pm-bl,.pm-b:focus-visible .pm-bl{fill:var(--tx);font-weight:600}
+
 /* product sheet */
 .ps-grp{margin:0 0 3px;font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-3)}
 .ps-area{display:flex;align-items:center;gap:7px;margin:13px 0 5px;padding-top:11px;border-top:1px solid var(--line)}
@@ -411,21 +405,6 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
   padding:1px 6px;border-radius:99px;border:1px solid var(--line-solid);color:var(--tx-3);flex:none}
 .ps-role.p{border-color:var(--accent);color:var(--accent)}
 .pm-note{font-size:11.5px;color:var(--tx-3);margin:12px 0 0;line-height:1.5}
-/* area comparison */
-.pm-cmp{background:var(--panel);border:1px solid var(--line-solid);border-radius:8px;padding:13px 15px;margin-bottom:16px}
-.pm-cmp h2{margin:0 0 3px;font-size:13px}
-.pm-cmp p{margin:0 0 10px;font-size:12px;color:var(--tx-3)}
-.pm-apick{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:11px}
-.pm-apick button{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:5px;
-  border:1px solid var(--line-solid);background:var(--panel);color:var(--tx-2)}
-.pm-apick button[aria-pressed="true"]{color:#fff;border-color:transparent}
-.pm-cmp-out{font-size:12.5px}
-.pm-cmp-out .pm-sec{margin-top:9px}
-.pm-cmp-out .pm-sec b{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--tx-3);font-weight:600}
-.pm-hit{display:flex;align-items:baseline;gap:8px;width:100%;padding:4px 7px;border-radius:5px;font-size:12.5px}
-.pm-hit:hover{background:var(--panel-2);color:var(--accent)}
-.pm-hit .pm-hn{flex:1}
-.pm-hit .pm-hm{font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
 @media(max-width:760px){table.pm th.pm-name,table.pm tbody td.pm-name{min-width:180px}}
 </style>
 </head>
@@ -488,43 +467,25 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 </section>
 
 <section id="view-products" role="tabpanel" aria-labelledby="tab-products" hidden>
-  <p class="pm-lead">The capability model read backwards: every Microsoft product it names, and the
-  capabilities each one answers. Sorted by how many <b>functional areas</b> a product reaches, because
-  that — not how many capabilities it touches — is what tells you a product is doing work for more than
-  one part of the business. Microsoft Intune answers seven capabilities but six of them sit inside device
-  management; that is depth, not reach.
-  <span class="pm-note" style="display:block;margin-top:7px">This shows <b>cross-functional reuse
-  potential</b>, not duplication. A reference model cannot tell you whether two teams are running
-  separate deployments, holding separate contracts, or paying twice — only that one product is capable
-  of serving both. Check the caveats on each product before treating reach as a consolidation case.</span></p>
+  <p class="pm-lead">Every Microsoft product the model names, sized by how many capabilities it
+  answers. Components that arrive inside a bigger product's licence are rolled up into it, so
+  Purview counts once rather than five times.
+  <span class="pm-note" style="display:block;margin-top:7px">Most products do exactly one job.
+  The handful that do several are where one licence is already earning its keep across the
+  estate — worth knowing before buying something else to do the same work. Hollow circles are
+  products that contribute to a capability without being the named answer.</span></p>
 
   <div class="pm-stats" id="pm-stats"></div>
-
-  <div class="pm-cmp">
-    <h2>Compare functional areas</h2>
-    <p>Pick two or more areas to see which products already serve all of them.</p>
-    <div class="pm-apick" id="pm-apick" role="group" aria-label="Select functional areas to compare"></div>
-    <div class="pm-cmp-out" id="pm-cmp-out" role="status" aria-live="polite"></div>
-  </div>
 
   <div class="pm-tools">
     <div class="search">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="pm-q" type="search" aria-label="Search products and families" placeholder="Search products…" autocomplete="off">
+      <input id="pm-q" type="search" aria-label="Search products" placeholder="Search products…" autocomplete="off">
     </div>
     <div class="pm-seg" role="group" aria-label="Layout">
-      <button id="pm-v-matrix" type="button" aria-pressed="true">Matrix</button>
-      <button id="pm-v-cards" type="button" aria-pressed="false">Cards</button>
+      <button id="pm-v-bubble" type="button" aria-pressed="true">Bubbles</button>
+      <button id="pm-v-matrix" type="button" aria-pressed="false">Grid</button>
     </div>
-    <div class="pm-seg" role="group" aria-label="Grouping">
-      <button id="pm-g-prod" type="button" aria-pressed="true">Products</button>
-      <button id="pm-g-fam" type="button" aria-pressed="false">Roll up to families</button>
-    </div>
-    <button class="tbtn" id="pm-multi" type="button" aria-pressed="false">Multi-area only</button>
-    <button class="tbtn" id="pm-sup" type="button" aria-pressed="false">Show supporting</button>
-    <label class="rescount" for="pm-fam">Family
-      <select class="pm-sel" id="pm-fam" aria-label="Filter by family"></select>
-    </label>
     <span class="rescount" id="pm-count" role="status" aria-live="polite"></span>
   </div>
 
@@ -1058,6 +1019,7 @@ const PRODUCTS={
   "fabric-dtb":{n:"Fabric digital twin builder",f:"Microsoft Fabric"},
   "fabric-monitoring-hub":{n:"Fabric Monitoring hub",f:"Microsoft Fabric"},
   "power-bi":{n:"Power BI",f:"Microsoft Fabric"},
+  "foundry":{n:"Microsoft Foundry",f:"Microsoft Foundry"},
   "foundry-models":{n:"Microsoft Foundry Models",f:"Microsoft Foundry"},
   "foundry-observability":{n:"Microsoft Foundry observability",f:"Microsoft Foundry"},
   "foundry-agent-service":{n:"Foundry Agent Service",f:"Microsoft Foundry"},
@@ -1276,6 +1238,28 @@ const CAP_PROD_SUP={
   "14.9":["azure-arc"],
   "14.10":["viva-engage","viva-amplify","viva-learning"]
 };
+
+/* Components that arrive with a parent product's SKU and cannot be bought on their
+   own, so they are one purchasing decision rather than several. Rolled up before
+   anything is counted — otherwise Purview looks like five products and Fabric six.
+   Anything separately licensable stays separate: Entra ID Governance, Entra External
+   ID, GitHub Advanced Security, each Defender, Security Copilot, Dataverse. */
+const SKU_OF={
+  "entra-pim":"entra-id","entra-id-protection":"entra-id","entra-verified-id":"entra-id",
+  "intune-endpoint-analytics":"intune",
+  "app-insights":"azure-monitor",
+  "avm":"bicep","finops-toolkit":"cost-management",
+  "purview-information-protection":"purview","purview-compliance-manager":"purview",
+  "purview-audit":"purview","purview-records-management":"purview",
+  "viva-connections":"viva","viva-engage":"viva","viva-amplify":"viva",
+  "viva-learning":"viva","viva-insights":"viva","viva-glint":"viva",
+  "fabric-data-factory":"fabric","fabric-rti":"fabric","fabric-dtb":"fabric",
+  "fabric-monitoring-hub":"fabric","power-bi":"fabric",
+  "foundry-models":"foundry","foundry-observability":"foundry","foundry-agent-service":"foundry",
+  "power-automate-desktop":"power-automate",
+  "github-actions":"github","github-codespaces":"github"
+};
+const skuOf=id=>SKU_OF[id]||id;
 
 const COV_PAL={Native:["#5ec75e","#0b6a08"],Partial:["#e6ad3c","#835b00"],
   Gap:["#f1707b","#c50f1f"],"N/A":["#a0a0a0","#616161"]};
@@ -2129,9 +2113,14 @@ function checkProducts(){
     if((m.ms||"—")==="—"&&CAP_PROD[c.id])err.push(c.id+" has an edge but names no product");
   });
   const used=new Set();
-  Object.values(CAP_PROD).forEach(v=>v.forEach(e=>used.add(e[0])));
-  Object.values(CAP_PROD_SUP).forEach(v=>v.forEach(id=>used.add(id)));
+  Object.values(CAP_PROD).forEach(v=>v.forEach(e=>{used.add(e[0]);used.add(skuOf(e[0]));}));
+  Object.values(CAP_PROD_SUP).forEach(v=>v.forEach(id=>{used.add(id);used.add(skuOf(id));}));
   Object.keys(PRODUCTS).forEach(id=>{if(!used.has(id))err.push("product '"+id+"' is registered but never referenced");});
+  Object.entries(SKU_OF).forEach(([k,v])=>{
+    if(!PRODUCTS[k])err.push("SKU roll-up source '"+k+"' is not a registered product");
+    if(!PRODUCTS[v])err.push("SKU roll-up target '"+v+"' is not a registered product");
+    if(SKU_OF[v])err.push("SKU roll-up '"+k+"' points at '"+v+"' which itself rolls up");
+  });
   if(err.length)console.error("Product map data is inconsistent:\n  "+err.join("\n  "));
   return err.length===0;
 }
@@ -2141,20 +2130,25 @@ let PIDX={};
 function buildProductIndex(){
   PIDX={};
   const touch=id=>PIDX[id]=PIDX[id]||{id:id,n:PRODUCTS[id].n,f:PRODUCTS[id].f,
-    areas:new Set(),groups:new Set(),caps:[],sup:[],roles:{},byArea:{}};
-  const put=(id,capId,role)=>{
-    const t=touch(id),a=capArea(capId);if(!a)return;
+    parts:new Set(),areas:new Set(),groups:new Set(),caps:[],sup:[],byArea:{}};
+  const put=(rawId,capId,role)=>{
+    const id=skuOf(rawId),t=touch(id),a=capArea(capId);if(!a)return;
+    if(rawId!==id)t.parts.add(PRODUCTS[rawId].n);
     const s=t.byArea[a.id]=t.byArea[a.id]||{anchor:[],sup:[]};
-    if(role==="s"){t.sup.push(capId);s.sup.push(capId);return;}
-    t.areas.add(a.id);t.groups.add(a.g);t.caps.push(capId);
-    t.roles[role]=(t.roles[role]||0)+1;s.anchor.push([capId,role]);
+    if(role==="s"){
+      if(t.sup.indexOf(capId)<0&&t.caps.indexOf(capId)<0){t.sup.push(capId);s.sup.push(capId);}
+      return;
+    }
+    t.areas.add(a.id);t.groups.add(a.g);
+    if(t.caps.indexOf(capId)<0){t.caps.push(capId);s.anchor.push([capId,role]);}
+    const i=t.sup.indexOf(capId);if(i>=0)t.sup.splice(i,1);
   };
   Object.entries(CAP_PROD).forEach(([k,v])=>v.forEach(e=>put(e[0],k,e[1])));
   Object.entries(CAP_PROD_SUP).forEach(([k,v])=>v.forEach(id=>put(id,k,"s")));
 }
 
-/* Licensing is a property of the capability mapping, not of the product, so a
-   single chip on a product would often be a lie. Report the spread instead. */
+/* Licensing belongs to the capability mapping rather than to the product, so a
+   single chip would often be a lie. Report the spread instead. */
 function prodLic(p){
   const s=[...new Set(p.caps.map(c=>(MAP[c]||{}).lic).filter(Boolean))];
   return s.length===0?["—",[]]:s.length===1?[s[0],s]:["Varies ("+s.length+")",s];
@@ -2162,193 +2156,175 @@ function prodLic(p){
 function prodCovMix(p){
   const m={};p.caps.forEach(c=>{const v=(MAP[c]||{}).cov;if(v)m[v]=(m[v]||0)+1;});return m;
 }
-function prodCaveats(p,isFam){
-  const out=[];
-  if(isFam)out.push(["Family roll-up","these are separate products under one brand, not one deployment"]);
-  const [lab,all]=prodLic(p);
-  if(all.length>1)out.push(["Licensing differs by capability",all.join(" · ")]);
-  const mix=prodCovMix(p),tot=p.caps.length;
-  if(tot&&!mix.Native)out.push(["Never rated Native","Microsoft covers part of every capability it is mapped to here"]);
-  if(p.roles.a)out.push(["Listed as an alternative","in "+p.roles.a+" capabilit"+(p.roles.a===1?"y":"ies")+", so it may not be additive"]);
-  if(p.roles.r)out.push(["Needs a partner product","in "+p.roles.r+" capabilit"+(p.roles.r===1?"y":"ies")+" it is only half the answer"]);
-  return out;
-}
 
-/* roll products up to their commercial family */
-function familyEntities(list){
-  const f={};
-  list.forEach(p=>{
-    const t=f[p.f]=f[p.f]||{id:"fam:"+p.f,n:p.f,f:"",members:[],areas:new Set(),
-      groups:new Set(),caps:[],sup:[],roles:{},byArea:{},isFam:true};
-    t.members.push(p);
-    p.areas.forEach(x=>t.areas.add(x));p.groups.forEach(x=>t.groups.add(x));
-    p.caps.forEach(x=>{if(t.caps.indexOf(x)<0)t.caps.push(x);});
-    p.sup.forEach(x=>{if(t.sup.indexOf(x)<0)t.sup.push(x);});
-    Object.keys(p.roles).forEach(k=>t.roles[k]=(t.roles[k]||0)+p.roles[k]);
-    Object.entries(p.byArea).forEach(([a,v])=>{
-      const s=t.byArea[a]=t.byArea[a]||{anchor:[],sup:[]};
-      v.anchor.forEach(x=>{if(!s.anchor.some(y=>y[0]===x[0]))s.anchor.push(x);});
-      v.sup.forEach(x=>{if(s.sup.indexOf(x)<0)s.sup.push(x);});
-    });
-  });
-  return Object.values(f);
-}
-
-let pmView="matrix",pmGroup="prod",pmMulti=false,pmSup=false,pmFam="all",pmQ="",pmCmp=[];
-const pmSort=(a,b)=>b.areas.size-a.areas.size||b.groups.size-a.groups.size||
-  b.caps.length-a.caps.length||a.n.localeCompare(b.n);
+let pmView="bubble",pmQ="";
+/* size ranks on capabilities answered; area spread only breaks ties */
+const pmSort=(a,b)=>b.caps.length-a.caps.length||b.areas.size-a.areas.size||
+  b.sup.length-a.sup.length||a.n.localeCompare(b.n);
 
 function pmEntities(){
   let list=Object.values(PIDX);
-  if(pmGroup==="fam")list=familyEntities(list);
-  if(pmFam!=="all")list=list.filter(p=>pmGroup==="fam"?p.n===pmFam:p.f===pmFam);
-  if(pmMulti)list=list.filter(p=>p.areas.size>1);
   if(pmQ){
     const q=pmQ.toLowerCase();
-    list=list.filter(p=>(p.n+" "+p.f+" "+p.caps.join(" ")).toLowerCase().indexOf(q)>=0);
+    list=list.filter(p=>(p.n+" "+p.f+" "+[...p.parts].join(" ")+" "+p.caps.join(" ")).toLowerCase().indexOf(q)>=0);
   }
   return list.sort(pmSort);
 }
 
 function pmStats(){
   const all=Object.values(PIDX);
-  const multi=all.filter(p=>p.areas.size>1).length;
-  const fams=familyEntities(all).filter(p=>p.areas.size>1).length;
-  const gaps=allCaps().filter(c=>((MAP[c.id]||{}).ms||"—")==="—").length;
-  const cells=[[all.length,"products named"],[multi,"reach 2+ areas",1],
-    [fams,"families reach 2+ areas"],[Object.keys(CAP_PROD).length,"capabilities mapped"],
-    [gaps,"with no first-party product"]];
+  const multi=all.filter(p=>p.caps.length>1).length;
+  const one=all.filter(p=>p.caps.length===1).length;
+  const none=all.filter(p=>!p.caps.length).length;
+  const cells=[[all.length,"products"],[multi,"cover 2+ capabilities",1],
+    [one,"cover just one"],[none,"contribute only"],
+    [Object.keys(SKU_OF).length,"components rolled into a parent"]];
   $("#pm-stats").innerHTML=cells.map(c=>
     '<div class="pm-stat'+(c[2]?" hero":"")+'"><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></div>').join("");
 }
 
-function pmAreaDot(aid,txt,cls){
-  const a=areaById(aid);
-  return '<span class="pm-areadot'+(cls||"")+'" style="background:'+a.color+'" title="'+
-    esc(a.id+" "+a.name)+'">'+esc(txt||aid)+'</span>';
+/* ---- bubble field: area of the circle tracks capabilities answered ----
+   Deterministic row packing rather than a physics simulation, so the picture is
+   identical on every load and nothing needs a library. */
+function pmBubbles(list){
+  const W=1130,PAD=8,SLOT=68,MINR=13,K=15;
+  const r=p=>Math.max(MINR,Math.sqrt(Math.max(p.caps.length,p.sup.length?0.55:0.35))*K+4);
+  const rows=[];let row=[],x=PAD;
+  list.forEach(p=>{
+    const rad=r(p),w=Math.max(rad*2,SLOT)+PAD;
+    if(x+w>W&&row.length){rows.push(row);row=[];x=PAD;}
+    row.push({p:p,r:rad,x:x+w/2,w:w});x+=w;
+  });
+  if(row.length)rows.push(row);
+  let y=PAD;
+  rows.forEach(rw=>{const h=Math.max(...rw.map(c=>c.r))*2;rw.forEach(c=>c.y=y+h/2);y+=h+PAD+24;});
+  let s='<svg class="pm-svg" viewBox="0 0 '+W+' '+y+'" role="img" '+
+    'aria-label="Microsoft products sized by the number of capabilities each one answers">';
+  rows.forEach(rw=>rw.forEach(c=>{
+    const p=c.p,n=p.caps.length,hollow=n===0;
+    const col=p.areas.size?areaById([...p.areas].sort()[0]).color:"var(--tx-3)";
+    const lines=pmWrapLabel(p.n,c.w-2);
+    s+='<g class="pm-b'+(hollow?" hollow":"")+(p.areas.size>1?" multi":"")+
+      '" data-p="'+esc(p.id)+'" tabindex="0" role="button" '+
+      'aria-label="'+esc(p.n+": "+(hollow?p.sup.length+" supporting mentions":
+        n+" capabilit"+(n===1?"y":"ies")+" across "+p.areas.size+" area"+(p.areas.size===1?"":"s")))+'">'+
+      '<title>'+esc(p.n+" — "+(hollow?p.sup.length+" supporting":
+        n+" capabilit"+(n===1?"y":"ies")+", "+p.areas.size+" area"+(p.areas.size===1?"":"s")))+'</title>'+
+      '<circle cx="'+c.x.toFixed(1)+'" cy="'+c.y.toFixed(1)+'" r="'+c.r.toFixed(1)+'" '+
+      (hollow?'fill="none" stroke-dasharray="3 2" stroke="'+col+'"':'fill="'+col+'" stroke="'+col+'"')+'/>'+
+      (hollow?'':'<text class="pm-bn" x="'+c.x.toFixed(1)+'" y="'+(c.y+3.5).toFixed(1)+'" '+
+        'text-anchor="middle" fill="#fff">'+n+'</text>')+
+      lines.map((t,i)=>'<text class="pm-bl" x="'+c.x.toFixed(1)+'" y="'+
+        (c.y+c.r+11+i*9.5).toFixed(1)+'" text-anchor="middle">'+esc(t)+'</text>').join("")+
+      '</g>';
+  }));
+  return s+'</svg>';
+}
+/* Nearly every product name starts with "Microsoft", which burns the whole label
+   budget on a word that never distinguishes anything. Drop it and wrap the rest. */
+function pmWrapLabel(name,w){
+  const n=name.replace(/^Microsoft\s+/,"");
+  const max=Math.max(8,Math.floor(w/4.85)),out=[];
+  let cur="";
+  n.split(/\s+/).forEach(word=>{
+    const t=cur?cur+" "+word:word;
+    if(t.length<=max){cur=t;return;}
+    if(cur)out.push(cur);
+    cur=word.length>max?word.slice(0,max-1)+"…":word;
+  });
+  if(cur)out.push(cur);
+  if(out.length>2){const keep=out.slice(0,2);keep[1]=keep[1].slice(0,max-1)+"…";return keep;}
+  return out;
 }
 
 function pmMatrix(list){
   const gs=GROUPS.map(g=>({g:g,areas:AREAS.filter(a=>a.g===g.id)})).filter(x=>x.areas.length);
   let h='<div class="pm-scroll"><table class="pm"><thead><tr>'+
-    '<th class="pm-name" rowspan="2" scope="col">'+(pmGroup==="fam"?"Family":"Product")+'</th>';
+    '<th class="pm-name" rowspan="2" scope="col">Product</th>';
   gs.forEach(x=>h+='<th class="pm-gh" colspan="'+x.areas.length+'" scope="colgroup">'+esc(x.g.name)+'</th>');
-  h+='<th class="pm-mh m1" rowspan="2" scope="col" title="Functional areas reached">Ar</th>'+
-     '<th class="pm-mh m2" rowspan="2" scope="col" title="Groups reached">Gp</th>'+
-     '<th class="pm-mh m3" rowspan="2" scope="col" title="Capabilities anchored">Cp</th></tr><tr>';
+  h+='<th class="pm-mh m1" rowspan="2" scope="col" title="Capabilities answered">Cp</th>'+
+     '<th class="pm-mh m2" rowspan="2" scope="col" title="Functional areas reached">Ar</th>'+
+     '<th class="pm-mh m3" rowspan="2" scope="col" title="Supporting mentions">Su</th></tr><tr>';
   gs.forEach(x=>x.areas.forEach(a=>
     h+='<th class="pm-ah" scope="col" title="'+esc(a.id+" "+a.name)+'">'+esc(a.id)+'</th>'));
   h+='</tr></thead><tbody>';
-  let lastFam=null;
   list.forEach(p=>{
-    /* no family banding here — the sort is global by reach, so a band would
-       fire on nearly every row. Family rides along on the name instead. */
-    h+='<tr'+(p.areas.size>1?' class="multi"':'')+'><td class="pm-name">'+
+    h+='<tr'+(p.caps.length>1?' class="multi"':'')+'><td class="pm-name">'+
       '<button class="pm-pname" type="button" data-p="'+esc(p.id)+'">'+esc(p.n)+
-      '<span class="pm-pf">'+esc(p.isFam?p.members.length+" products":p.f)+'</span></button></td>';
+      '<span class="pm-pf">'+esc(p.f)+'</span></button></td>';
     gs.forEach(x=>x.areas.forEach(a=>{
-      const c=p.byArea[a.id],n=c?c.anchor.length:0,s=c?c.sup.length:0;
+      const c=p.byArea[a.id],n=c?c.anchor.length:0,su=c?c.sup.length:0;
       let inner="";
       if(n)inner='<span class="pm-dot" style="background:'+areaById(a.id).color+'">'+n+'</span>';
-      else if(s&&pmSup)inner='<span class="pm-dot sup">'+s+'</span>';
+      else if(su)inner='<span class="pm-dot sup">'+su+'</span>';
       h+='<td class="pm-c"'+(inner?' title="'+esc(p.n+" — "+a.id+" "+a.name)+'"':'')+'>'+inner+'</td>';
     }));
-    h+='<td class="pm-m m1'+(p.areas.size>1?" hero":"")+'">'+p.areas.size+'</td>'+
-       '<td class="pm-m m2">'+p.groups.size+'</td><td class="pm-m m3">'+p.caps.length+'</td></tr>';
+    h+='<td class="pm-m m1'+(p.caps.length>1?" hero":"")+'">'+p.caps.length+'</td>'+
+       '<td class="pm-m m2">'+p.areas.size+'</td>'+
+       '<td class="pm-m m3">'+(p.sup.length||"")+'</td></tr>';
   });
   return h+'</tbody></table></div>';
-}
-
-function pmCards(list){
-  return '<div class="pm-cards">'+list.map(p=>{
-    const [lic]=prodLic(p),cav=prodCaveats(p,!!p.isFam);
-    return '<button class="pm-card'+(p.areas.size>1?" multi":"")+'" type="button" data-p="'+esc(p.id)+'">'+
-      '<h3>'+esc(p.n)+'</h3>'+
-      '<div class="pm-pf">'+esc(p.isFam?p.members.length+" products":p.f)+'</div>'+
-      '<div class="pm-areadots">'+[...p.areas].sort().map(a=>pmAreaDot(a)).join("")+'</div>'+
-      '<div class="pm-cm"><span><b>'+p.areas.size+'</b> area'+(p.areas.size===1?"":"s")+'</span>'+
-      '<span>'+p.groups.size+' group'+(p.groups.size===1?"":"s")+'</span>'+
-      '<span>'+p.caps.length+' capabilit'+(p.caps.length===1?"y":"ies")+'</span>'+
-      (p.sup.length?'<span>+'+p.sup.length+' supporting</span>':'')+'</div>'+
-      '<div class="pm-cm"><span>'+esc(lic)+'</span></div>'+
-      (cav.length?'<div class="pm-cav"><b>'+esc(cav[0][0])+'</b> — '+esc(cav[0][1])+'</div>':'')+
-      '</button>';
-  }).join("")+'</div>';
 }
 
 function pmApply(){
   const list=pmEntities();
   $("#pm-host").innerHTML=list.length?
-    (pmView==="matrix"?pmMatrix(list):pmCards(list)):
+    (pmView==="bubble"?pmBubbles(list):pmMatrix(list)):
     '<div class="empty">No products match.</div>';
-  $("#pm-host").querySelectorAll("[data-p]").forEach(b=>
-    b.addEventListener("click",()=>openProductSheet(b.getAttribute("data-p"),b)));
-  const multi=list.filter(p=>p.areas.size>1).length;
-  $("#pm-count").textContent=list.length+(pmGroup==="fam"?" families":" products")+
-    " · "+multi+" reaching 2+ areas";
+  const open=e=>openProductSheet(e.getAttribute("data-p"),e);
+  $("#pm-host").querySelectorAll("[data-p]").forEach(b=>{
+    b.addEventListener("click",()=>open(b));
+    b.addEventListener("keydown",ev=>{
+      if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();open(b);}});
+  });
+  const multi=list.filter(p=>p.caps.length>1).length;
+  $("#pm-count").textContent=list.length+" products · "+multi+" cover 2+ capabilities";
   const gaps=allCaps().filter(c=>((MAP[c.id]||{}).ms||"—")==="—");
-  $("#pm-foot").innerHTML='Cells show how many capabilities in that area the product answers; '+
-    'the accent bar marks products reaching more than one area. <b>Ar</b> areas, <b>Gp</b> groups, '+
-    '<b>Cp</b> capabilities. Supporting mentions are curated rather than exhaustive, so they are '+
-    'excluded from the counts and from sorting. '+gaps.length+' capabilities name no first-party '+
-    'product at all and therefore appear nowhere on this page — they are '+
-    gaps.map(c=>esc(c.id)).join(", ")+'.';
+  $("#pm-foot").innerHTML='Circle area tracks capabilities answered; colour is the first '+
+    'functional area the product serves. '+gaps.length+' capabilities name no first-party '+
+    'product at all and so appear nowhere here — '+gaps.map(c=>esc(c.id)).join(", ")+'.';
 }
 
 /* ---- product sheet: reuses the capability dialog in a second mode ---- */
 function openProductSheet(pid,invoker){
-  const p=pid.indexOf("fam:")===0?
-    familyEntities(Object.values(PIDX)).find(x=>x.id===pid):PIDX[pid];
-  if(!p)return;
+  const p=PIDX[pid];if(!p)return;
   dlgId=null;dlgReturn=invoker||document.activeElement;
   $("#dlg-goto").hidden=true;
-  $("#dlg-crumb").textContent=p.isFam?"Family roll-up":esc(p.f);
+  $("#dlg-crumb").textContent=p.f;
   $("#dlg-title").textContent=p.n;
-  /* areas reached only by a supporting mention are listed below but deliberately
-     excluded from the reach count, so say so rather than look inconsistent */
-  const supOnly=Object.keys(p.byArea).filter(a=>!p.byArea[a].anchor.length).length;
-  $("#dlg-def").textContent=(p.areas.size>1
-    ? "Answers "+p.caps.length+" capabilities across "+p.areas.size+" functional areas and "+
-      p.groups.size+" groups."
-    : "Answers "+p.caps.length+" capabilit"+(p.caps.length===1?"y":"ies")+
-      ", all within one functional area.")
-    +(supOnly?" Contributes to "+supOnly+" further area"+(supOnly===1?"":"s")+
-      " in a supporting role, which does not count towards reach.":"");
+  $("#dlg-def").textContent=(p.caps.length
+    ? "Answers "+p.caps.length+" capabilit"+(p.caps.length===1?"y":"ies")+
+      " across "+p.areas.size+" functional area"+(p.areas.size===1?"":"s")+"."
+    : "Contributes to capabilities without being the named answer for any.")
+    +(p.sup.length?" Contributes to "+p.sup.length+" more in a supporting role.":"");
 
   const [lic,licAll]=prodLic(p);
   let h="";
-  if(p.isFam)h+=dRow("Products",'<div class="chips">'+p.members.sort((a,b)=>a.n.localeCompare(b.n))
-    .map(m=>'<span class="cc">'+esc(m.n)+'</span>').join("")+'</div>');
+  if(p.parts.size)h+=dRow("Includes",'<div class="chips">'+[...p.parts].sort()
+    .map(m=>'<span class="cc">'+esc(m)+'</span>').join("")+'</div>');
   h+=dRow("Licensing",licAll.length>1
     ?'<div class="chips">'+licAll.map(x=>'<span class="cc">'+esc(x)+'</span>').join("")+'</div>'
     :esc(lic));
   const mix=prodCovMix(p);
-  h+=dRow("Coverage",Object.keys(mix).length
-    ?Object.keys(mix).map(k=>covPill(k)+' <span class="pm-hm">'+mix[k]+'</span>').join(" ")
-    :'<span class="mv none">—</span>');
-  const cav=prodCaveats(p,!!p.isFam);
-  if(cav.length)h+=dRow("Caveats",'<div>'+cav.map(c=>
-    '<div class="pm-cav"><b>'+esc(c[0])+'</b> — '+esc(c[1])+'</div>').join("")+'</div>');
+  if(Object.keys(mix).length)h+=dRow("Coverage",
+    Object.keys(mix).map(k=>covPill(k)+' <span class="pm-hm">'+mix[k]+'</span>').join(" "));
 
   let rows="";
-  [...new Set([...p.areas,...Object.keys(p.byArea)])].sort().forEach(aid=>{
+  Object.keys(p.byArea).sort().forEach(aid=>{
     const a=areaById(aid),blk=p.byArea[aid];if(!a||!blk)return;
     if(!blk.anchor.length&&!blk.sup.length)return;
-    const g=GROUPS.find(x=>x.id===a.g)||{name:""};
     rows+='<div class="ps-area"><span class="ps-swatch" style="background:'+a.color+'"></span>'+
       '<h3>'+esc(a.id+" "+a.name)+'</h3>'+
-      (blk.anchor.length?"":'<span class="ps-role">Supporting only</span>')+'</div>'+
-      '<p class="ps-grp">'+esc(g.name)+'</p>';
-    const line=(cid,role)=>{
+      (blk.anchor.length?"":'<span class="ps-role">Supporting only</span>')+'</div>';
+    const line=(cid,sup)=>{
       const c=allCaps().find(x=>x.id===cid);if(!c)return"";
-      const lab=role==="p"?"Primary":role==="r"?"Needs pair":role==="a"?"Alternative":"Supporting";
       return '<button class="ps-row" type="button" data-cap="'+esc(cid)+'">'+
         '<span class="cc">'+esc(cid)+'</span><span class="ps-n">'+esc(c.name)+'</span>'+
-        '<span class="ps-role'+(role==="p"?" p":"")+'">'+lab+'</span>'+
+        (sup?'<span class="ps-role">Supporting</span>':'')+
         covPill((MAP[cid]||{}).cov||"Gap")+'</button>';
     };
-    blk.anchor.forEach(x=>rows+=line(x[0],x[1]));
-    blk.sup.forEach(cid=>rows+=line(cid,"s"));
+    blk.anchor.forEach(x=>rows+=line(x[0],false));
+    blk.sup.forEach(cid=>rows+=line(cid,true));
   });
   h+='<div class="mrow"><div class="mk">Capabilities</div><div class="mv">'+rows+'</div></div>';
   $("#dlg-body").innerHTML=h;
@@ -2362,75 +2338,17 @@ function openProductSheet(pid,invoker){
   if(typeof DLG.showModal==="function")DLG.showModal();else DLG.setAttribute("open","");
 }
 
-/* ---- compare areas ---- */
-function pmBuildPicker(){
-  $("#pm-apick").innerHTML=AREAS.map(a=>
-    '<button type="button" data-a="'+esc(a.id)+'" aria-pressed="false" title="'+esc(a.name)+'">'+
-    esc(a.id+" "+a.name)+'</button>').join("");
-  $("#pm-apick").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
-    const id=b.getAttribute("data-a"),i=pmCmp.indexOf(id);
-    if(i<0)pmCmp.push(id);else pmCmp.splice(i,1);
-    pmSyncPicker();pmCompare();
-  }));
-  pmSyncPicker();pmCompare();
-}
-function pmSyncPicker(){
-  $("#pm-apick").querySelectorAll("button").forEach(b=>{
-    const on=pmCmp.indexOf(b.getAttribute("data-a"))>=0;
-    b.setAttribute("aria-pressed",String(on));
-    b.style.background=on?areaById(b.getAttribute("data-a")).color:"";
-  });
-}
-function pmCompare(){
-  const out=$("#pm-cmp-out");
-  if(pmCmp.length<2){
-    out.innerHTML='<span class="pm-hm">Select at least two areas.'+
-      (pmCmp.length?" One selected.":"")+'</span>';return;
-  }
-  const rows=Object.values(PIDX).map(p=>{
-    const hit=pmCmp.filter(a=>p.byArea[a]&&p.byArea[a].anchor.length);
-    return {p:p,hit:hit};
-  }).filter(x=>x.hit.length>1).sort((a,b)=>b.hit.length-a.hit.length||pmSort(a.p,b.p));
-  const all=rows.filter(x=>x.hit.length===pmCmp.length),some=rows.filter(x=>x.hit.length<pmCmp.length);
-  const sec=(t,arr)=>!arr.length?"":'<div class="pm-sec"><b>'+t+'</b>'+arr.map(x=>{
-    const [lic]=prodLic(x.p);
-    return '<button class="pm-hit" type="button" data-p="'+esc(x.p.id)+'">'+
-      '<span class="pm-hn">'+esc(x.p.n)+'</span>'+
-      '<span class="pm-hm">'+x.hit.map(a=>esc(a)).join(" · ")+'</span>'+
-      '<span class="pm-hm">'+esc(lic)+'</span></button>';
-  }).join("")+'</div>';
-  out.innerHTML=rows.length
-    ? sec("Serves every selected area",all)+sec("Serves some of them",some)
-    : '<span class="pm-hm">No single product anchors capabilities in more than one of those areas.</span>';
-  out.querySelectorAll("[data-p]").forEach(b=>
-    b.addEventListener("click",()=>openProductSheet(b.getAttribute("data-p"),b)));
-}
-
-function pmSeg(aId,bId,set){
-  const A=$(aId),B=$(bId);
-  const go=(el,other,v)=>{el.setAttribute("aria-pressed","true");other.setAttribute("aria-pressed","false");set(v);pmApply();};
-  A.addEventListener("click",()=>go(A,B,A.getAttribute("data-v")));
-  B.addEventListener("click",()=>go(B,A,B.getAttribute("data-v")));
-}
 let pmWired=false;
 function buildProductMap(){
   buildProductIndex();checkProducts();pmStats();
   /* a theme switch re-runs the builders; only the render is repeatable */
-  if(pmWired){pmSyncPicker();pmCompare();pmApply();return;}
+  if(pmWired){pmApply();return;}
   pmWired=true;
-  pmBuildPicker();
-  const fams=[...new Set(Object.values(PRODUCTS).map(p=>p.f))].sort();
-  $("#pm-fam").innerHTML='<option value="all">All</option>'+
-    fams.map(f=>'<option value="'+esc(f)+'">'+esc(f)+'</option>').join("");
-  $("#pm-v-matrix").setAttribute("data-v","matrix");$("#pm-v-cards").setAttribute("data-v","cards");
-  $("#pm-g-prod").setAttribute("data-v","prod");$("#pm-g-fam").setAttribute("data-v","fam");
-  pmSeg("#pm-v-matrix","#pm-v-cards",v=>pmView=v);
-  pmSeg("#pm-g-prod","#pm-g-fam",v=>{pmGroup=v;pmFam="all";$("#pm-fam").value="all";});
-  const tog=(id,fn)=>$(id).addEventListener("click",()=>{
-    const on=$(id).getAttribute("aria-pressed")!=="true";
-    $(id).setAttribute("aria-pressed",String(on));fn(on);pmApply();});
-  tog("#pm-multi",v=>pmMulti=v);tog("#pm-sup",v=>pmSup=v);
-  $("#pm-fam").addEventListener("change",e=>{pmFam=e.target.value;pmApply();});
+  const A=$("#pm-v-bubble"),B=$("#pm-v-matrix");
+  const go=(el,other,v)=>{el.setAttribute("aria-pressed","true");
+    other.setAttribute("aria-pressed","false");pmView=v;pmApply();};
+  A.addEventListener("click",()=>go(A,B,"bubble"));
+  B.addEventListener("click",()=>go(B,A,"matrix"));
   $("#pm-q").addEventListener("input",e=>{pmQ=e.target.value.trim();pmApply();});
   pmApply();
 }
