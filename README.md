@@ -43,21 +43,33 @@ on custom build rather than a first-party product.
 bubble sized by how many capabilities it answers, with a grid view for reading names and
 areas. Clicking a product lists its capabilities and jumps into the model.
 
-Components that arrive inside a bigger product's licence are rolled up into the parent, so
-Purview counts once rather than five times and Power BI sits inside Fabric. Anything
-separately licensable stays separate — Entra ID Governance, GitHub Advanced Security and
-each Defender are their own purchase. The roll-up takes 123 named products down to 96.
+Workloads that Microsoft positions as part of a bigger platform are rolled into the parent,
+so Purview counts once rather than five times and Power BI sits inside Fabric. The roll-up
+takes 124 named products down to 100.
 
-The picture that falls out is the point: **18 products cover more than one capability, 69
-cover exactly one**, and 9 only ever contribute to a capability someone else answers. The
-big circles are where one licence is already earning its keep across the estate.
+That grouping follows **how Microsoft architects these products, not how they are billed**.
+The two diverge often enough that conflating them would mislead — Power BI is a Fabric
+workload in Microsoft's architecture yet Power BI Pro is its own per-user licence, and
+Codespaces is metered apart from GitHub Enterprise seats. Licensing therefore stays attached
+at capability level and is reported as a spread on each product, so a large circle means one
+platform rather than one purchase order.
+
+Peer products in a family stay separate even where the brand is shared. The Entra product
+family lists ID Governance, ID Protection and Verified ID *alongside* Entra ID rather than
+inside it, so they are separate here and PIM sits under ID Governance. Defender for Endpoint
+and Defender for Office 365 are products whose signals Defender XDR coordinates, so folding
+them into XDR would double-count them.
+
+The picture that falls out is the point: **19 products cover more than one capability, 71
+cover exactly one**, and 10 only ever contribute to a capability someone else answers. The
+big circles are where one platform is already earning its keep across the estate.
 
 Two properties of the underlying data are handled explicitly rather than inferred. `ms` in
 `MAP` is a display label, not a product identity — it compounds two products in 19 places
 and fragments families across separate labels. So the edges live in `CAP_PROD`, curated per
 capability, and each carries a role, because a module library that extends a product is not
-a co-equal answer to the capability. `checkProducts()` validates the edges and the SKU
-roll-up against `MAP` at load and logs loudly if they drift.
+a co-equal answer to the capability. `checkProducts()` validates the edges and the roll-up
+against `MAP` at load and logs loudly if they drift.
 
 **Overview graphic** — the Overview tab has **Download SVG** and **Download PNG** buttons. The
 graphic is generated in the browser from the model itself at click time, in whichever theme is

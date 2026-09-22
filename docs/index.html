@@ -468,12 +468,15 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 
 <section id="view-products" role="tabpanel" aria-labelledby="tab-products" hidden>
   <p class="pm-lead">Every Microsoft product the model names, sized by how many capabilities it
-  answers. Components that arrive inside a bigger product's licence are rolled up into it, so
-  Purview counts once rather than five times.
-  <span class="pm-note" style="display:block;margin-top:7px">Most products do exactly one job.
-  The handful that do several are where one licence is already earning its keep across the
-  estate — worth knowing before buying something else to do the same work. Hollow circles are
-  products that contribute to a capability without being the named answer.</span></p>
+  answers. Workloads Microsoft positions as part of a bigger platform are rolled into it, so
+  Purview counts once rather than five times and Power BI sits inside Fabric.
+  <span class="pm-note" style="display:block;margin-top:7px">Grouping follows how Microsoft
+  architects these products, not how they are billed — a rolled-up workload may still be a
+  separate purchase, which is why licensing is shown as a spread on each product rather than a
+  single badge. Most products do exactly one job. The handful that do several are where one
+  platform is already earning its keep across the estate, worth knowing before buying something
+  else to do the same work. Hollow circles contribute to a capability without being the named
+  answer.</span></p>
 
   <div class="pm-stats" id="pm-stats"></div>
 
@@ -1239,16 +1242,26 @@ const CAP_PROD_SUP={
   "14.10":["viva-engage","viva-amplify","viva-learning"]
 };
 
-/* Components that arrive with a parent product's SKU and cannot be bought on their
-   own, so they are one purchasing decision rather than several. Rolled up before
-   anything is counted — otherwise Purview looks like five products and Fabric six.
-   Anything separately licensable stays separate: Entra ID Governance, Entra External
-   ID, GitHub Advanced Security, each Defender, Security Copilot, Dataverse. */
+/* Workloads that Microsoft positions as part of a parent platform rather than as
+   products in their own right. Rolled up before anything is counted — otherwise
+   Purview appears five times and Fabric six, and every bubble understates its reach.
+
+   This is a POSITIONING test, not a licensing one, and the difference matters: a
+   rolled-up workload may still be bought separately. Power BI is a Fabric workload
+   in Microsoft's architecture yet Power BI Pro is its own per-user licence, and
+   Codespaces is metered apart from GitHub Enterprise seats. Licensing stays attached
+   at capability level and is reported as a spread on each product, so a large bubble
+   means one platform rather than one purchase order.
+
+   Peer products in a family stay separate even when the brand is shared. The Entra
+   product family lists ID Governance, ID Protection and Verified ID alongside Entra
+   ID rather than inside it, and Defender for Endpoint and Defender for Office 365
+   are products whose signals Defender XDR coordinates — folding them into XDR would
+   double-count them. */
 const SKU_OF={
-  "entra-pim":"entra-id","entra-id-protection":"entra-id","entra-verified-id":"entra-id",
+  "entra-pim":"entra-id-governance",
   "intune-endpoint-analytics":"intune",
   "app-insights":"azure-monitor",
-  "avm":"bicep","finops-toolkit":"cost-management",
   "purview-information-protection":"purview","purview-compliance-manager":"purview",
   "purview-audit":"purview","purview-records-management":"purview",
   "viva-connections":"viva","viva-engage":"viva","viva-amplify":"viva",
@@ -2178,7 +2191,7 @@ function pmStats(){
   const none=all.filter(p=>!p.caps.length).length;
   const cells=[[all.length,"products"],[multi,"cover 2+ capabilities",1],
     [one,"cover just one"],[none,"contribute only"],
-    [Object.keys(SKU_OF).length,"components rolled into a parent"]];
+    [Object.keys(SKU_OF).length,"workloads rolled into a platform"]];
   $("#pm-stats").innerHTML=cells.map(c=>
     '<div class="pm-stat'+(c[2]?" hero":"")+'"><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></div>').join("");
 }
@@ -2301,8 +2314,7 @@ function openProductSheet(pid,invoker){
   const [lic,licAll]=prodLic(p);
   let h="";
   if(p.parts.size)h+=dRow("Includes",'<div class="chips">'+[...p.parts].sort()
-    .map(m=>'<span class="cc">'+esc(m)+'</span>').join("")+'</div>');
-  h+=dRow("Licensing",licAll.length>1
+    .map(m=>'<span class="cc">'+esc(m)+'</span>').join("")+'</div>');  h+=dRow("Licensing",licAll.length>1
     ?'<div class="chips">'+licAll.map(x=>'<span class="cc">'+esc(x)+'</span>').join("")+'</div>'
     :esc(lic));
   const mix=prodCovMix(p);
