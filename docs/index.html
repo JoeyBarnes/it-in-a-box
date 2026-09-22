@@ -424,6 +424,52 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 
 /* ============ fit ============ */
 .fit-tools{margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+/* size selector */
+#fit-size button{display:flex;flex-direction:column;gap:1px;padding:7px 14px;line-height:1.3}
+#fit-size button span{font-family:var(--mono);font-size:9.5px;opacity:.72;letter-spacing:.02em}
+/* foundations */
+.fa{margin-bottom:9px;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.fa-hd{display:flex;align-items:center;gap:9px;padding:9px 14px;background:var(--panel-2);
+  border-bottom:1px solid var(--line)}
+.fa-sw{width:9px;height:9px;border-radius:2px;flex:none}
+.fa-hd h3{margin:0;font-size:12.5px;font-weight:600}
+.fa-n{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--tx-3)}
+.fa-rows{}
+.fr{display:grid;grid-template-columns:44px minmax(190px,1.5fr) auto minmax(130px,1fr);
+  gap:12px;align-items:baseline;width:100%;padding:8px 14px;border-top:1px solid var(--line);text-align:left}
+.fa-rows .fr:first-child{border-top:0}
+.fr:hover{background:var(--hover)}
+.fr-c{font-family:var(--mono);font-size:11px;color:var(--tx-3)}
+.fr-n{display:block;font-size:12.5px}
+.fr:hover .fr-n{color:var(--accent)}
+.fr-p{display:block;font-size:11.5px;color:var(--tx-3);margin-top:1px}
+.fr-p i{opacity:.8}
+.fr-t{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.fr-a{font-size:11px;color:var(--tx-3);text-align:right}
+.sh,.bb{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;padding:2px 7px;
+  border-radius:5px;white-space:nowrap;border:1px solid var(--line-solid);color:var(--tx-3);cursor:help}
+.sh.e3{color:var(--ok);border-color:var(--okbd);background:var(--okbg)}
+.sh.e5,.sh.addon{color:var(--warn);border-color:var(--warnbd);background:var(--warnbg)}
+.sh.cons{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+html[data-theme="dark"] .sh.cons{color:var(--accent)}
+.sh.none{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
+.bb.buy{border-style:solid}
+.bb.supp,.bb.prac{border-style:dashed}
+.bb.build,.bb.3p{border-style:dotted;color:var(--tx-2)}
+/* the growth section, demoted */
+.fit-more{margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+.fit-more > summary{cursor:pointer;font-size:13px;color:var(--tx-2);padding:7px 0;list-style:none}
+.fit-more > summary::-webkit-details-marker{display:none}
+.fit-more > summary::before{content:"\\25B8  ";color:var(--tx-3)}
+.fit-more[open] > summary::before{content:"\\25BE  "}
+.fit-more > summary:hover{color:var(--tx)}
+.fit-more > summary b{font-weight:600;color:var(--tx)}
+.fit-more-in{padding-top:12px}
+@media(max-width:820px){
+  .fr{grid-template-columns:40px 1fr;gap:5px}
+  .fr-t{justify-content:flex-start;grid-column:2}
+  .fr-a{text-align:left;grid-column:2}
+}
 .fit-row{display:grid;grid-template-columns:104px 1fr;gap:12px;align-items:start;margin-top:8px}
 .fit-row:first-child{margin-top:0}
 .fit-row.acts{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
@@ -667,60 +713,74 @@ html[data-theme="dark"] .fit-pre.req button[aria-pressed="true"]{color:var(--acc
 </section>
 
 <section id="view-fit" role="tabpanel" aria-labelledby="tab-fit" hidden>
-  <p class="pm-lead">Where a business sits against the documented limits in the Microsoft stack.
-  Every limit here is published by Microsoft and linked to its source.
-  <span class="pm-note" style="display:block;margin-top:7px">This page reports what a limit
-  <b>rules out</b>, and stops there. Crossing 300 seats removes Defender for Business; it does not
-  establish what should replace it. That second step needs commercial and architectural context
-  this page does not hold, so it is not attempted. Each check runs only when the specific figures
-  it needs are supplied — an unrelated field being filled in is not evidence.</span></p>
+  <p class="pm-lead">At roughly this size, what does a business need, what carries it, what would it
+  cost in shape rather than price, and where would building beat buying.
+  <span class="pm-note" style="display:block;margin-top:7px">In practice this is a longer
+  conversation than any page can hold. What follows is a starting shortlist drawn from the model
+  itself, so it stays consistent with everything else here — and it says plainly where Microsoft
+  sells nothing at all.</span></p>
 
   <div class="fit-tools">
     <div class="fit-row">
-      <span class="fit-rl">Scale</span>
-      <div class="fit-pre" id="fit-band" role="group" aria-label="Scale band"></div>
-    </div>
-    <div class="fit-row">
-      <span class="fit-rl">Requirements</span>
-      <div class="fit-pre req" id="fit-req" role="group" aria-label="Requirements"></div>
-    </div>
-    <div class="fit-row acts">
-      <span class="fit-rl"></span>
-      <div class="fit-actbar">
-        <button class="tbtn" id="fit-edit" aria-expanded="false">Enter figures</button>
-        <button class="tbtn" id="fit-clear">Clear</button>
-        <span class="rescount" id="fit-count" role="status" aria-live="polite"></span>
-      </div>
+      <span class="fit-rl">Company size</span>
+      <div class="fit-pre" id="fit-size" role="group" aria-label="Company size"></div>
     </div>
   </div>
 
-  <div class="fit-illus" id="fit-illus" hidden></div>
+  <div id="fit-head"></div>
+  <div id="fit-found"></div>
 
-  <div class="fit-form" id="fit-form" hidden></div>
+  <details class="fit-more">
+    <summary><b>What breaks as you grow</b> — documented Microsoft limits, checked against real figures</summary>
+    <div class="fit-more-in">
+      <p class="fit-sub">Eleven published limits, each linked to its source. These report what a limit
+      <b>rules out</b> and stop there: crossing 300 seats removes Defender for Business, but it does not
+      establish what should replace it. Each check runs only when the figures it needs are supplied.</p>
 
-  <div id="fit-summary"></div>
+      <div class="fit-tools">
+        <div class="fit-row">
+          <span class="fit-rl">Scale</span>
+          <div class="fit-pre" id="fit-band" role="group" aria-label="Scale band"></div>
+        </div>
+        <div class="fit-row">
+          <span class="fit-rl">Requirements</span>
+          <div class="fit-pre req" id="fit-req" role="group" aria-label="Requirements"></div>
+        </div>
+        <div class="fit-row acts">
+          <span class="fit-rl"></span>
+          <div class="fit-actbar">
+            <button class="tbtn" id="fit-edit" aria-expanded="false">Enter figures</button>
+            <button class="tbtn" id="fit-clear">Clear</button>
+            <span class="rescount" id="fit-count" role="status" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
 
-  <h2 class="fit-h2">Product constraints <span class="rescount" id="fit-prodcount" role="status" aria-live="polite"></span></h2>
-  <p class="fit-sub">What the entered figures rule out, product by product. A product is never
-  marked <i>eligible</i> — eleven checks passing does not establish eligibility, only that these
-  particular boundaries were not crossed. Nothing here is ranked or recommended.</p>
-  <div id="fit-prod"></div>
+      <div class="fit-illus" id="fit-illus" hidden></div>
+      <div class="fit-form" id="fit-form" hidden></div>
+      <div id="fit-summary"></div>
 
-  <h2 class="fit-h2">Findings</h2>
-  <p class="fit-sub">The same checks in full, grouped by how much weight the evidence carries.</p>
-  <div id="fit-out"></div>
+      <h2 class="fit-h2">Product constraints <span class="rescount" id="fit-prodcount" role="status" aria-live="polite"></span></h2>
+      <p class="fit-sub">What the entered figures rule out, product by product. A product is never
+      marked <i>eligible</i> — eleven checks passing does not establish eligibility, only that these
+      particular boundaries were not crossed.</p>
+      <div id="fit-prod"></div>
 
-  <h2 class="fit-h2">Options <span class="rescount" id="fit-optcount" role="status" aria-live="polite"></span></h2>
-  <p class="fit-sub">A documented limit can rule an option out. It cannot pick between the options
-  that survive — that needs commercial and organisational context this page does not hold. So each
-  decision below shows the shortlist with the ruling-out done by evidence, and the choice left
-  where it belongs. Where no limit applies at all, it says so.</p>
-  <div id="fit-opts"></div>
+      <h2 class="fit-h2">Findings</h2>
+      <p class="fit-sub">The same checks in full, grouped by how much weight the evidence carries.</p>
+      <div id="fit-out"></div>
 
-  <h2 class="fit-h2">Where Microsoft publishes no threshold</h2>
-  <p class="fit-sub">Questions that sound as though they should have a number attached, and do not.
-  Listing them is the point — it is where a figure would otherwise get invented.</p>
-  <div id="fit-none"></div>
+      <h2 class="fit-h2">Options <span class="rescount" id="fit-optcount" role="status" aria-live="polite"></span></h2>
+      <p class="fit-sub">Where a limit narrows a choice without settling it. Each shows the shortlist,
+      where every option loses, and what would drive the implementation effort.</p>
+      <div id="fit-opts"></div>
+
+      <h2 class="fit-h2">Where Microsoft publishes no threshold</h2>
+      <p class="fit-sub">Questions that sound as though they should have a number attached, and do not.
+      Listing them is the point — it is where a figure would otherwise get invented.</p>
+      <div id="fit-none"></div>
+    </div>
+  </details>
 </section>
 
 <section id="view-ri" role="tabpanel" aria-labelledby="tab-ri" hidden></section>
@@ -2987,6 +3047,114 @@ function fitSummary(){
     'rather than safe. Nothing on this page determines a product.</p>';
 }
 
+/* ============ fit: foundations by company size ============
+   The question this answers: at roughly this size, what do I need, what carries
+   it, what would I pay for it, and would I be better off building it.
+
+   Sizes map to TIER, which was written for exactly this and carries its own
+   definitions — Essential is "non-negotiable wherever it applies", Standard "the
+   default where there is a real technology function", Advanced "scale, regulatory
+   pressure, or technology as a differentiator". Tier is about the capability, not
+   the company, so this is a starting shortlist and the page says so rather than
+   pretending the mapping is precise.
+
+   Cost is expressed as commercial shape rather than price. Whether something is
+   already inside a suite you own, a new line item, or metered consumption is the
+   part that actually changes a decision, and it is derivable from `lic`. Prices
+   are not in the model and are not invented here. */
+const FIT_SIZE=[
+ {id:"s",n:"Small",sub:"Essential only",lvl:1,
+  d:"One IT function, little specialisation. The capabilities that are non-negotiable wherever they apply."},
+ {id:"m",n:"Mid",sub:"Essential + Standard",lvl:2,
+  d:"A real technology function with defined roles. Adds what becomes the default once there is a team to run it."},
+ {id:"l",n:"Large",sub:"All three tiers",lvl:3,
+  d:"Scale, regulatory pressure, or technology as a differentiator. Adds the capabilities those three conditions force."}
+];
+const TIER_LVL={Essential:1,Standard:2,Advanced:3};
+
+/* commercial shape, derived from the licensing string already on every capability */
+function fitShape(lic){
+  const l=lic||"";
+  if(/Not applicable/.test(l))            return["none","No Microsoft product"];
+  if(/^Included/.test(l))                 return["inc","Included"];
+  if(/^Microsoft 365 E3/.test(l))         return["e3","In Microsoft 365 E3"];
+  if(/E5|Defender Suite|Purview Suite/.test(l)) return["e5","Needs E5 or a suite add-on"];
+  if(/^Add-on/.test(l))                   return["addon","Add-on SKU"];
+  if(/consumption/.test(l))               return["cons","Azure consumption"];
+  if(/^Verify/.test(l))                   return["ver","Verify licensing"];
+  return["sku","Separate SKU"];
+}
+const SHAPE_NOTE={
+  e3:"Already inside the base suite most estates hold, so the cost is adoption rather than purchase.",
+  e5:"A step up in suite tier or a named add-on. The jump usually carries several capabilities with it, so judge it as a bundle.",
+  addon:"Bought on top of a suite you already hold.",
+  sku:"Its own purchase, sized independently of the suite.",
+  cons:"Metered. Cost follows usage rather than headcount, so it scales with the workload and not the org chart.",
+  inc:"No separate charge.",
+  ver:"Licensing varies by edition or region — confirm before planning around it.",
+  none:"Microsoft sells nothing here. Whatever covers it is bought elsewhere or built."
+};
+/* build-versus-buy, derived from coverage and the practice flag */
+function fitBuy(m){
+  if(m.kind==="practice"&&m.cov==="Gap")
+    return["build","Build the practice","No product constitutes this. Tooling supports it; the discipline is yours to run."];
+  if(m.kind==="practice")
+    return["prac","Buy tooling, own the practice","A product helps but does not constitute the capability — the operating discipline stays with you."];
+  if(m.cov==="Native")
+    return["buy","Buy — Microsoft leads","First-party covers this substantially. Building here is rarely defensible."];
+  if(m.cov==="Partial")
+    return["supp","Buy, expect to supplement","Microsoft covers part of it. The gap is usually filled by a third party rather than by building."];
+  return["3p","Buy third-party","No meaningful first-party product. The market has established answers; building is a last resort."];
+}
+
+function fitFoundations(){
+  const lvl=(FIT_SIZE.find(x=>x.id===FITSIZE)||FIT_SIZE[0]).lvl;
+  const caps=allCaps().filter(c=>(TIER_LVL[TIER[c.id]]||9)<=lvl);
+  const areas={};
+  caps.forEach(c=>{
+    const a=c.area;(areas[a.id]=areas[a.id]||{a:a,rows:[]});
+    const m=MAP[c.id]||{};
+    const prim=(CAP_PROD[c.id]||[]).filter(e=>e[1]==="p").map(e=>PRODUCTS[skuOf(e[0])].n);
+    const [sh,shLab]=fitShape(m.lic);
+    const [bk,bLab,bWhy]=fitBuy(m);
+    areas[a.id].rows.push({id:c.id,n:c.name,tier:TIER[c.id],
+      prod:prim.length?prim.join(" + "):null,alt:(m.alt||[]).slice(0,3),
+      sh:sh,shLab:shLab,bk:bk,bLab:bLab,bWhy:bWhy,cov:m.cov,lic:m.lic});
+  });
+  const list=Object.values(areas).sort((x,y)=>x.a.id.localeCompare(y.a.id));
+  /* headline counts */
+  const prods=new Set(),noMs=caps.filter(c=>((MAP[c.id]||{}).ms||"—")==="—").length;
+  caps.forEach(c=>(CAP_PROD[c.id]||[]).forEach(e=>{if(e[1]==="p")prods.add(skuOf(e[0]));}));
+  const shapes={};caps.forEach(c=>{const [k]=fitShape((MAP[c.id]||{}).lic);shapes[k]=(shapes[k]||0)+1;});
+  const buys={};caps.forEach(c=>{const [k]=fitBuy(MAP[c.id]||{});buys[k]=(buys[k]||0)+1;});
+
+  $("#fit-head").innerHTML='<div class="fsum">'+
+    [[caps.length,"capabilities in scope"],[prods.size,"Microsoft products",1],
+     [(shapes.e3||0),"already in Microsoft 365 E3"],[(shapes.e5||0)+(shapes.addon||0),"need an add-on or E5"],
+     [(shapes.cons||0),"metered on consumption"],[noMs,"no Microsoft product"]]
+    .map(c=>'<div class="fsum-c '+(c[2]?"hero":"")+'"><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></div>').join("")+
+    '</div><p class="fsum-note"><b>A starting shortlist, not a specification.</b> Sizes map to the '+
+    'capability tier, which describes the capability rather than the company — a small business in a '+
+    'regulated sector will need things this list puts under Large. Cost is shown as commercial shape, '+
+    'not price: the model holds no pricing, and where Microsoft publishes no figure none is invented here.</p>';
+
+  $("#fit-found").innerHTML=list.map(g=>
+    '<div class="fa"><div class="fa-hd"><span class="fa-sw" style="background:'+g.a.color+'"></span>'+
+    '<h3>'+esc(g.a.id+" "+g.a.name)+'</h3><span class="fa-n">'+g.rows.length+'</span></div>'+
+    '<div class="fa-rows">'+g.rows.map(r=>
+      '<button class="fr" type="button" data-fitcap="'+esc(r.id)+'">'+
+      '<span class="fr-c">'+esc(r.id)+'</span>'+
+      '<span class="fr-m"><span class="fr-n">'+esc(r.n)+'</span>'+
+      '<span class="fr-p">'+(r.prod?esc(r.prod):'<i>no Microsoft product</i>')+'</span></span>'+
+      '<span class="fr-t"><span class="sh '+r.sh+'" title="'+esc(SHAPE_NOTE[r.sh])+'">'+esc(r.shLab)+'</span>'+
+      '<span class="bb '+r.bk+'" title="'+esc(r.bWhy)+'">'+esc(r.bLab)+'</span></span>'+
+      '<span class="fr-a">'+(r.alt.length?esc(r.alt.join(" · ")):"")+'</span>'+
+      '</button>').join("")+'</div></div>').join("");
+  $("#fit-found").querySelectorAll("[data-fitcap]").forEach(b=>
+    b.addEventListener("click",()=>openInModel(b.getAttribute("data-fitcap"))));
+}
+
+let FITSIZE="s";
 function fitBuildForm(){
   const groups={};
   Object.entries(FIT_IN).forEach(([k,f])=>(groups[f.g]=groups[f.g]||[]).push([k,f]));
@@ -3021,6 +3189,16 @@ function buildFit(){
   if(fitWired){fitRender();return;}
   fitWired=true;
   fitBuildForm();
+  $("#fit-size").innerHTML=FIT_SIZE.map(x=>
+    '<button type="button" data-s="'+esc(x.id)+'" aria-pressed="'+(x.id===FITSIZE)+'" title="'+esc(x.d)+'">'+
+    esc(x.n)+'<span>'+esc(x.sub)+'</span></button>').join("");
+  $("#fit-size").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    FITSIZE=b.getAttribute("data-s");
+    $("#fit-size").querySelectorAll("button").forEach(x=>
+      x.setAttribute("aria-pressed",String(x===b)));
+    fitFoundations();
+  }));
+  fitFoundations();
   $("#fit-band").innerHTML=FIT_BAND.map(x=>
     '<button type="button" data-b="'+esc(x.id)+'" aria-pressed="false" title="'+esc(x.d)+'">'+
     esc(x.n)+'</button>').join("");

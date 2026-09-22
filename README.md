@@ -35,42 +35,31 @@ capability is sized as a single product decision and carries:
 Capabilities that are a management discipline rather than a product purchase are marked
 `Practice`, so a `Gap` rating is not misread as a missing product.
 
-**Fit** — where a business sits against the documented limits in the Microsoft stack. Eleven
-published limits, each linked to its source, running high-level to detail: scale and requirements,
-then a coverage summary, then product constraints, then the findings in full, then the open
-decisions.
+**Fit** — what a business of roughly a given size needs, what carries it, what it costs in
+shape rather than price, and where building beats buying.
 
-The page reports what a limit **rules out** and stops there. Crossing 300 seats removes Defender
-for Business; it does not establish what should replace it.
+Pick a size and the capabilities in scope are grouped by functional area, each showing the
+Microsoft product, the commercial shape, a build-versus-buy posture and the named third-party
+alternatives. Small is 35 capabilities and 24 products; Large is 141 and 77.
 
-Evidence is separated by strength rather than lumped together. A **hard boundary** removes an
-option outright. A **design constraint** is real and documented but has known mitigations — the
-SharePoint 5,000-item figure governs a view, not a corpus, and a list can hold 30 million items,
-so it shapes how views are built rather than ruling SharePoint out. **Vendor guidance** is
-Microsoft's own advice whose assumptions are unpublished, so the PPU break-even prompts you to
-model your own numbers rather than deciding anything.
+Sizes map to the capability tier, which was written for this kind of scoping — Essential is
+"non-negotiable wherever it applies", Standard "the default where there is a real technology
+function", Advanced "scale, regulatory pressure, or technology as a differentiator". Tier
+describes the capability rather than the company, so the page presents a starting shortlist and
+says so.
 
-A check runs only when the figures it needs are supplied, and separately only when the rule is
-known to **apply**. A list past 100,000 items says nothing until you know whether the design
-breaks permission inheritance — without that the answer is "applicability not established",
-which is neither crossed nor clear.
+**Cost is commercial shape, not price.** Whether something already sits inside Microsoft 365 E3,
+needs an E5 step or an add-on, is metered on consumption, or has no Microsoft product at all says
+more about the cost of adding a capability than a list price would. The model holds no pricing
+and none is invented.
 
-**Product constraints** answers the original brief's question about products by scale, as far as
-evidence honestly reaches: what the entered figures rule out, product by product. A product is
-never marked *eligible* — eleven checks passing establishes only that these boundaries were not
-crossed. Nothing is ranked.
+**Build versus buy is derived** from coverage and the practice flag rather than authored: Native
+reads as buy, Partial as buy and expect to supplement, Gap as buy third-party, and a practice as
+a discipline that tooling supports without constituting.
 
-**Scale bands** are Microsoft's own two published seat thresholds — 300 (the Business family cap)
-and 2,500 (the Lighthouse ceiling) — so even the band edges are not invented. A band sets a seat
-count and nothing else, because seats is the only figure company size actually determines.
-Directory objects, list sizes and capacity SKUs are architecture and workload choices that do not
-follow from headcount. **Requirements** are separate toggles on a separate axis, each setting
-exactly the one field it names, because regulation is not a size.
-
-The view also lists **where Microsoft publishes no threshold** — size bands above 300 seats,
-Fabric capacity by organisation size, the Power Apps per-app break-even, Teams Phone seat caps, a
-subscription count forcing a split, and landing zones by size. Stating these is the point: it is
-where a number would otherwise get invented.
+Below that, collapsed, sits **what breaks as you grow** — eleven documented Microsoft limits with
+per-rule evidence gates, product constraints, seven worked decisions and the places where
+Microsoft publishes no threshold at all. It qualifies the answer above rather than being it.
 
 **Reference Implementation** — one real initiative expressed against the model, with an
 interactive flow diagram, control planes, and a closing note on where the design depends
