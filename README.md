@@ -50,7 +50,7 @@ A snapshot of that same output is committed for direct linking:
 | File | Use |
 | --- | --- |
 | `docs/it-in-a-box-overview.svg` | vector — documents, print, scaling |
-| `docs/it-in-a-box-overview.png` | 3440×2316 raster — Teams, PowerPoint, chat |
+| `docs/it-in-a-box-overview.png` | 3440×2000 raster — Teams, PowerPoint, chat |
 
 ## Structure
 
