@@ -3373,7 +3373,7 @@ function fitProducts(lvl,bite){
     const oAlts={};orphans.forEach(({m})=>(m.alt||[]).forEach(a=>oAlts[a]=(oAlts[a]||0)+1));
     h+='<div class="pv none"><div class="pv-hd"><span class="pv-n">No Microsoft product</span>'+
       '<span class="pv-f">'+orphans.length+' capabilities</span><span class="pv-sp"></span>'+
-      '<span class="cst high" title="Cost — '+esc(COST_RUBRIC[2][1])+'">High</span>'+
+      '<span class="cst none" title="'+esc(COST_RUBRIC[4][1])+'">Not first-party</span>'+
       '<span class="cst none" title="'+esc(COST_RUBRIC[4][1])+'">Not first-party</span></div>'+
       '<p class="pv-lev">Microsoft sells nothing against these. Each is a separate vendor '+
       'selection, contract and integration, and the model names '+Object.keys(oAlts).length+
