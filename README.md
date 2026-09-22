@@ -48,14 +48,22 @@ function", Advanced "scale, regulatory pressure, or technology as a differentiat
 describes the capability rather than the company, so the page presents a starting shortlist and
 says so.
 
-**Cost is commercial shape, not price.** Whether something already sits inside Microsoft 365 E3,
-needs an E5 step or an add-on, is metered on consumption, or has no Microsoft product at all says
-more about the cost of adding a capability than a list price would. The model holds no pricing
-and none is invented.
+**Alternatives appear only where they carry weight** — a partial gap someone has to fill, no
+first-party product at all, or a practice no product constitutes. That is 81 capabilities. On the
+60 Microsoft covers substantially, none is listed, because offering one would invent a debate
+that does not exist. Where coverage is partial the framing is *recommended, with a gap to fill*.
 
-**Build versus buy is derived** from coverage and the practice flag rather than authored: Native
-reads as buy, Partial as buy and expect to supplement, Gap as buy third-party, and a practice as
-a discipline that tooling supports without constituting.
+**Effort to adopt** is rated low, medium or high against a rubric printed on the page, derived
+from two things the model already records: commercial exposure from the licensing string, and how
+much of the capability Microsoft supplies from the coverage rating. Nothing to buy and fully
+covered is low; one of the two costs something is medium; both — or a practice, where the effort
+is organisational and no purchase discharges it — is high. The model holds no pricing and none is
+invented.
+
+Size moves the rating where a documented Microsoft limit bites: endpoint provisioning,
+configuration management and endpoint detection carry a published seat limit at 300, and
+configuration and asset management at 2,500, so those rise a level once the chosen size passes
+the threshold and are marked as such.
 
 Below that, collapsed, sits **what breaks as you grow** — eleven documented Microsoft limits with
 per-rule evidence gates, product constraints, seven worked decisions and the places where
