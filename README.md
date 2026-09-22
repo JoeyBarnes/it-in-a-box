@@ -48,22 +48,28 @@ function", Advanced "scale, regulatory pressure, or technology as a differentiat
 describes the capability rather than the company, so the page presents a starting shortlist and
 says so.
 
-**Alternatives appear only where they carry weight** — a partial gap someone has to fill, no
-first-party product at all, or a practice no product constitutes. That is 81 capabilities. On the
-60 Microsoft covers substantially, none is listed, because offering one would invent a debate
-that does not exist. Where coverage is partial the framing is *recommended, with a gap to fill*.
+**Cost and complexity appear only where there is something to weigh** — where Microsoft does not
+fully cover the capability, or where covering it needs a paid suite step. Where first-party covers
+it and the licence is already held, the row stays clean and shows only what carries it. That
+settles 16 of 35 capabilities at Small and 49 of 141 at Large.
 
-**Effort to adopt** is rated low, medium or high against a rubric printed on the page, derived
-from two things the model already records: commercial exposure from the licensing string, and how
-much of the capability Microsoft supplies from the coverage rating. Nothing to buy and fully
-covered is low; one of the two costs something is medium; both — or a practice, where the effort
-is organisational and no purchase discharges it — is high. The model holds no pricing and none is
-invented.
+They are **separate axes**, because they disagree on 24 of the 92 capabilities that carry a
+trade-off — application packaging is cheap to license and fiddly to land, device provisioning is
+the reverse. **Cost** is commercial exposure, derived from the licensing string: already inside a
+held licence, a distinct purchase, or a suite step and new vendor contracts. **Complexity** is
+implementation burden, derived from coverage: one product to configure, a supplement to join up
+and keep joined, or a vendor selected and integrated from scratch. Both rubrics are printed on the
+page. The model holds no pricing and none is invented.
 
-Size moves the rating where a documented Microsoft limit bites: endpoint provisioning,
+**Alternatives follow the same test**, so a third party is named only where it is load-bearing — a
+partial gap someone has to fill, no first-party product at all, or a practice no product
+constitutes. Where Microsoft covers a capability substantially and it is already licensed, none is
+listed.
+
+Size moves the cost rating where a documented Microsoft limit bites: endpoint provisioning,
 configuration management and endpoint detection carry a published seat limit at 300, and
-configuration and asset management at 2,500, so those rise a level once the chosen size passes
-the threshold and are marked as such.
+configuration and asset management at 2,500, so those rise a level once the chosen size passes the
+threshold and are marked as such.
 
 Below that, collapsed, sits **what breaks as you grow** — eleven documented Microsoft limits with
 per-rule evidence gates, product constraints, seven worked decisions and the places where

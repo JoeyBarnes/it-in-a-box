@@ -453,12 +453,19 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
 .sh.cons{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
 html[data-theme="dark"] .sh.cons{color:var(--accent)}
 .sh.none{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
-/* effort to adopt */
-.cst{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;padding:2px 8px;border-radius:99px;
+/* cost and complexity, shown only where a trade-off exists */
+.cst,.cx{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;padding:2px 8px;
   white-space:nowrap;cursor:help;font-weight:700;border:1px solid}
-.cst.low{color:var(--ok);border-color:var(--okbd);background:var(--okbg)}
-.cst.medium{color:var(--warn);border-color:var(--warnbd);background:var(--warnbg)}
-.cst.high{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
+.cst{border-radius:99px}
+.cx{border-radius:4px}
+.cst.low,.cx.low{color:var(--ok);border-color:var(--okbd);background:var(--okbg)}
+.cst.medium,.cx.medium{color:var(--warn);border-color:var(--warnbd);background:var(--warnbg)}
+.cst.high,.cx.high{color:var(--stop);border-color:var(--stopbd);background:var(--stopbg)}
+.cx{opacity:.92}
+.fr-t{position:relative}
+.fr-t .cst::before{content:"Cost ";opacity:.6;font-weight:400}
+.fr-t .cx::before{content:"Build ";opacity:.6;font-weight:400}
+.fr.settled .fr-n{color:var(--tx-2)}
 .bite{font-family:var(--mono);font-size:9.5px;padding:2px 7px;border-radius:5px;white-space:nowrap;
   cursor:help;border:1px dashed var(--accent);color:var(--accent-2);background:var(--accent-dim)}
 html[data-theme="dark"] .bite{color:var(--accent)}
@@ -472,9 +479,13 @@ html[data-theme="dark"] .bite{color:var(--accent)}
 .frub{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:11px 14px;
   margin:0 0 11px;font-size:11.5px;color:var(--tx-3);line-height:1.55}
 .frub > b{color:var(--tx);font-weight:600}
-.frub-r{display:block;margin-top:7px;color:var(--tx-2)}
-.frub-r .cst{margin-right:6px}
-.frub-n{display:block;margin-top:9px;padding-top:8px;border-top:1px solid var(--line)}
+.frub-r{display:block;margin-top:6px;color:var(--tx-2)}
+.frub-r .cst,.frub-r .cx{margin-right:6px}
+.frub-h{display:block;margin-top:11px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--tx);font-weight:600}
+.frub-h i{font-style:normal;text-transform:none;letter-spacing:0;color:var(--tx-3);
+  font-weight:400;margin-left:6px}
+.frub-n{display:block;margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
 /* the growth section, demoted */
 .fit-more{margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
 .fit-more > summary{cursor:pointer;font-size:13px;color:var(--tx-2);padding:7px 0;list-style:none}
@@ -3091,16 +3102,24 @@ const FIT_SIZE=[
 ];
 const TIER_LVL={Essential:1,Standard:2,Advanced:3};
 
-/* Effort to adopt, on a published rubric rather than a hand-assigned score.
-   Two documented fields decide it: what the capability costs commercially, taken
-   from `lic`, and how much of the answer Microsoft actually supplies, taken from
-   `cov`. Both are already on every capability, so the rating cannot drift from the
-   model, and the rubric is printed on the page so it is checkable rather than
-   asserted. Size moves it where a documented Microsoft limit bites at that scale. */
+/* Cost and implementation complexity are separate axes, because they move
+   independently: a capability can be cheap to license and hard to land, or the
+   reverse. Cost comes from the licensing string, complexity from how much of the
+   capability Microsoft actually supplies.
+
+   Both are shown only where a trade-off genuinely exists — where Microsoft does not
+   fully cover the capability, or where covering it needs a paid suite step. Where
+   first-party covers it and the licence is already held there is nothing to weigh,
+   so the row stays clean rather than inviting a comparison that has no substance. */
 const COST_RUBRIC=[
- ["Low","Already licensed in the base suite and covered substantially by Microsoft. The work is enablement rather than procurement."],
- ["Medium","One of the two costs something: either a purchase on top of what is held, or Microsoft covers only part of it so something else fills the remainder."],
- ["High","Both. A purchase or a new vendor, and a capability Microsoft does not fully cover — or a practice, where the effort is organisational and arrives with no purchase at all."]
+ ["Low","Already inside a licence most estates hold. Adding the capability is an enablement exercise, not a purchase."],
+ ["Medium","A distinct purchase — an add-on, its own SKU, or metered consumption that follows usage rather than headcount."],
+ ["High","A suite step that lifts the whole tenant, or no first-party product at all, which means a new vendor and a new contract."]
+];
+const CX_RUBRIC=[
+ ["Low","One first-party product covers it. The work is configuration."],
+ ["Medium","Microsoft covers part of it, so something sits alongside and the two have to be joined up and kept that way."],
+ ["High","Either no first-party product, so a vendor is selected, contracted and integrated from scratch — or a practice, where the work is organisational and no product discharges it."]
 ];
 function fitShape(lic){
   const l=lic||"";
@@ -3123,25 +3142,27 @@ const SHAPE_NOTE={
   ver:"Licensing varies by edition or region — confirm before planning around it.",
   none:"Microsoft sells nothing here, so whatever covers it is contracted separately."
 };
-function fitCost(m,sizeBite){
-  /* Scored on two axes rather than a lookup, so the levels spread rather than
-     collapsing everything with a gap into the top band. Commercial exposure: nothing
-     to buy, a purchase, or no product at all. Coverage burden: Microsoft supplies it,
-     supplies part of it, or supplies none. A practice adds one, because the work is
-     organisational and no purchase discharges it. */
+/* Is there anything to weigh up? Only if first-party does not fully cover the
+   capability, or if covering it means stepping the whole tenant up a tier. */
+function fitDecision(m){
   const [sh]=fitShape(m.lic);
-  const cost={e3:0,inc:0,none:2}[sh];
-  const cov={Native:0,Partial:1,Gap:2}[m.cov];
-  let n=(cost===undefined?1:cost)+(cov===undefined?1:cov)+(m.kind==="practice"?1:0);
-  if(sizeBite)n++;                   /* a documented limit bites at this scale */
-  const lvl=n<=0?1:n<=2?2:3;
+  return m.cov!=="Native"||m.kind==="practice"||sh==="e5"||sh==="addon";
+}
+function fitCostTag(m,bite){
+  const [sh]=fitShape(m.lic);
+  let lvl={e3:1,inc:1,e5:3,none:3}[sh]||2;
+  if(bite&&lvl<3)lvl++;          /* a documented limit forces a different purchase */
   const L=["Low","Medium","High"][lvl-1];
   return[L.toLowerCase(),L,COST_RUBRIC[lvl-1][1]];
 }
-/* How the capability is answered. Where Microsoft covers it substantially there is
-   nothing to weigh up, so no alternative is listed — surfacing one would invent a
-   debate. Alternatives appear where they are load-bearing: a partial gap someone has
-   to fill, no first-party product at all, or a practice no product constitutes. */
+function fitCxTag(m){
+  let n={Native:0,Partial:1,Gap:2}[m.cov];
+  if(n===undefined)n=1;
+  if(m.kind==="practice")n++;
+  const lvl=n<=0?1:n<=1?2:3;
+  const L=["Low","Medium","High"][lvl-1];
+  return[L.toLowerCase(),L,CX_RUBRIC[lvl-1][1]];
+}
 function fitAnswer(m){
   if(m.kind==="practice"&&m.cov==="Gap")
     return["prac","Practice-led","No product constitutes this capability. Tooling supports the discipline; running it is the work.",true];
@@ -3153,11 +3174,9 @@ function fitAnswer(m){
     return["part","Recommended, with a gap to fill","Microsoft covers part of this. The remainder is commonly met alongside it.",true];
   return["gap","No Microsoft product","Nothing first-party addresses this, so it is sourced elsewhere.",true];
 }
-
 function fitFoundations(){
   const size=FIT_SIZE.find(x=>x.id===FITSIZE)||FIT_SIZE[0];
   const caps=allCaps().filter(c=>(TIER_LVL[TIER[c.id]]||9)<=size.lvl);
-  /* capabilities where a documented seat limit bites at this size */
   const bite=new Set();
   FIT_RULES.forEach(r=>{
     if(r.at===300&&size.lvl>=2)(r.caps||[]).forEach(c=>bite.add(c));
@@ -3170,30 +3189,38 @@ function fitFoundations(){
     const prim=(CAP_PROD[c.id]||[]).filter(e=>e[1]==="p").map(e=>PRODUCTS[skuOf(e[0])].n);
     const [sh,shLab]=fitShape(m.lic);
     const [ak,aLab,aWhy,showAlt]=fitAnswer(m);
-    const [ck,cLab,cWhy]=fitCost(m,bite.has(c.id));
+    const dec=fitDecision(m)||bite.has(c.id);
+    const [ck,cLab,cWhy]=fitCostTag(m,bite.has(c.id));
+    const [xk,xLab,xWhy]=fitCxTag(m);
     areas[a.id].rows.push({id:c.id,n:c.name,prod:prim.length?prim.join(" + "):null,
-      alt:showAlt?(m.alt||[]).slice(0,3):[],sh:sh,shLab:shLab,
-      ak:ak,aLab:aLab,aWhy:aWhy,ck:ck,cLab:cLab,cWhy:cWhy,bite:bite.has(c.id)});
+      alt:showAlt?(m.alt||[]).slice(0,3):[],sh:sh,shLab:shLab,dec:dec,
+      ak:ak,aLab:aLab,aWhy:aWhy,ck:ck,cLab:cLab,cWhy:cWhy,xk:xk,xLab:xLab,xWhy:xWhy,
+      bite:bite.has(c.id)});
   });
   const list=Object.values(areas).sort((x,y)=>x.a.id.localeCompare(y.a.id));
   const prods=new Set(),noMs=caps.filter(c=>((MAP[c.id]||{}).ms||"—")==="—").length;
   caps.forEach(c=>(CAP_PROD[c.id]||[]).forEach(e=>{if(e[1]==="p")prods.add(skuOf(e[0]));}));
-  const cost={low:0,medium:0,high:0};
-  caps.forEach(c=>{const [k]=fitCost(MAP[c.id]||{},bite.has(c.id));cost[k]++;});
+  const nDec=caps.filter(c=>fitDecision(MAP[c.id]||{})||bite.has(c.id)).length;
 
   $("#fit-head").innerHTML='<div class="fsum">'+
     [[caps.length,"capabilities in scope"],[prods.size,"Microsoft products",1],
-     [cost.low,"low effort to adopt"],[cost.medium,"medium"],[cost.high,"high"],
-     [noMs,"no Microsoft product"]]
+     [caps.length-nDec,"settled — first-party, already licensed"],
+     [nDec,"with a trade-off to weigh"],[noMs,"no Microsoft product"]]
     .map(c=>'<div class="fsum-c '+(c[2]?"hero":"")+'"><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></div>').join("")+
-    '</div><div class="frub"><b>Effort to adopt</b> is derived from two things the model already '+
-    'records — what the capability costs commercially, and how much of it Microsoft supplies — '+
-    'so it cannot drift from the rest of the page. '+
+    '</div><div class="frub"><b>Cost and complexity appear only where there is something to weigh</b>'+
+    ' — where Microsoft does not fully cover the capability, or where covering it needs a paid '+
+    'suite step. Where first-party covers it and the licence is already held, the row stays clean. '+
+    'Both are derived from what the model already records, so neither can drift from the rest of '+
+    'the page.'+
+    '<span class="frub-h">Cost <i>commercial exposure, from licensing</i></span>'+
     COST_RUBRIC.map(r=>'<span class="frub-r"><span class="cst '+r[0].toLowerCase()+'">'+esc(r[0])+
-    '</span> '+esc(r[1])+'</span>').join("")+
-    '<span class="frub-n">Alternatives appear only where they carry weight: a partial gap someone '+
-    'has to fill, no first-party product at all, or a practice no product constitutes. Where '+
-    'Microsoft covers a capability substantially, none is listed.</span></div>'+
+      '</span> '+esc(r[1])+'</span>').join("")+
+    '<span class="frub-h">Complexity <i>implementation burden, from coverage</i></span>'+
+    CX_RUBRIC.map(r=>'<span class="frub-r"><span class="cx '+r[0].toLowerCase()+'">'+esc(r[0])+
+      '</span> '+esc(r[1])+'</span>').join("")+
+    '<span class="frub-n">Alternatives appear on the same test. Where Microsoft covers a '+
+    'capability substantially and it is already licensed, none is listed — offering one would '+
+    'invent a comparison with no substance.</span></div>'+
     '<p class="fsum-note"><b>A starting shortlist, not a specification.</b> Sizes map to the '+
     'capability tier, which describes the capability rather than the company — a small business in '+
     'a regulated sector will need things this list puts under Large.</p>';
@@ -3202,15 +3229,18 @@ function fitFoundations(){
     '<div class="fa"><div class="fa-hd"><span class="fa-sw" style="background:'+g.a.color+'"></span>'+
     '<h3>'+esc(g.a.id+" "+g.a.name)+'</h3><span class="fa-n">'+g.rows.length+'</span></div>'+
     '<div class="fa-rows">'+g.rows.map(r=>
-      '<button class="fr" type="button" data-fitcap="'+esc(r.id)+'">'+
+      '<button class="fr'+(r.dec?"":" settled")+'" type="button" data-fitcap="'+esc(r.id)+'">'+
       '<span class="fr-c">'+esc(r.id)+'</span>'+
       '<span class="fr-m"><span class="fr-n">'+esc(r.n)+'</span>'+
       '<span class="fr-p '+r.ak+'" title="'+esc(r.aWhy)+'">'+
         (r.prod?esc(r.prod):'<i>no first-party product</i>')+
         (r.ak==="rec"?'':' <em>'+esc(r.aLab)+'</em>')+'</span></span>'+
-      '<span class="fr-t"><span class="sh '+r.sh+'" title="'+esc(SHAPE_NOTE[r.sh])+'">'+esc(r.shLab)+'</span>'+
-      '<span class="cst '+r.ck+'" title="'+esc(r.cWhy)+'">'+esc(r.cLab)+'</span>'+
-      (r.bite?'<span class="bite" title="A documented Microsoft limit applies at this size — see what breaks as you grow, below.">Limit at this size</span>':'')+
+      '<span class="fr-t">'+
+      (r.dec
+        ? '<span class="cst '+r.ck+'" title="Cost — '+esc(r.cWhy)+'">'+esc(r.cLab)+'</span>'+
+          '<span class="cx '+r.xk+'" title="Complexity — '+esc(r.xWhy)+'">'+esc(r.xLab)+'</span>'+
+          (r.bite?'<span class="bite" title="A documented Microsoft limit applies at this size, which forces a different purchase. See what breaks as you grow, below.">Limit at this size</span>':'')
+        : '<span class="sh '+r.sh+'" title="'+esc(SHAPE_NOTE[r.sh])+'">'+esc(r.shLab)+'</span>')+
       '</span>'+
       '<span class="fr-a">'+(r.alt.length?'<i>consider</i> '+esc(r.alt.join(" · ")):"")+'</span>'+
       '</button>').join("")+'</div></div>').join("");
