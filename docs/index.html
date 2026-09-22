@@ -349,14 +349,22 @@ table.pm thead th{position:sticky;top:0;z-index:3;background:var(--panel-2);
 table.pm th.pm-gh{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
   color:var(--tx-3);text-align:center;padding:5px 4px;border-left:1px solid var(--line);
   line-height:1.3;font-weight:600}
-/* Area names run to 41 characters against a ~46px column, so the header is turned
-   on its side. Reading the full name in place beats decoding a number against a key. */
+/* Area names run to 41 characters against a ~44px column, so the header is turned
+   on its side. Reading the full name in place beats decoding a number against a key,
+   but it costs ~250px of height — hence the compact mode, which drops to the numbers
+   alone and leaves the tooltip to carry the name. */
 table.pm th.pm-ah{width:44px;min-width:44px;padding:7px 2px 6px;border-left:1px solid var(--line);
   vertical-align:bottom}
 table.pm th.pm-ah span,table.pm th.pm-mh span{writing-mode:vertical-rl;transform:rotate(180deg);
   display:inline-block;white-space:nowrap;font-weight:600}
 table.pm th.pm-ah span{font-family:var(--mono);font-size:10px;color:var(--tx-2);letter-spacing:0}
 table.pm th.pm-ah b{font-weight:700;color:var(--tx)}
+table.pm th.pm-ah i{font-style:normal}
+/* compact: numbers sit flat, so the header collapses to the height of the metric
+   words rather than the longest area name */
+table.pm.hdr-num th.pm-ah{text-align:center;vertical-align:middle;padding:6px 2px}
+table.pm.hdr-num th.pm-ah span{writing-mode:horizontal-tb;transform:none;font-size:10.5px}
+table.pm.hdr-num th.pm-ah i{display:none}
 table.pm th.pm-name{position:sticky;left:0;z-index:4;text-align:left;padding:6px 12px;min-width:238px;
   font-size:11px;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--tx-3);
   vertical-align:bottom}
@@ -496,6 +504,7 @@ table.pm tbody tr.multi td.pm-name{box-shadow:inset 3px 0 0 var(--accent)}
       <button id="pm-v-bubble" type="button" aria-pressed="true">Bubbles</button>
       <button id="pm-v-matrix" type="button" aria-pressed="false">Grid</button>
     </div>
+    <button class="tbtn" id="pm-hdr" type="button" aria-pressed="false" hidden>Collapse headers</button>
     <span class="rescount" id="pm-count" role="status" aria-live="polite"></span>
   </div>
 
@@ -2177,7 +2186,7 @@ function prodCovMix(p){
   const m={};p.caps.forEach(c=>{const v=(MAP[c]||{}).cov;if(v)m[v]=(m[v]||0)+1;});return m;
 }
 
-let pmView="bubble",pmQ="";
+let pmView="bubble",pmQ="",pmHdrNum=false;
 /* size ranks on capabilities answered; area spread only breaks ties */
 const pmSort=(a,b)=>b.caps.length-a.caps.length||b.areas.size-a.areas.size||
   b.sup.length-a.sup.length||a.n.localeCompare(b.n);
@@ -2259,7 +2268,7 @@ function pmWrapLabel(name,w){
 
 function pmMatrix(list){
   const gs=GROUPS.map(g=>({g:g,areas:AREAS.filter(a=>a.g===g.id)})).filter(x=>x.areas.length);
-  let h='<div class="pm-scroll"><table class="pm"><thead><tr>'+
+  let h='<div class="pm-scroll"><table class="pm'+(pmHdrNum?" hdr-num":"")+'"><thead><tr>'+
     '<th class="pm-name" rowspan="2" scope="col">Product</th>';
   gs.forEach(x=>h+='<th class="pm-gh" colspan="'+x.areas.length+'" scope="colgroup">'+esc(x.g.name)+'</th>');
   h+='<th class="pm-mh m1" rowspan="2" scope="col" title="Capabilities this product answers">'+
@@ -2269,7 +2278,8 @@ function pmMatrix(list){
      '<th class="pm-mh m3" rowspan="2" scope="col" title="Capabilities it supports without being the named answer">'+
        '<span>Supporting</span></th></tr><tr>';
   gs.forEach(x=>x.areas.forEach(a=>
-    h+='<th class="pm-ah" scope="col"><span><b>'+esc(a.id)+'</b> '+esc(a.name)+'</span></th>'));
+    h+='<th class="pm-ah" scope="col" title="'+esc(a.id+" "+a.name)+'">'+
+      '<span><b>'+esc(a.id)+'</b> <i>'+esc(a.name)+'</i></span></th>'));
   h+='</tr></thead><tbody>';
   list.forEach(p=>{
     h+='<tr'+(p.caps.length>1?' class="multi"':'')+'><td class="pm-name">'+
@@ -2302,6 +2312,7 @@ function pmApply(){
   });
   const multi=list.filter(p=>p.caps.length>1).length;
   $("#pm-count").textContent=list.length+" products · "+multi+" cover 2+ capabilities";
+  $("#pm-hdr").hidden=(pmView!=="matrix");   /* the toggle only means anything on the grid */
   const gaps=allCaps().filter(c=>((MAP[c.id]||{}).ms||"—")==="—");
   $("#pm-foot").innerHTML=(pmView==="bubble"
     ? 'Circle area tracks capabilities answered; colour is the first functional area the '+
@@ -2375,6 +2386,15 @@ function buildProductMap(){
     other.setAttribute("aria-pressed","false");pmView=v;pmApply();};
   A.addEventListener("click",()=>go(A,B,"bubble"));
   B.addEventListener("click",()=>go(B,A,"matrix"));
+  /* pure class swap rather than a re-render, so the grid keeps its scroll position */
+  $("#pm-hdr").addEventListener("click",()=>{
+    pmHdrNum=!pmHdrNum;
+    const b=$("#pm-hdr");
+    b.setAttribute("aria-pressed",String(pmHdrNum));
+    b.textContent=pmHdrNum?"Show area names":"Collapse headers";
+    const t=$("#pm-host").querySelector("table.pm");
+    if(t)t.classList.toggle("hdr-num",pmHdrNum);
+  });
   $("#pm-q").addEventListener("input",e=>{pmQ=e.target.value.trim();pmApply();});
   pmApply();
 }
