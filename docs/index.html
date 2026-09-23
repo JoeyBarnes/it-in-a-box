@@ -3332,25 +3332,45 @@ function fitProdTags(p){
    Evidence class is public and checkable:
      ani   Azure Native Integration — deployed and billed as a managed Azure resource
      learn a first-party integration page on Microsoft Learn
-     mp    a transactable Microsoft Marketplace listing */
+     mp    a transactable Microsoft Marketplace listing
+
+   Third element is an alias list, used only where the sub-product is the same kind
+   of thing as its parent: Jira and Bitbucket read as Atlassian, the way ServiceNow
+   ITSM, IRM and VRM collapse into one row.
+
+   Ownership alone is not enough to fold. Salesforce owns Tableau, MuleSoft and
+   Slack, but a BI tool, an integration platform and a chat client are three
+   different conversations and none of them is a CRM — folding them would hide more
+   than it tidies. Auth0 stays separate from Okta for the same reason: developer
+   identity and workforce SSO are bought by different people.
+
+   Order matters. A label like "Auth0 (Okta)" or "Splunk (Cisco)" contains two
+   vendor names and the first match wins, so anything that must not be swallowed by
+   its parent has to appear above it. */
 const PARTNERS=[
- ["SAP","learn"],["Databricks","learn"],["Oracle","learn"],["Salesforce","learn"],
- ["ServiceNow","learn"],["Snowflake","learn"],["Workday","learn"],["Okta","learn"],
- ["Zoom","learn"],["Splunk","learn"],["Tableau","learn"],["Zscaler","learn"],
- ["Omnissa","learn"],["Ping Identity","learn"],["Jamf","learn"],["Cisco","learn"],
+ ["Auth0","learn"],["MuleSoft","learn"],["Tableau","learn"],
+ ["ServiceNow","learn"],["SAP","learn"],["Databricks","learn"],["Oracle","learn"],
+ ["Salesforce","learn"],["Okta","learn"],
+ ["Snowflake","learn"],["Workday","learn"],["Zoom","learn"],
+ ["Splunk","learn"],["Cisco","learn",["Duo","Webex"]],
+ ["Zscaler","learn"],["Omnissa","learn",["Workspace ONE","Horizon"]],
+ ["Ping Identity","learn"],["Jamf","learn"],
  ["Informatica","ani"],["Datadog","ani"],["Dynatrace","ani"],["Elastic","ani"],
- ["New Relic","ani"],["Commvault","ani"],["Confluent","ani"],["MongoDB","ani"],
- ["Palo Alto","ani"],["F5","ani"],
- ["CrowdStrike","mp"],["Proofpoint","mp"],["Mimecast","mp"],["Netskope","mp"],
- ["Veeam","mp"],["Rubrik","mp"],["Genesys","mp"],["Five9","mp"],["NICE","mp"],
- ["Qlik","mp"],["GitLab","mp"],["Atlassian","mp"],["Jira","mp"],["Confluence","mp"],
+ ["Commvault","ani"],["Confluent","ani"],["MongoDB","ani"],["Palo Alto","ani"],
+ ["CrowdStrike","mp"],["Proofpoint","mp"],["Netskope","mp"],
+ ["Veeam","mp"],["Rubrik","mp"],["Genesys","mp"],["Five9","mp"],["NICE CXone","mp"],
+ ["Qlik","mp"],["GitLab","mp"],
+ ["Atlassian","mp",["Jira","Confluence","Bitbucket","Statuspage","Trello"]],
  ["PagerDuty","mp"],["OneTrust","mp"],["HubSpot","mp"],["Collibra","mp"],
  ["Alation","mp"],["Ivanti","mp"],["Secureworks","mp"]
 ];
 const PARTNER_EV={ani:"Azure Native Integration",learn:"Microsoft Learn integration",mp:"Microsoft Marketplace"};
 function partnerOf(s){
   const t=String(s||"").toLowerCase();
-  for(const [n,ev] of PARTNERS) if(t.indexOf(n.toLowerCase())>=0) return {n:n,ev:ev};
+  for(const p of PARTNERS){
+    const pats=[p[0]].concat(p[2]||[]);
+    for(const pat of pats) if(t.indexOf(pat.toLowerCase())>=0) return {n:p[0],ev:p[1]};
+  }
   return null;
 }
 /* Collapse an alt list to recognised vendors, deduped by vendor rather than by the
