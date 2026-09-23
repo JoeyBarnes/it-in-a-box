@@ -1159,13 +1159,13 @@ const MAP={
 
 /* 02 Endpoint & Device Management */
 "02.1":{ms:"Microsoft Intune",comp:["Windows Autopilot","Intune enrolment","Enrolment Status Page","Apple/Android enrolment","Autopilot device preparation"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/autopilot/device-preparation/overview",pos:"Zero-touch provisioning is mature for Windows; Jamf remains preferred where the Apple estate is large and Mac-specific workflows matter.",cov:"Native",alt:["Jamf (Apple)","Omnissa Workspace ONE"]},
-"02.2":{ms:"Microsoft Intune",comp:["Configuration profiles","Security baselines","Compliance policies","Settings catalog","Endpoint Privilege Management (E5)"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Comprehensive policy engine tightly coupled to Conditional Access — device compliance gating access is a genuine architectural advantage.",cov:"Native",alt:["Jamf Pro","Omnissa Workspace ONE"]},
+"02.2":{ms:"Microsoft Intune",comp:["Configuration profiles","Security baselines","Compliance policies","Settings catalog","Endpoint Privilege Management (E5)"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Comprehensive policy engine tightly coupled to Conditional Access — device compliance gating access is a genuine architectural advantage. Endpoint Privilege Management is the exception: it arrives with E5, so least-privilege enforcement is a step up from the E3 baseline this row is priced against.",cov:"Native",alt:["Jamf Pro","Omnissa Workspace ONE"]},
 "02.3":{ms:"Windows Autopatch",comp:["Windows Autopatch","Update rings","Driver & firmware updates","Expedited quality updates","Autopatch reporting"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/windows/deployment/windows-autopatch/overview/windows-autopatch-overview",pos:"Autopatch handles Microsoft's own estate well; third-party application patching at scale is the routine reason to add Ivanti or Tanium.",cov:"Native",alt:["Ivanti Neurons","Tanium"]},
-"02.4":{ms:"Microsoft Intune",comp:["Enterprise App Management (E5)","Win32 app deployment","Microsoft Store apps","Configuration Manager (co-management)","App protection policies"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Enterprise App Management narrowed the gap on packaging and updating common ISV apps, but it arrives with E5 rather than E3, and large custom catalogues still often justify a specialist.",cov:"Partial",alt:["Ivanti","PatchMyPC"]},
+"02.4":{ms:"Microsoft Intune",comp:["Enterprise App Management (E5)","Win32 app deployment","Microsoft Store apps","Configuration Manager (co-management)","App protection policies"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Enterprise App Management narrowed the gap on packaging and updating common ISV apps, but it arrives with E5 rather than E3 — so on an E3 baseline this gap is closed by a licence step, not by configuration — and large custom catalogues still often justify a specialist.",cov:"Partial",alt:["Ivanti","PatchMyPC"]},
 "02.5":{ms:"Microsoft Intune",comp:["Mobile device management","Mobile application management","App protection policies","BYOD enrolment","Conditional Access integration"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"App protection without enrolment is the strongest answer for contractor and BYOD scenarios — relevant where large field workforces use personal devices.",cov:"Native",alt:["Jamf","Omnissa Workspace ONE"]},
-"02.6":{ms:"Microsoft Intune",comp:["Shared device mode","Kiosk configuration","Android Enterprise dedicated devices","Windows 365 Frontline","Managed Home Screen"],lic:"Microsoft 365 F3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Specialty device management moved into Microsoft 365 E3 in July 2026. Rugged and purpose-built hardware still often carries OEM management tooling Intune does not fully replace.",cov:"Partial",alt:["SOTI MobiControl","Zebra / Honeywell OEM tooling"]},
+"02.6":{ms:"Microsoft Intune",comp:["Shared device mode","Kiosk configuration","Android Enterprise dedicated devices","Windows 365 Frontline","Managed Home Screen"],lic:"Microsoft 365 F3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"The Plan 2 capabilities that began rolling into E3 and E5 from July 2026 — including specialty device management — do not extend to F3, so a frontline-licensed estate still needs a step up to reach them. Rugged and purpose-built hardware also often carries OEM tooling Intune does not fully replace.",cov:"Partial",alt:["SOTI MobiControl","Zebra / Honeywell OEM tooling"]},
 "02.7":{ms:"Azure Virtual Desktop & Windows 365",comp:["Azure Virtual Desktop","Windows 365 Cloud PC","App attach","FSLogix profile containers","Session host autoscale"],lic:"Azure consumption / per user",docs:"https://learn.microsoft.com/en-us/azure/virtual-desktop/overview",pos:"Microsoft covers both delivery models — consumption-based AVD and fixed-price Windows 365. Citrix persists where complex brokering, protocol optimisation over poor links, or a genuinely multi-cloud desktop estate is in play.",cov:"Native",alt:["Citrix DaaS","Omnissa Horizon"]},
-"02.8":{ms:"Microsoft Intune Endpoint Analytics",comp:["Endpoint analytics","Startup performance score","Application reliability","Anomaly detection","Advanced Analytics"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Advanced Analytics moved into Microsoft 365 E3 in July 2026, so this no longer needs an Intune Suite add-on. Nexthink remains materially deeper for digital experience management and proactive remediation.",cov:"Partial",alt:["Nexthink","1E (TeamViewer DEX)"]},
+"02.8":{ms:"Microsoft Intune Endpoint Analytics",comp:["Endpoint analytics","Startup performance score","Application reliability","Anomaly detection","Advanced Analytics"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Advanced Analytics began rolling into Microsoft 365 E3 and E5 from July 2026, so for tenants that have had the update this no longer needs an Intune Suite add-on. Nexthink remains materially deeper for digital experience management and proactive remediation.",cov:"Partial",alt:["Nexthink","1E (TeamViewer DEX)"]},
 "02.9":{ms:"Microsoft Intune",comp:["Device inventory","Retire & wipe","Fresh Start","Autopilot device reset","Device categories"],lic:"Microsoft 365 E3",docs:"https://learn.microsoft.com/en-us/intune/fundamentals/what-is-intune",pos:"Covers secure wipe and lifecycle actions, but financial asset tracking and disposal chain-of-custody sit outside Microsoft entirely.",cov:"Partial",alt:["ServiceNow ITAM","Lansweeper"]},
 
 /* 03 Network & Connectivity */
@@ -3334,42 +3334,54 @@ function fitProdTags(p){
      learn a first-party integration page on Microsoft Learn
      mp    a transactable Microsoft Marketplace listing
 
-   Third element is an alias list, used only where the sub-product is the same kind
-   of thing as its parent: Jira and Bitbucket read as Atlassian, the way ServiceNow
-   ITSM, IRM and VRM collapse into one row.
+   Third element is an alias list, and it is deliberately almost empty. Nearly every
+   alt label already names its parent — "Omnissa Horizon", "Atlassian Bitbucket",
+   "Duo (Cisco)" — so substring matching folds them without help. The only label that
+   omits its parent is "Jira Service Management", so Jira is the one real alias.
 
-   Ownership alone is not enough to fold. Salesforce owns Tableau, MuleSoft and
-   Slack, but a BI tool, an integration platform and a chat client are three
-   different conversations and none of them is a CRM — folding them would hide more
-   than it tidies. Auth0 stays separate from Okta for the same reason: developer
-   identity and workforce SSO are bought by different people.
+   That leaves a mechanical rule rather than a judgement call: every brand gets its
+   own row, and an alias exists only where a label names no parent at all. An earlier
+   version folded by ownership and produced nonsense — it swallowed Tableau, MuleSoft
+   and Slack into Salesforce, and Horizon into Omnissa, even though a BI tool, an
+   integration platform, a chat client and a VDI stack are four different
+   conversations. Auth0, Duo, Webex and Horizon are named products in their own right
+   and are listed as such.
 
-   Order matters. A label like "Auth0 (Okta)" or "Splunk (Cisco)" contains two
-   vendor names and the first match wins, so anything that must not be swallowed by
-   its parent has to appear above it. */
+   Order matters. A label like "Auth0 (Okta)" or "Duo (Cisco)" contains two vendor
+   names and the first match wins, so anything that must not be swallowed by its
+   parent has to appear above it. Matching is word-boundary anchored, so a short
+   token like "SAP" or "Duo" cannot match inside a longer word. */
 const PARTNERS=[
  ["Auth0","learn"],["MuleSoft","learn"],["Tableau","learn"],
+ ["Duo","learn"],["Webex","learn"],["Horizon","learn"],
  ["ServiceNow","learn"],["SAP","learn"],["Databricks","learn"],["Oracle","learn"],
  ["Salesforce","learn"],["Okta","learn"],
  ["Snowflake","learn"],["Workday","learn"],["Zoom","learn"],
- ["Splunk","learn"],["Cisco","learn",["Duo","Webex"]],
- ["Zscaler","learn"],["Omnissa","learn",["Workspace ONE","Horizon"]],
+ ["Splunk","learn"],["Cisco","learn"],
+ ["Zscaler","learn"],["Omnissa","learn"],
  ["Ping Identity","learn"],["Jamf","learn"],
  ["Informatica","ani"],["Datadog","ani"],["Dynatrace","ani"],["Elastic","ani"],
  ["Commvault","ani"],["Confluent","ani"],["MongoDB","ani"],["Palo Alto","ani"],
  ["CrowdStrike","mp"],["Proofpoint","mp"],["Netskope","mp"],
  ["Veeam","mp"],["Rubrik","mp"],["Genesys","mp"],["Five9","mp"],["NICE CXone","mp"],
  ["Qlik","mp"],["GitLab","mp"],
- ["Atlassian","mp",["Jira","Confluence","Bitbucket","Statuspage","Trello"]],
+ ["Atlassian","mp",["Jira"]],
  ["PagerDuty","mp"],["OneTrust","mp"],["HubSpot","mp"],["Collibra","mp"],
  ["Alation","mp"],["Ivanti","mp"],["Secureworks","mp"]
 ];
-const PARTNER_EV={ani:"Azure Native Integration",learn:"Microsoft Learn integration",mp:"Microsoft Marketplace"};
+/* Marketplace publication evidences transactability, not endorsement or technical
+   integration — anyone can publish. The label says "listing" for that reason, and
+   the three classes are not ranked in the output: topAlts preserves the order the
+   capability declared, so the page never implies one class outranks another. */
+const PARTNER_EV={ani:"Azure Native Integration",learn:"Microsoft Learn integration",mp:"Marketplace listing"};
 function partnerOf(s){
-  const t=String(s||"").toLowerCase();
+  const t=String(s||"");
   for(const p of PARTNERS){
     const pats=[p[0]].concat(p[2]||[]);
-    for(const pat of pats) if(t.indexOf(pat.toLowerCase())>=0) return {n:p[0],ev:p[1]};
+    for(const pat of pats){
+      const rx=new RegExp("\\b"+pat.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b","i");
+      if(rx.test(t)) return {n:p[0],ev:p[1]};
+    }
   }
   return null;
 }
@@ -3510,7 +3522,10 @@ function fitFoundations(){
     'rel="noopener">Azure Native Integration</a> (deployed and billed as a managed Azure '+
     'resource), a first-party integration page on Microsoft Learn, or a transactable '+
     '<a href="https://marketplace.microsoft.com" target="_blank" rel="noopener">Microsoft '+
-    'Marketplace</a> listing. Each name carries the class it qualified under. Competing '+
+    'Marketplace</a> listing. Each name carries the class it qualified under. A Marketplace '+
+    'listing evidences that a vendor is transactable, not that Microsoft endorses it or that '+
+    'deep integration exists — anyone can publish — so the three classes are shown as labels '+
+    'and are deliberately not ranked against each other here. Competing '+
     'products are deliberately included — plenty of customers run Salesforce, ServiceNow or '+
     'Workday and will keep running them, and Microsoft publishes integration for each. '+
     'The underlying model names 308 third parties, 280 of them only once; that long tail is '+
